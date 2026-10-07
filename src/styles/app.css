@@ -840,8 +840,13 @@ html:not(.dark):not(.black) .off-btn-no{background:#e4e7ec;color:#202124}
 .store-empty{padding:18px 16px;opacity:.75}
 .store-ad-wrap{padding:4px 12px 18px}
 .store-ad{display:block;text-decoration:none;color:inherit;margin:0 2px 8px}
-.store-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:80}
-.store-drawer{position:absolute;top:0;right:0;width:75vw;height:100%;background:#17181b;color:#fff;padding:28px 16px;display:flex;flex-direction:column;gap:8px}
+.store-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:80;animation:storeFade .28s ease}
+.store-drawer{position:absolute;top:0;right:0;width:75vw;height:100%;background:#17181b;color:#fff;padding:28px 16px;display:flex;flex-direction:column;gap:8px;transform:translateX(100%);animation:storeSlide .42s cubic-bezier(.16,.84,.24,1) forwards;box-shadow:-18px 0 40px rgba(0,0,0,.28)}
+@keyframes storeFade{from{opacity:0}to{opacity:1}}
+@keyframes storeSlide{from{transform:translateX(110%)}to{transform:translateX(0)}}
+.store-open-btn{display:inline-flex;align-items:center;justify-content:center;align-self:center;min-width:84px;height:36px;padding:0 16px;border-radius:999px;background:#d3e3fd;color:#041e49;font-weight:700;line-height:1;text-align:center;white-space:nowrap}
+.store-ad .promo-foot{align-items:center}
+.ed-gh{width:auto!important;min-height:36px;padding:0 10px;border-radius:12px;background:#2A2A2A;color:#fff;font-family:inherit;font-weight:700;white-space:nowrap}
 .store-drawer h2{margin:8px 4px 16px;text-align:right}
 .store-drawer button{display:flex;align-items:center;gap:12px;border:none;background:#2A2A2A;color:#fff;border-radius:14px;min-height:52px;padding:0 14px;font-family:inherit;font-weight:700;text-align:right}
 .pub-page,.proj-page{min-height:100dvh;padding:8px 16px 32px}
