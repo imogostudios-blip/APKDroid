@@ -1,7 +1,7 @@
 {
   "name": "APKDroid",
-  "short_name": "APKDroid",
-  "description": "APKDroid Store",
+  "short_name": "متجر Droid",
+  "description": "APKDroid",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
