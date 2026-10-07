@@ -860,9 +860,9 @@
     _navMoved = true;
   });
   const useHash = () => {
-    const [r, setR] = useState(() => location.hash.slice(1) || "/");
+    const [r, setR] = useState(() => location.hash.slice(1) || "/games");
     useEffect(() => {
-      const f = () => setR(location.hash.slice(1) || "/");
+      const f = () => setR(location.hash.slice(1) || "/games");
       window.addEventListener("hashchange", f);
       return () => window.removeEventListener("hashchange", f);
     }, []);
@@ -871,13 +871,48 @@
     }];
   };
   const PersonMark = ({ className = "w-6 h-6" }) => /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, height: "24", viewBox: "0 -960 960 960", width: "24", fill: "currentColor" }, /* @__PURE__ */ React.createElement("path", { d: "M367-527q-47-47-47-113t47-113q47-47 113-47t113 47q47 47 47 113t-47 113q-47 47-113 47t-113-47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm296.5-343.5Q560-607 560-640t-23.5-56.5Q513-720 480-720t-56.5 23.5Q400-673 400-640t23.5 56.5Q447-560 480-560t56.5-23.5ZM480-640Zm0 400Z" }));
+  
+  const chipGlyph = (k) => {
+    const paths = {
+      chip_all: ["M4 6h16M4 12h16M4 18h16"],
+      cat_games: ["M6 11h3v2H6zm9 0h3v2h-3zM8 9v6m8-6v6M9 16h6"],
+      cat_productivity: ["M8 7h8v12H8zM10 7V5h4v2"],
+      cat_education: ["M4 7l8-3 8 3-8 3zM6 10v5c2 2 10 2 12 0v-5"],
+      cat_entertainment: ["M4 8h16v10H4zM9 8l2-3h2l2 3"],
+      cat_social: ["M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM16 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM3 19c1-3 9-3 10 0M14 19c.4-2 5-2 6 0"],
+      cat_photo: ["M4 8h4l2-2h4l2 2h4v10H4zM12 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"],
+      cat_music: ["M9 18a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM12 15V5l8-2v8"],
+      cat_shopping: ["M6 8h12l-1 12H7zM9 8a3 3 0 0 1 6 0"],
+      cat_finance: ["M12 4v16M16 8c0-2-8-2-8 1s8 2 8 4-8 2-8 0"],
+      cat_health: ["M12 20s-7-4.4-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 4.6-7 9-7 9z"],
+      cat_news: ["M5 6h11v12H5zM16 8h3v10H8M8 10h5M8 13h5"],
+      cat_travel: ["M3 13l18-5-4 12-4-4-4 2z"],
+      cat_food: ["M6 4v8a3 3 0 0 0 6 0V4M9 4v16M16 4c2 3 2 6 0 8v8"],
+      cat_sports: ["M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM4 12h16M12 4c2 3 2 13 0 16M12 4c-2 3-2 13 0 16"],
+      cat_weather: ["M7 16h10a4 4 0 0 0 0-8 5 5 0 0 0-9-1A3.5 3.5 0 0 0 7 16z"],
+      cat_utilities: ["M14 6l4 4-8 8H6v-4z"],
+      g_most_dl: ["M12 4v10M8 10l4 4 4-4M5 19h14"],
+      g_br: ["M12 4l2 5h5l-4 3 2 5-5-3-5 3 2-5-4-3h5z"],
+      g_sandbox: ["M12 3l8 4v6l-8 8-8-8V7zM4 7l8 4 8-4M12 11v10"],
+      g_tanks: ["M4 14h12v4H4zM16 15h4v2h-4M8 14V9h4v5"],
+      g_adventure: ["M12 4v2M12 20a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM12 9l2 4-4 .5z"],
+      g_popular: ["M12 3l2 5h5l-4 3 2 6-5-3-5 3 2-6-4-3h5z"],
+      g_horror: ["M8 20V10a4 4 0 0 1 8 0v10M9 13h.1M15 13h.1M10 17h4"],
+      g_kids: ["M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM8 11h.1M16 11h.1M8 15c1.5 2 6.5 2 8 0"],
+      g_rpg: ["M12 3l2 6h6l-5 4 2 7-5-4-5 4 2-7-5-4h6z"],
+      g_strategy: ["M5 19h14M7 19V9h4v10M13 19V5h4v14"],
+      g_sim: ["M3 15h13l3-4h2v4M6 15a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM15 15a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"],
+      g_puzzle: ["M9 4h6v3a2 2 0 1 1 0 4v3H9v-3a2 2 0 1 0 0-4z"]
+    }[k] || ["M5 12h14"];
+    return React.createElement("svg", { viewBox: "0 0 24 24", width: "18", height: "18", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true" }, paths.map((d, i) => React.createElement("path", { d, key: i })));
+  };
   const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     const showChips = !isDetail && (route === "/" || route === "" || route === "/games" || (route || "").startsWith("/category/"));
     const chips = route === "/games" || (route || "").startsWith("/category/") && GAME_SECTIONS.some((g) => route.indexOf(encodeURIComponent(g.term)) >= 0 || route.indexOf(g.term) >= 0) ? [{ k: "chip_all", path: "/games", term: "" }].concat(GAME_SECTIONS.map((g) => ({ k: g.k, path: "/category/" + encodeURIComponent(g.term), term: g.term }))) : [{ k: "chip_all", path: "/", term: "" }].concat(SEARCH_CATEGORIES.map((c) => ({ k: c.k, path: "/category/" + encodeURIComponent(c.term), term: c.term })));
     const activePath = route || "/";
     return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: `hdr-top-row flex items-center px-4 max-w-screen-2xl mx-auto w-full ${isDetail ? "sticky top-0 z-40 bg-[hsl(var(--bg))]" : ""}`, style: { direction: "ltr" } }, isDetail ? /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: () => window.history.back(), "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" })) : /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: onOpenAccount, "aria-label": t("account") }, photo ? /* @__PURE__ */ React.createElement("img", { src: photo, alt: "", className: "nav-avatar" }) : /* @__PURE__ */ React.createElement(PersonMark, { className: "w-6 h-6" })), /* @__PURE__ */ React.createElement("div", { className: "flex-1" }), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => nav("/"), className: "shrink-0 group", "aria-label": "APKDroid Store" }, /* @__PURE__ */ React.createElement("div", { className: "group-hover:scale-105 transition-transform" }, /* @__PURE__ */ React.createElement(StoreLogo, { size: 48 })))), showChips && /* @__PURE__ */ React.createElement("div", { className: "hdr-chips" }, chips.map((ch) => {
       const on = ch.path === "/" || ch.path === "/games" ? activePath === ch.path : activePath === ch.path || ch.term && activePath.indexOf(encodeURIComponent(ch.term)) >= 0;
-      return /* @__PURE__ */ React.createElement("button", { key: ch.k + ch.path, type: "button", className: `hdr-chip ${on ? "on" : ""}`, onClick: () => nav(ch.path) }, t(ch.k));
+      return /* @__PURE__ */ React.createElement("button", { key: ch.k + ch.path, type: "button", className: `hdr-chip ${on ? "on" : ""}`, onClick: () => nav(ch.path) }, chipGlyph(ch.k), /* @__PURE__ */ React.createElement("span", null, t(ch.k)));
     })));
   };
   const AccPick = ({ open, title, onClose, children }) => {
