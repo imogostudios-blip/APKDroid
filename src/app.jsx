@@ -2764,8 +2764,8 @@ const downloadBlob = (blob, name) => {
   setTimeout(() => URL.revokeObjectURL(url), 1500);
 };
 const StoreAd = ({ ad }) => React.createElement("a", { className: "promo-ghost store-ad", href: ad.https || "#", target: "_blank", rel: "noopener noreferrer" },
-  React.createElement("span", { className: "promo-banner-wrap" }, React.createElement("span", { className: "promo-banner-clip" }, React.createElement("img", { src: "res/ads/icon_ads/" + ad.id + ".png", alt: "", onError: (e) => { e.currentTarget.style.display = "none"; } })), React.createElement("span", { className: "promo-caption" }, (ad.txt || ad.name || ad.id))),
-  React.createElement("span", { className: "promo-foot" }, React.createElement("img", { className: "promo-icon", src: "res/ads/icon_ads/" + ad.id + ".png", alt: "", onError: (e) => { e.currentTarget.style.visibility = "hidden"; } }), React.createElement("span", { className: "promo-meta" }, React.createElement("span", { className: "promo-name" }, (ad.txt || ad.name || ad.id)), React.createElement("span", { className: "promo-sub" }, "إعلان")), React.createElement("span", { className: "store-open-btn" }, "فتح"))
+  React.createElement("span", { className: "promo-banner-wrap" }, React.createElement("span", { className: "promo-banner-clip" }, React.createElement("img", { src: "res/ads/icons_ads/" + ad.id + ".png", alt: "", onError: (e) => { e.currentTarget.style.display = "none"; } })), React.createElement("span", { className: "promo-caption" }, (ad.txt || ad.name || ad.id))),
+  React.createElement("span", { className: "promo-foot" }, React.createElement("img", { className: "promo-icon", src: "res/ads/icons_ads/" + ad.id + ".png", alt: "", onError: (e) => { e.currentTarget.style.visibility = "hidden"; } }), React.createElement("span", { className: "promo-meta" }, React.createElement("span", { className: "promo-name" }, (ad.txt || ad.name || ad.id)), React.createElement("span", { className: "promo-sub" }, "إعلان")), React.createElement("span", { className: "store-open-btn" }, "فتح"))
 );
 
   const b64utf = (value) => {
@@ -2793,7 +2793,7 @@ const StoreAd = ({ ad }) => React.createElement("a", { className: "promo-ghost s
     }
     window.alert("تم الدفع إلى GitHub");
   };
-  const StorePage = ({ nav }) => {
+  
   const [q, setQ] = useState("");
   const [apps, setApps] = useState([]);
   const [ads, setAds] = useState([]);
@@ -2807,7 +2807,7 @@ const StoreAd = ({ ad }) => React.createElement("a", { className: "promo-ghost s
   const rows = chunk8(shown);
   const blocks = [];
   rows.forEach((row, i) => {
-    blocks.push(React.createElement("div", { key: "r" + i, className: "store-row" }, row.map((a) => React.createElement("a", { key: a.id || a.file, className: "store-app", href: a.https || "#", target: "_blank", rel: "noopener noreferrer" }, React.createElement("img", { src: "res/apps/icon_apps/" + (a.file || a.id) + ".png", alt: "" }), React.createElement("span", null, a.name || a.id)))));
+    blocks.push(React.createElement("div", { key: "r" + i, className: "store-row" }, row.map((a) => React.createElement("button", { key: a.id || a.file, type: "button", className: "store-app", onClick: () => nav("/you-app/" + encodeURIComponent(a.id || a.file)) }, React.createElement("img", { src: "res/apps/icons_apps/" + (a.file || a.id) + ".png", alt: "" }), React.createElement("span", null, a.name || a.id)))));
     if ((i + 1) % 3 === 0 && ads.length) blocks.push(React.createElement("div", { key: "ad" + i, className: "store-ad-wrap" }, React.createElement(StoreAd, { ad: ads[Math.floor(i / 3) % ads.length] })));
   });
   if (!rows.length && ads.length) blocks.push(React.createElement("div", { key: "ad0", className: "store-ad-wrap" }, ads.map((ad) => React.createElement(StoreAd, { key: ad.id, ad }))));
@@ -3731,7 +3731,7 @@ function App(){
   else if(isDetail){const _p=route.split('?');const _id=(_p[0].split('/')[2]||'');const _qi=new URLSearchParams(_p[1]||'').get('install')==='1';page=<Detail id={_id} nav={nav} favs={favs} toggle={toggle} selStore={selStore} expMode={expMode} setDetailApp={setDetailApp} autoInstall={_qi} onToggleTheme={toggleTheme} isDark={isDarkNow}></Detail>}
   else if(route==='/favorites')page=<Favs favs={favs} songFavs={songFavs} open={open} toggle={toggle} toggleSongFav={toggleSongFav} play={playFromList}></Favs>;
   else if(route==='/downloads')page=<DownloadsManager open={open}></DownloadsManager>;
-  else if(route==='/you'||route==='/music')page=<StorePage nav={nav}></StorePage>;
+  else if(route==='/you'||route==='/music')page=<StorePage nav={nav}></StorePage>; else if(route.startsWith('/you-app/'))page=<StoreInstall route={route} nav={nav}></StoreInstall>;
   else if(route==='/you-publish')page=<PublishPage nav={nav}></PublishPage>;
   else if(route==='/you-projects')page=<ProjectsPage nav={nav}></ProjectsPage>;
   else if(route.startsWith('/you-project/'))page=<ProjectGate route={route} nav={nav}></ProjectGate>;
