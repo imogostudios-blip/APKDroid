@@ -72,7 +72,7 @@ const STRINGS={
     menu:'القائمة',home:'الرئيسية',top_rated:'الأعلى تقييماً',favorites:'المفضلة',games:'الألعاب',music:'الموسيقى',settings:'الإعدادات',
     terms:'بنود الخدمة',privacy:'سياسة الخصوصية',
     search_placeholder:'ابحث عن تطبيقات وألعاب',search_apps:'Search apps & games',
-    nav_games:'ألعاب',nav_apps:'تطبيقات',nav_search:'بحث',nav_library:'مكتبة',nav_you:'المتجر',
+    nav_games:'ألعاب',nav_apps:'تطبيقات',nav_search:'بحث',nav_library:'مكتبة',nav_you:'المشاريع',
     featured:'مميز',top_free_apps:'أفضل التطبيقات المجانية',productivity:'الإنتاجية',education:'التعليم',entertainment:'الترفيه',top_paid_apps:'أفضل التطبيقات المدفوعة',see_all:'عرض الكل',
     top_game:'أفضل لعبة',top_free_games:'أفضل الألعاب المجانية',action_games:'ألعاب الأكشن',
     recent_searches:'عمليات البحث الأخيرة',
@@ -136,7 +136,7 @@ const STRINGS={
     menu:'Menu',home:'Home',top_rated:'Top Rated',favorites:'Favorites',games:'Games',music:'Music',settings:'Settings',
     terms:'Terms of Service',privacy:'Privacy Policy',
     search_placeholder:'Search apps & games',search_apps:'Search apps & games',
-    nav_games:'Games',nav_apps:'Apps',nav_search:'Search',nav_library:'Library',nav_you:'المتجر',
+    nav_games:'Games',nav_apps:'Apps',nav_search:'Search',nav_library:'Library',nav_you:'المشاريع',
     featured:'Featured',top_free_apps:'Top Free Apps',productivity:'Productivity',education:'Education',entertainment:'Entertainment',top_paid_apps:'Top Paid Apps',see_all:'See All',
     top_game:'Top Game',top_free_games:'Top Free Games',action_games:'Action Games',
     recent_searches:'RECENT SEARCHES',
@@ -691,9 +691,9 @@ const NavIcon=({kind,on,className='w-6 h-6'})=>{
   }
   if(kind==='you'){
     return on?(
-      <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24"><path fill="currentColor" fillRule="evenodd" d="M19,6h-2c0,-2.76 -2.24,-5 -5,-5S7,3.24 7,6L5,6c-1.1,0 -2,0.9 -2,2v12c0,1.1 0.9,2 2,2h14c1.1,0 2,-0.9 2,-2L21,8c0,-1.1 -0.9,-2 -2,-2zM12,3c1.66,0 3,1.34 3,3L9,6c0,-1.66 1.34,-3 3,-3zM12,12c-1.66,0 -3,-1.34 -3,-3L7,9c0,2.76 2.24,5 5,5s5,-2.24 5,-5h-2c0,1.66 -1.34,3 -3,3z"></path></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 -960 960 960"><path fill="currentColor" d="M260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H260Z"></path></svg>
     ):(
-      <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24"><path fill="currentColor" d="M19,6h-2c0,-2.76 -2.24,-5 -5,-5S7,3.24 7,6L5,6c-1.1,0 -2,0.9 -2,2v12c0,1.1 0.9,2 2,2h14c1.1,0 2,-0.9 2,-2L21,8c0,-1.1 -0.9,-2 -2,-2zM12,3c1.66,0 3,1.34 3,3L9,6c0,-1.66 1.34,-3 3,-3zM19,20L5,20L5,8h14v12zM12,12c-1.66,0 -3,-1.34 -3,-3L7,9c0,2.76 2.24,5 5,5s5,-2.24 5,-5h-2c0,1.66 -1.34,3 -3,3z"></path></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 -960 960 960"><path fill="currentColor" d="M260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H260Zm0-80h480q42 0 71-29t29-71q0-42-29-71t-71-29h-60v-80q0-83-58.5-141.5T480-720q-83 0-141.5 58.5T280-520h-20q-58 0-99 41t-41 99q0 58 41 99t99 41Zm220-240Z"></path></svg>
     );
   }
   return null;
@@ -2701,19 +2701,26 @@ const SICO = {
   open: "M480-480ZM202-65l-56-57 118-118h-90v-80h226v226h-80v-89L202-65Zm278-15v-80h240v-440H520v-200H240v400h-80v-400q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H480Z",
   html: "M0-360v-240h60v80h80v-80h60v240h-60v-100H60v100H0Zm310 0v-180h-70v-60h200v60h-70v180h-60Zm170 0v-200q0-17 11.5-28.5T520-600h180q17 0 28.5 11.5T740-560v200h-60v-180h-40v140h-60v-140h-40v180h-60Zm320 0v-240h60v180h100v60H800Z"
 };
-const parseAds = (text) => {
-  const lines = String(text || "").split(/\r?\n/).map((x) => x.trim()).filter(Boolean);
-  const out = [];
-  let cur = null;
-  lines.forEach((line) => {
-    if (line.charAt(0) === "/" && line !== "/end") { cur = { id: line.slice(1), txt: "", https: "" }; return; }
-    if (line === "/end") { if (cur && cur.id) out.push(cur); cur = null; return; }
-    if (!cur) return;
-    if (!cur.txt) cur.txt = line; else if (!cur.https) cur.https = line;
-  });
-  return out;
-};
-const chunk8 = (list) => { const rows = []; for (let i = 0; i < list.length; i += 8) rows.push(list.slice(i, i + 8)); return rows; };
+const parseTagged = (text) => {
+    const lines = String(text || "").split(/\r?\n/).map((x) => x.trim()).filter(Boolean);
+    const out = [];
+    let cur = null;
+    lines.forEach((line) => {
+      if (line === "</end>" || line === "/end") { if (cur && cur.id) out.push(cur); cur = null; return; }
+      const head = line.match(/^<\/?(app\d+|ad\d+)>$/i);
+      if (head) { cur = { id: head[1], name: "", txt: "", https: "" }; return; }
+      if (!cur) return;
+      const name = line.match(/^<\/?name=([\s\S]*)>$/);
+      const txt = line.match(/^<\/?txt=([\s\S]*)>$/);
+      const open = line.match(/^<\/?open=([\s\S]*)>$/);
+      if (name) cur.name = name[1].trim();
+      else if (txt) cur.txt = txt[1].trim();
+      else if (open) cur.https = open[1].trim();
+    });
+    return out;
+  };
+  const parseAds = (text) => parseTagged(text);
+  const chunk8 = (list) => { const rows = []; for (let i = 0; i < list.length; i += 8) rows.push(list.slice(i, i + 8)); return rows; };
 const crc32 = (bytes) => {
   let c = ~0;
   for (let i = 0; i < bytes.length; i++) {
@@ -2757,24 +2764,50 @@ const downloadBlob = (blob, name) => {
   setTimeout(() => URL.revokeObjectURL(url), 1500);
 };
 const StoreAd = ({ ad }) => React.createElement("a", { className: "promo-ghost store-ad", href: ad.https || "#", target: "_blank", rel: "noopener noreferrer" },
-  React.createElement("span", { className: "promo-banner-wrap" }, React.createElement("span", { className: "promo-banner-clip" }, React.createElement("img", { src: "res/ads/icons/" + ad.id + ".png", alt: "", onError: (e) => { e.currentTarget.style.display = "none"; } })), React.createElement("span", { className: "promo-caption" }, ad.txt || ad.id)),
-  React.createElement("span", { className: "promo-foot" }, React.createElement("img", { className: "promo-icon", src: "res/ads/icons/" + ad.id + ".png", alt: "", onError: (e) => { e.currentTarget.style.visibility = "hidden"; } }), React.createElement("span", { className: "promo-meta" }, React.createElement("span", { className: "promo-name" }, ad.txt || ad.id), React.createElement("span", { className: "promo-sub" }, "إعلان")), React.createElement("span", { className: "promo-install" }, "فتح"))
+  React.createElement("span", { className: "promo-banner-wrap" }, React.createElement("span", { className: "promo-banner-clip" }, React.createElement("img", { src: "res/ads/icon_ads/" + ad.id + ".png", alt: "", onError: (e) => { e.currentTarget.style.display = "none"; } })), React.createElement("span", { className: "promo-caption" }, (ad.txt || ad.name || ad.id))),
+  React.createElement("span", { className: "promo-foot" }, React.createElement("img", { className: "promo-icon", src: "res/ads/icon_ads/" + ad.id + ".png", alt: "", onError: (e) => { e.currentTarget.style.visibility = "hidden"; } }), React.createElement("span", { className: "promo-meta" }, React.createElement("span", { className: "promo-name" }, (ad.txt || ad.name || ad.id)), React.createElement("span", { className: "promo-sub" }, "إعلان")), React.createElement("span", { className: "store-open-btn" }, "فتح"))
 );
-const StorePage = ({ nav }) => {
+
+  const b64utf = (value) => {
+    const bytes = new TextEncoder().encode(String(value || ""));
+    let bin = "";
+    bytes.forEach((n) => { bin += String.fromCharCode(n); });
+    return btoa(bin);
+  };
+  const storeGithub = async (item) => {
+    const repo = window.prompt("المستودع بصيغة owner/repo");
+    if (!repo || repo.indexOf("/") < 0) return;
+    const token = window.prompt("رمز GitHub");
+    if (!token) return;
+    const files = item.type === "html" ? [{ name: "index.html", data: item.html || "" }] : (item.files || []).filter((f) => f.kind === "file").map((f) => ({ name: f.path, data: f.content || "" }));
+    const headers = { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" };
+    for (const f of files) {
+      const path = f.name.split("/").map(encodeURIComponent).join("/");
+      const url = "https://api.github.com/repos/" + repo + "/contents/" + path;
+      let sha = "";
+      try { const got = await fetch(url, { headers }); if (got.ok) sha = (await got.json()).sha || ""; } catch (e) {}
+      const body = { message: "Update " + f.name + " from APKDroid", content: b64utf(f.data) };
+      if (sha) body.sha = sha;
+      const put = await fetch(url, { method: "PUT", headers: Object.assign({ "Content-Type": "application/json" }, headers), body: JSON.stringify(body) });
+      if (!put.ok) { window.alert("تعذر الدفع: " + f.name); return; }
+    }
+    window.alert("تم الدفع إلى GitHub");
+  };
+  const StorePage = ({ nav }) => {
   const [q, setQ] = useState("");
   const [apps, setApps] = useState([]);
   const [ads, setAds] = useState([]);
   const [menu, setMenu] = useState(false);
   useEffect(() => {
-    fetch("res/apps/list.json").then((r) => r.json()).then((d) => setApps(Array.isArray(d) ? d : [])).catch(() => setApps([]));
-    fetch("res/ads/ads.txt").then((r) => r.text()).then((t) => setAds(parseAds(t))).catch(() => setAds([]));
+    fetch("res/apps/apps.json").then((r) => r.text()).then((text) => setApps(parseTagged(text))).catch(() => setApps([]));
+    fetch("res/ads/ads.json").then((r) => r.text()).then((t) => setAds(parseAds(t))).catch(() => setAds([]));
   }, []);
   const query = q.trim();
   const shown = apps.filter((a) => !query || String(a.name || "").toLowerCase().indexOf(query.toLowerCase()) >= 0);
   const rows = chunk8(shown);
   const blocks = [];
   rows.forEach((row, i) => {
-    blocks.push(React.createElement("div", { key: "r" + i, className: "store-row" }, row.map((a) => React.createElement("a", { key: a.id || a.file, className: "store-app", href: a.https || "#", target: "_blank", rel: "noopener noreferrer" }, React.createElement("img", { src: "res/apps/icons/" + a.file, alt: "" }), React.createElement("span", null, a.name)))));
+    blocks.push(React.createElement("div", { key: "r" + i, className: "store-row" }, row.map((a) => React.createElement("a", { key: a.id || a.file, className: "store-app", href: a.https || "#", target: "_blank", rel: "noopener noreferrer" }, React.createElement("img", { src: "res/apps/icon_apps/" + (a.file || a.id) + ".png", alt: "" }), React.createElement("span", null, a.name || a.id)))));
     if ((i + 1) % 3 === 0 && ads.length) blocks.push(React.createElement("div", { key: "ad" + i, className: "store-ad-wrap" }, React.createElement(StoreAd, { ad: ads[Math.floor(i / 3) % ads.length] })));
   });
   if (!rows.length && ads.length) blocks.push(React.createElement("div", { key: "ad0", className: "store-ad-wrap" }, ads.map((ad) => React.createElement(StoreAd, { key: ad.id, ad }))));
@@ -2895,7 +2928,8 @@ const ProjectPage = ({ route, nav }) => {
       React.createElement("button", { type: "button", onClick: () => nav("/you-project/" + id + "/preview"), "aria-label": "معاينة" }, storeSvg(SICO.play, "0 0 32 32", 24)),
       React.createElement("button", { type: "button", onClick: () => { navigator.clipboard && navigator.clipboard.writeText(content || ""); setNote("تم نسخ الكود"); }, "aria-label": "نسخ" }, storeSvg(SICO.copy, "0 0 24 24", 22)),
       React.createElement("button", { type: "button", onClick: doZip, "aria-label": "تنزيل" }, storeSvg(SICO.down, "0 0 18 18", 22)),
-      React.createElement("button", { type: "button", onClick: doShare, "aria-label": "مشاركة" }, storeSvg(SICO.share, "0 -960 960 960", 22))
+      React.createElement("button", { type: "button", onClick: doShare, "aria-label": "مشاركة" }, storeSvg(SICO.share, "0 -960 960 960", 22)),
+      React.createElement("button", { type: "button", className: "ed-gh", onClick: () => storeGithub(item) }, "ادفع على GitHub")
     ),
     item.type === "web" ? React.createElement("div", { className: "ed-files" }, (item.files || []).map((f) => React.createElement("button", { key: f.path, type: "button", className: f.path === file ? "on" : "", onClick: () => f.kind === "file" && setFile(f.path) }, (f.kind === "folder" ? "📁 " : "📄 ") + f.path))) : null,
     React.createElement("textarea", { className: "ed-code", value: content, spellCheck: false, onChange: (e) => setContent(e.target.value), onKeyDown: (e) => { if (e.key === "Tab") { e.preventDefault(); const el = e.target; const s = el.selectionStart; const v = content.slice(0, s) + "  " + content.slice(el.selectionEnd); setContent(v); } } }),
