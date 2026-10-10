@@ -165,6 +165,55 @@
       nav_search: "\u0628\u062D\u062B",
       nav_library: "\u0645\u0643\u062A\u0628\u0629",
       nav_you: "\u0627\u0644\u0645\u0634\u0627\u0631\u064A\u0639",
+      you_publish: "\u0646\u0634\u0631 \u062A\u0637\u0628\u064A\u0642",
+      you_search: "\u0627\u0644\u0628\u062D\u062B \u0641\u064A \u0645\u062A\u062C\u0631 Droid",
+      you_menu: "\u0627\u0644\u0642\u0627\u0626\u0645\u0629",
+      you_no_results: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u0627\u0626\u062C \u062F\u0627\u062E\u0644 \u0627\u0644\u0645\u062A\u062C\u0631",
+      you_no_apps: "\u0644\u0627 \u062A\u0648\u062C\u062F \u062A\u0637\u0628\u064A\u0642\u0627\u062A \u0641\u064A \u0627\u0644\u0645\u062A\u062C\u0631 \u0628\u0639\u062F",
+      you_store: "\u0627\u0644\u0645\u062A\u062C\u0631",
+      you_settings: "\u0625\u0639\u062F\u0627\u062F\u0627\u062A",
+      you_my_projects: "\u0645\u0634\u0627\u0631\u064A\u0639\u064A",
+      you_name_label: "\u0627\u0644\u0627\u0633\u0645: ",
+      you_mail_body: "\u0645\u0631\u062D\u0628\u0627 \u0627\u0631\u064A\u062F \u0631\u0641\u0639 \u062A\u0637\u0628\u064A\u0642\u064A \u0639\u0644\u0649 APKDroid \u0627\u0631\u062C\u0648 \u0627\u0644\u0645\u0631\u0627\u062C\u0639\u0629.",
+      you_publish_title: "\u064A\u0645\u0643\u0646\u0643 \u0627\u0644\u0622\u0646 \u0646\u0634\u0631 \u062A\u0637\u0628\u064A\u0642\u0643 \u0639\u0628\u0631 \u0634\u0631\u0627\u0621 \u062D\u0633\u0627\u0628 \u0645\u0637\u0648\u0631",
+      you_subscribe: "\u0623\u0634\u062A\u0631\u0627\u0643",
+      you_free_plan: "\u0627\u0644\u062E\u0637\u0629 \u0627\u0644\u0645\u062C\u0627\u0646\u064A\u0629",
+      you_enter_data: "\u0627\u062F\u062E\u0644 \u0628\u064A\u0627\u0646\u0627\u062A\u0643 \u0627\u0644\u0645\u0637\u0644\u0648\u0628\u0629",
+      you_name: "\u0627\u0644\u0627\u0633\u0645",
+      you_email: "\u0627\u0644\u0628\u0631\u064A\u062F",
+      you_download: "\u0631\u0627\u0628\u0637 \u062A\u062D\u0645\u064A\u0644 \u0627\u0644\u062A\u0637\u0628\u064A\u0642 \u0645\u0628\u0627\u0634\u0631",
+      you_message: "\u0637\u0644\u0628\u0643 \u0627\u0644\u0643\u0627\u0645\u0644 \u0641\u064A \u0631\u0633\u0627\u0644\u0629",
+      you_contact: "\u0645\u0631\u0627\u0633\u0644\u0629",
+      you_signup: "\u062A\u0633\u062C\u064A\u0644 \u0627\u0634\u062A\u0631\u0627\u0643",
+      you_new_project: "\u0645\u0634\u0631\u0648\u0639 \u062C\u062F\u064A\u062F",
+      you_empty_projects: "\u064A\u0628\u062F\u0648 \u0627\u0646\u0647 \u0644\u0627 \u064A\u0648\u062C\u062F \u0644\u062F\u064A\u0643 \u0627\u064A \u0645\u0634\u0631\u0648\u0639 \u064A\u0645\u0643\u0646\u0643 \u0625\u0646\u0634\u0627\u0621 \u0645\u0634\u0631\u0648\u0639\u0643 \u0627\u0644\u0622\u0646",
+      you_open_project: "\u0641\u062A\u062D \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
+      you_project_name: "\u0627\u0633\u0645 \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
+      you_banner: "\u0627\u062E\u062A\u0631 \u0635\u0648\u0631\u0629 \u0628\u0627\u0646\u0631 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0645\u0646 \u0627\u0644\u0645\u0639\u0631\u0636",
+      you_create: "\u0625\u0646\u0634\u0627\u0621",
+      you_missing: "\u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u063A\u064A\u0631 \u0645\u0648\u062C\u0648\u062F",
+      you_saved: "\u062A\u0645 \u0627\u0644\u062D\u0641\u0638",
+      you_save: "\u062D\u0641\u0638",
+      you_preview: "\u0645\u0639\u0627\u064A\u0646\u0629",
+      you_copied: "\u062A\u0645 \u0646\u0633\u062E \u0627\u0644\u0643\u0648\u062F",
+      you_copy: "\u0646\u0633\u062E",
+      you_download_btn: "\u062A\u0646\u0632\u064A\u0644",
+      you_share: "\u0645\u0634\u0627\u0631\u0643\u0629",
+      you_push_github: "\u0627\u062F\u0641\u0639 \u0639\u0644\u0649 GitHub",
+      you_add: "\u0625\u0636\u0627\u0641\u0629",
+      you_file_name: "\u0627\u0633\u0645 \u0627\u0644\u0645\u0644\u0641 \u0623\u0648 \u0627\u0644\u0645\u062C\u0644\u062F",
+      you_new_file: "\u0625\u0646\u0634\u0627\u0621 \u0645\u0644\u0641",
+      you_new_folder: "\u0625\u0646\u0634\u0627\u0621 \u0645\u062C\u0644\u062F",
+      you_upload: "\u0631\u0641\u0639 \u0645\u0644\u0641",
+      you_editor: "\u0627\u0644\u0645\u062D\u0631\u0631",
+      you_no_preview: "\u0644\u0627 \u064A\u0648\u062C\u062F \u0645\u062D\u062A\u0648\u0649 \u0644\u0644\u0645\u0639\u0627\u064A\u0646\u0629",
+      you_install: "\u062A\u062B\u0628\u064A\u062A",
+      you_open: "\u0641\u062A\u062D",
+      you_ad: "\u0625\u0639\u0644\u0627\u0646",
+      you_repo: "\u0627\u0644\u0645\u0633\u062A\u0648\u062F\u0639 \u0628\u0635\u064A\u063A\u0629 owner/repo",
+      you_token: "\u0631\u0645\u0632 GitHub",
+      you_push_fail: "\u062A\u0639\u0630\u0631 \u0627\u0644\u062F\u0641\u0639: ",
+      you_pushed: "\u062A\u0645 \u0627\u0644\u062F\u0641\u0639 \u0625\u0644\u0649 GitHub",
       featured: "\u0645\u0645\u064A\u0632",
       top_free_apps: "\u0623\u0641\u0636\u0644 \u0627\u0644\u062A\u0637\u0628\u064A\u0642\u0627\u062A \u0627\u0644\u0645\u062C\u0627\u0646\u064A\u0629",
       productivity: "\u0627\u0644\u0625\u0646\u062A\u0627\u062C\u064A\u0629",
@@ -408,7 +457,56 @@
       nav_apps: "Apps",
       nav_search: "Search",
       nav_library: "Library",
-      nav_you: "\u0627\u0644\u0645\u0634\u0627\u0631\u064A\u0639",
+      nav_you: "Projects",
+      you_publish: "Publish app",
+      you_search: "Search Droid Store",
+      you_menu: "Menu",
+      you_no_results: "No results in the store",
+      you_no_apps: "No apps in the store yet",
+      you_store: "Store",
+      you_settings: "Settings",
+      you_my_projects: "My projects",
+      you_name_label: "Name: ",
+      you_mail_body: "Hello, I want to publish my app on APKDroid. Please review it.",
+      you_publish_title: "You can now publish your app by buying a developer account",
+      you_subscribe: "Subscribe",
+      you_free_plan: "Free plan",
+      you_enter_data: "Enter the required details",
+      you_name: "Name",
+      you_email: "Email",
+      you_download: "Direct app download link",
+      you_message: "Your full request",
+      you_contact: "Contact",
+      you_signup: "Subscribe",
+      you_new_project: "New project",
+      you_empty_projects: "You have no projects yet. You can create one now",
+      you_open_project: "Open project",
+      you_project_name: "Project name",
+      you_banner: "Choose a project banner from the gallery",
+      you_create: "Create",
+      you_missing: "Project not found",
+      you_saved: "Saved",
+      you_save: "Save",
+      you_preview: "Preview",
+      you_copied: "Code copied",
+      you_copy: "Copy",
+      you_download_btn: "Download",
+      you_share: "Share",
+      you_push_github: "Push to GitHub",
+      you_add: "Add",
+      you_file_name: "File or folder name",
+      you_new_file: "New file",
+      you_new_folder: "New folder",
+      you_upload: "Upload file",
+      you_editor: "Editor",
+      you_no_preview: "Nothing to preview",
+      you_install: "Install",
+      you_open: "Open",
+      you_ad: "Ad",
+      you_repo: "Repository as owner/repo",
+      you_token: "GitHub token",
+      you_push_fail: "Could not push: ",
+      you_pushed: "Pushed to GitHub",
       featured: "Featured",
       top_free_apps: "Top Free Apps",
       productivity: "Productivity",
@@ -2300,8 +2398,8 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     );
     if (!app) {
       if (failKind === "missing" && !ld) return /* @__PURE__ */ React.createElement(React.Fragment, null, topBar, /* @__PURE__ */ React.createElement("div", { className: "p-8 text-center text-muted-foreground" }, t("app_not_found")));
-      if (waited) return /* @__PURE__ */ React.createElement(React.Fragment, null, topBar, /* @__PURE__ */ React.createElement("div", { className: "page-stage page-stage-detail" }, /* @__PURE__ */ React.createElement(NetOffline, { onRetry: () => setNetTry((n) => n + 1) })));
-      return /* @__PURE__ */ React.createElement(React.Fragment, null, topBar, /* @__PURE__ */ React.createElement("div", { className: "page-stage page-stage-detail" }, /* @__PURE__ */ React.createElement(NetSpin, null)));
+      if (waited) return /* @__PURE__ */ React.createElement(React.Fragment, null, topBar, /* @__PURE__ */ React.createElement("div", { className: "page-stage page-stage-detail", dir: _lang === "ar" ? "rtl" : "ltr" }, /* @__PURE__ */ React.createElement(NetOffline, { onRetry: () => setNetTry((n) => n + 1) })));
+      return /* @__PURE__ */ React.createElement(React.Fragment, null, topBar, /* @__PURE__ */ React.createElement("div", { className: "page-stage page-stage-detail", dir: _lang === "ar" ? "rtl" : "ltr" }, /* @__PURE__ */ React.createElement(NetSpin, null)));
     }
     const rating = fmtRating(app.averageUserRating);
     const ratingCount = app.userRatingCount ? `(${Number(app.userRatingCount).toLocaleString()})` : "";
@@ -2672,8 +2770,8 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
   };
   /* APKDroid You section: catalog, store, and P2P chat */
   const STORE_KEY = "apk_store_projects";
-  const storeLoad = () => { try { const v = JSON.parse(localStorage.getItem(STORE_KEY) || "[]"); return Array.isArray(v) ? v : []; } catch (e) { return []; } };
-  const storeSave = (list) => { try { localStorage.setItem(STORE_KEY, JSON.stringify(list)); } catch (e) {} };
+  const storeLoad = () => { const v = getS(STORE_KEY, null); return Array.isArray(v) ? v : []; };
+  const storeSave = (list) => setS(STORE_KEY, list);
   const storeSvg = (d, box, size) => React.createElement("svg", { width: size || 22, height: size || 22, viewBox: box || "0 0 24 24", fill: "currentColor", "aria-hidden": "true" }, React.createElement("path", { d }));
   const SICO = {
     bag: "M19,6h-2c0,-2.76 -2.24,-5 -5,-5S7,3.24 7,6L5,6c-1.1,0 -2,0.9 -2,2v12c0,1.1 0.9,2 2,2h14c1.1,0 2,-0.9 2,-2L21,8c0,-1.1 -0.9,-2 -2,-2zM12,3c1.66,0 3,1.34 3,3L9,6c0,-1.66 1.34,-3 3,-3zM19,20L5,20L5,8h14v12zM12,12c-1.66,0 -3,-1.34 -3,-3L7,9c0,2.76 2.24,5 5,5s5,-2.24 5,-5h-2c0,1.66 -1.34,3 -3,3z",
@@ -2756,7 +2854,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
   };
   const StoreAd = ({ ad }) => React.createElement("a", { className: "promo-ghost store-ad", href: ad.https || "#", target: "_blank", rel: "noopener noreferrer" },
     React.createElement("span", { className: "promo-banner-wrap" }, React.createElement("span", { className: "promo-banner-clip" }, React.createElement("img", { src: "res/ads/icons_ads/" + ad.id + ".png", alt: "", alt: "" })), React.createElement("span", { className: "promo-caption" }, (ad.txt || ad.name || ad.id))),
-    React.createElement("span", { className: "promo-foot" }, React.createElement("img", { className: "promo-icon", src: "res/ads/icons_ads/" + ad.id + ".png", alt: "", alt: "" }), React.createElement("span", { className: "promo-meta" }, React.createElement("span", { className: "promo-name" }, (ad.txt || ad.name || ad.id)), React.createElement("span", { className: "promo-sub" }, "إعلان")), React.createElement("span", { className: "store-open-btn" }, "فتح"))
+    React.createElement("span", { className: "promo-foot" }, React.createElement("img", { className: "promo-icon", src: "res/ads/icons_ads/" + ad.id + ".png", alt: "", alt: "" }), React.createElement("span", { className: "promo-meta" }, React.createElement("span", { className: "promo-name" }, (ad.txt || ad.name || ad.id)), React.createElement("span", { className: "promo-sub" }, t("you_ad"))), React.createElement("span", { className: "store-open-btn" }, t("you_open")))
   );
   
   const b64utf = (value) => {
@@ -2766,9 +2864,9 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     return btoa(bin);
   };
   const storeGithub = async (item) => {
-    const repo = window.prompt("المستودع بصيغة owner/repo");
+    const repo = window.prompt(t("you_repo"));
     if (!repo || repo.indexOf("/") < 0) return;
-    const token = window.prompt("رمز GitHub");
+    const token = window.prompt(t("you_token"));
     if (!token) return;
     const files = item.type === "html" ? [{ name: "index.html", data: item.html || "" }] : (item.files || []).filter((f) => f.kind === "file").map((f) => ({ name: f.path, data: f.content || "" }));
     const headers = { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" };
@@ -2780,9 +2878,9 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       const body = { message: "Update " + f.name + " from APKDroid", content: b64utf(f.data) };
       if (sha) body.sha = sha;
       const put = await fetch(url, { method: "PUT", headers: Object.assign({ "Content-Type": "application/json" }, headers), body: JSON.stringify(body) });
-      if (!put.ok) { window.alert("تعذر الدفع: " + f.name); return; }
+      if (!put.ok) { window.alert(t("you_push_fail") + f.name); return; }
     }
-    window.alert("تم الدفع إلى GitHub");
+    window.alert(t("you_pushed"));
   };
   
   const StoreInstall = ({ route, nav }) => {
@@ -2796,14 +2894,14 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     }, [id]);
     const name = app && (app.name || app.id) || id;
     const openLink = () => { if (app && app.https) window.open(app.https, "_blank", "noopener"); };
-    return React.createElement("div", { className: "page-stage page-stage-detail" },
-      React.createElement("button", { type: "button", className: "store-back", onClick: () => nav("/you") }, "رجوع"),
+    return React.createElement("div", { className: "page-stage page-stage-detail", dir: _lang === "ar" ? "rtl" : "ltr" },
+      React.createElement("button", { type: "button", className: "store-back", onClick: () => nav("/you") }, t("back")),
       React.createElement("div", { className: "bg-detail" },
         React.createElement("div", { className: "bg-detail-header" },
           React.createElement("img", { className: "bg-detail-icon", src: "res/apps/icons_apps/" + id + ".png", alt: "" }),
           React.createElement("div", { className: "bg-detail-info" },
             React.createElement("div", { className: "bg-detail-title-row" }, React.createElement("h1", { className: "bg-detail-name" }, name)),
-            React.createElement("button", { type: "button", className: "bg-btn-install", onClick: openLink }, "تثبيت")
+            React.createElement("button", { type: "button", className: "bg-btn-install", onClick: openLink }, t("you_install"))
           )
         )
       )
@@ -2827,19 +2925,19 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       if ((i + 1) % 3 === 0 && ads.length) blocks.push(React.createElement("div", { key: "ad" + i, className: "store-ad-wrap" }, React.createElement(StoreAd, { ad: ads[Math.floor(i / 3) % ads.length] })));
     });
     if (!rows.length && ads.length) blocks.push(React.createElement("div", { key: "ad0", className: "store-ad-wrap" }, ads.map((ad) => React.createElement(StoreAd, { key: ad.id, ad }))));
-    return React.createElement("div", { className: "store-page" },
+    return React.createElement("div", { className: "store-page", dir: _lang === "ar" ? "rtl" : "ltr" },
       React.createElement("div", { className: "store-top" },
-        React.createElement("button", { type: "button", className: "store-ico", onClick: () => nav("/you-publish"), "aria-label": "نشر تطبيق" }, storeSvg(SICO.cloud, "0 -960 960 960", 26)),
-        React.createElement("input", { className: "store-search", value: q, onChange: (e) => setQ(e.target.value), placeholder: "البحث في متجر Droid", "aria-label": "البحث في متجر Droid" }),
-        React.createElement("button", { type: "button", className: "store-ico", onClick: () => setMenu(true), "aria-label": "القائمة" }, storeSvg(SICO.menu, "0 -960 960 960", 26))
+        React.createElement("button", { type: "button", className: "store-ico", onClick: () => nav("/you-publish"), "aria-label": t("you_publish") }, storeSvg(SICO.cloud, "0 -960 960 960", 26)),
+        React.createElement("input", { className: "store-search", value: q, onChange: (e) => setQ(e.target.value), placeholder: t("you_search"), "aria-label": t("you_search") }),
+        React.createElement("button", { type: "button", className: "store-ico", onClick: () => setMenu(true), "aria-label": t("you_menu") }, storeSvg(SICO.menu, "0 -960 960 960", 26))
       ),
-      query && !shown.length ? React.createElement("p", { className: "store-empty" }, "لا توجد نتائج داخل المتجر") : null,
-      !query && !shown.length ? React.createElement("p", { className: "store-empty" }, "لا توجد تطبيقات في المتجر بعد") : null,
+      query && !shown.length ? React.createElement("p", { className: "store-empty" }, t("you_no_results")) : null,
+      !query && !shown.length ? React.createElement("p", { className: "store-empty" }, t("you_no_apps")) : null,
       blocks,
       menu ? React.createElement("div", { className: "store-mask", onClick: () => setMenu(false) }, React.createElement("aside", { className: "store-drawer", onClick: (e) => e.stopPropagation() },
-        React.createElement("h2", null, "المتجر"),
-        React.createElement("button", { type: "button", onClick: () => nav("/settings") }, storeSvg(SICO.gear, "0 0 24 24", 22), React.createElement("span", null, "إعدادات")),
-        React.createElement("button", { type: "button", onClick: () => nav("/you-projects") }, storeSvg(SICO.devices, "0 0 24 24", 22), React.createElement("span", null, "مشاريعي"))
+        React.createElement("h2", null, t("you_store")),
+        React.createElement("button", { type: "button", onClick: () => nav("/settings") }, storeSvg(SICO.gear, "0 0 24 24", 22), React.createElement("span", null, t("you_settings"))),
+        React.createElement("button", { type: "button", onClick: () => nav("/you-projects") }, storeSvg(SICO.devices, "0 0 24 24", 22), React.createElement("span", null, t("you_my_projects")))
       )) : null
     );
   };
@@ -2848,24 +2946,24 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     const [form, setForm] = useState({ name: "", mail: "", link: "", msg: "" });
     const set = (k) => (e) => setForm((p) => Object.assign({}, p, { [k]: e.target.value }));
     const go = () => {
-      const body = "الاسم: " + form.name + "\nالبريد: " + form.mail + "\nرابط التحميل: " + form.link + "\nالطلب: " + form.msg;
-      if (mode === "free") location.href = "mailto:apkdroidstore30@gmail.com?subject=" + encodeURIComponent("مرحبا اريد رفع تطبيقي على APKDroid ارجو المراجعة.") + "&body=" + encodeURIComponent(body);
+      const body = t("you_name_label") + form.name + "\nالبريد: " + form.mail + "\nرابط التحميل: " + form.link + "\nالطلب: " + form.msg;
+      if (mode === "free") location.href = "mailto:apkdroidstore30@gmail.com?subject=" + encodeURIComponent(t("you_mail_body")) + "&body=" + encodeURIComponent(body);
       else window.open("https://t.me/apkdroidstore", "_blank", "noopener");
     };
-    return React.createElement("div", { className: "pub-page" },
-      React.createElement("button", { type: "button", className: "bg-detail-back-btn", onClick: () => nav("/you") }, "رجوع"),
-      React.createElement("div", { className: "pub-hero" }, storeSvg(SICO.up, "0 -960 960 960", 72), React.createElement("h1", null, "يمكنك الآن نشر تطبيقك عبر شراء حساب مطور")),
+    return React.createElement("div", { className: "pub-page", dir: _lang === "ar" ? "rtl" : "ltr" },
+      React.createElement("button", { type: "button", className: "bg-detail-back-btn", onClick: () => nav("/you") }, t("back")),
+      React.createElement("div", { className: "pub-hero" }, storeSvg(SICO.up, "0 -960 960 960", 72), React.createElement("h1", null, t("you_publish_title"))),
       React.createElement("div", { className: "pub-actions" },
-        React.createElement("button", { type: "button", onClick: () => setMode("sub") }, "أشتراك"),
-        React.createElement("button", { type: "button", onClick: () => setMode("free") }, "الخطة المجانية")
+        React.createElement("button", { type: "button", onClick: () => setMode("sub") }, t("you_subscribe")),
+        React.createElement("button", { type: "button", onClick: () => setMode("free") }, t("you_free_plan"))
       ),
       mode ? React.createElement("div", { className: "pub-mask", onClick: () => setMode("") }, React.createElement("div", { className: "pub-modal", onClick: (e) => e.stopPropagation() },
-        React.createElement("h2", null, "ادخل بياناتك المطلوبة"),
-        React.createElement("input", { value: form.name, onChange: set("name"), placeholder: "الاسم" }),
-        React.createElement("input", { value: form.mail, onChange: set("mail"), placeholder: "البريد" }),
-        React.createElement("input", { value: form.link, onChange: set("link"), placeholder: "رابط تحميل التطبيق مباشر" }),
-        React.createElement("textarea", { value: form.msg, onChange: set("msg"), placeholder: "طلبك الكامل في رسالة" }),
-        React.createElement("button", { type: "button", className: "pub-go", onClick: go }, mode === "free" ? "مراسلة" : "تسجيل اشتراك")
+        React.createElement("h2", null, t("you_enter_data")),
+        React.createElement("input", { value: form.name, onChange: set("name"), placeholder: t("you_name") }),
+        React.createElement("input", { value: form.mail, onChange: set("mail"), placeholder: t("you_email") }),
+        React.createElement("input", { value: form.link, onChange: set("link"), placeholder: t("you_download") }),
+        React.createElement("textarea", { value: form.msg, onChange: set("msg"), placeholder: t("you_message") }),
+        React.createElement("button", { type: "button", className: "pub-go", onClick: go }, mode === "free" ? t("you_contact") : t("you_signup"))
       )) : null
     );
   };
@@ -2877,32 +2975,32 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     const [banner, setBanner] = useState("");
     const create = () => {
       const id = "p" + Date.now();
-      const item = { id, name: name.trim() || "مشروع جديد", type, banner, html: "", files: type === "web" ? [{ path: "index.html", kind: "file", content: "" }] : [] };
+      const item = { id, name: name.trim() || t("you_new_project"), type, banner, html: "", files: type === "web" ? [{ path: "index.html", kind: "file", content: "" }] : [] };
       const next = [item].concat(items);
       storeSave(next); setItems(next); setOpen(false); setName(""); setBanner("");
     };
-    return React.createElement("div", { className: "proj-page" },
-      React.createElement("button", { type: "button", className: "bg-detail-back-btn", onClick: () => nav("/you") }, "رجوع"),
-      React.createElement("h1", null, "مشاريعي"),
+    return React.createElement("div", { className: "proj-page", dir: _lang === "ar" ? "rtl" : "ltr" },
+      React.createElement("button", { type: "button", className: "bg-detail-back-btn", onClick: () => nav("/you") }, t("back")),
+      React.createElement("h1", null, t("you_my_projects")),
       !items.length ? React.createElement("div", { className: "proj-empty" },
         React.createElement("img", { src: "res/apps/empty-projects.svg", alt: "" }),
-        React.createElement("p", null, "يبدو انه لا يوجد لديك اي مشروع يمكنك إنشاء مشروعك الآن"),
-        React.createElement("button", { type: "button", className: "proj-plus", onClick: () => setOpen(true), "aria-label": "مشروع جديد" }, storeSvg(SICO.plus, "0 -960 960 960", 28))
+        React.createElement("p", null, t("you_empty_projects")),
+        React.createElement("button", { type: "button", className: "proj-plus", onClick: () => setOpen(true), "aria-label": t("you_new_project") }, storeSvg(SICO.plus, "0 -960 960 960", 28))
       ) : React.createElement("div", { className: "proj-scroller" }, items.map((p) => React.createElement("article", { key: p.id, className: "proj-card" },
         p.banner ? React.createElement("img", { src: p.banner, alt: "" }) : React.createElement("span", { className: "proj-fallback" }, storeSvg(SICO.html, "0 -960 960 960", 64)),
         React.createElement("strong", null, p.name),
-        React.createElement("button", { type: "button", className: "proj-open", onClick: () => nav("/you-project/" + p.id), "aria-label": "فتح المشروع" }, storeSvg(SICO.open, "0 -960 960 960", 22))
+        React.createElement("button", { type: "button", className: "proj-open", onClick: () => nav("/you-project/" + p.id), "aria-label": t("you_open_project") }, storeSvg(SICO.open, "0 -960 960 960", 22))
       ))),
-      items.length ? React.createElement("button", { type: "button", className: "proj-plus float", onClick: () => setOpen(true), "aria-label": "مشروع جديد" }, storeSvg(SICO.plus, "0 -960 960 960", 28)) : null,
+      items.length ? React.createElement("button", { type: "button", className: "proj-plus float", onClick: () => setOpen(true), "aria-label": t("you_new_project") }, storeSvg(SICO.plus, "0 -960 960 960", 28)) : null,
       open ? React.createElement("div", { className: "pub-mask", onClick: () => setOpen(false) }, React.createElement("div", { className: "pub-modal", onClick: (e) => e.stopPropagation() },
-        React.createElement("h2", null, "مشروع جديد"),
-        React.createElement("input", { value: name, onChange: (e) => setName(e.target.value), placeholder: "اسم المشروع" }),
-        React.createElement("label", { className: "proj-file" }, "اختر صورة بانر المشروع من المعرض", React.createElement("input", { type: "file", accept: "image/*", hidden: true, onChange: (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => setBanner(String(r.result || "")); r.readAsDataURL(f); } })),
+        React.createElement("h2", null, t("you_new_project")),
+        React.createElement("input", { value: name, onChange: (e) => setName(e.target.value), placeholder: t("you_project_name") }),
+        React.createElement("label", { className: "proj-file" }, t("you_banner"), React.createElement("input", { type: "file", accept: "image/*", hidden: true, onChange: (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => setBanner(String(r.result || "")); r.readAsDataURL(f); } })),
         React.createElement("div", { className: "proj-types" },
           React.createElement("button", { type: "button", className: type === "html" ? "on" : "", onClick: () => setType("html") }, "html"),
           React.createElement("button", { type: "button", className: type === "web" ? "on" : "", onClick: () => setType("web") }, "web app")
         ),
-        React.createElement("button", { type: "button", className: "pub-go", onClick: create }, "إنشاء")
+        React.createElement("button", { type: "button", className: "pub-go", onClick: create }, t("you_create"))
       )) : null
     );
   };
@@ -2915,8 +3013,8 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     const [add, setAdd] = useState(false);
     const [draft, setDraft] = useState("");
     useEffect(() => { const found = storeLoad().find((x) => x.id === id) || null; setItem(found); if (found && found.type === "web") setFile((found.files[0] && found.files[0].path) || "index.html"); }, [id]);
-    if (!item) return React.createElement("div", { className: "proj-page" }, React.createElement("p", null, "المشروع غير موجود"));
-    const save = (next) => { const list = storeLoad().map((x) => x.id === next.id ? next : x); storeSave(list); setItem(next); setNote("تم الحفظ"); };
+    if (!item) return React.createElement("div", { className: "proj-page", dir: _lang === "ar" ? "rtl" : "ltr" }, React.createElement("p", null, t("you_missing")));
+    const save = (next) => { const list = storeLoad().map((x) => x.id === next.id ? next : x); storeSave(list); setItem(next); setNote(t("you_saved")); };
     const content = item.type === "html" ? item.html : ((item.files || []).find((f) => f.path === file) || { content: "" }).content;
     const hasText = item.type === "html" ? !!String(item.html || "").trim() : (item.files || []).some((f) => f.kind === "file" && String(f.content || "").trim());
     const setContent = (value) => {
@@ -2937,32 +3035,32 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       if (!previewRoute && hasText) return React.createElement(ProjectPreview, { item, html: previewHtml, nav, onEdit: () => { sessionStorage.setItem("apk_proj_edit", id); nav("/you-project/" + id + "/edit"); } });
     }
     if (route.indexOf("/preview") >= 0) return React.createElement(ProjectPreview, { item, html: previewHtml, nav, onEdit: () => nav("/you-project/" + id + "/edit") });
-    return React.createElement("div", { className: "ed-page" },
+    return React.createElement("div", { className: "ed-page", dir: _lang === "ar" ? "rtl" : "ltr" },
       React.createElement("header", { className: "ed-bar" },
-        React.createElement("button", { type: "button", onClick: () => nav("/you-projects"), "aria-label": "رجوع" }, "›"),
-        React.createElement("button", { type: "button", onClick: () => save(item), "aria-label": "حفظ" }, storeSvg(SICO.save, "0 0 24 24", 22)),
-        React.createElement("button", { type: "button", onClick: () => nav("/you-project/" + id + "/preview"), "aria-label": "معاينة" }, storeSvg(SICO.play, "0 0 32 32", 24)),
-        React.createElement("button", { type: "button", onClick: () => { navigator.clipboard && navigator.clipboard.writeText(content || ""); setNote("تم نسخ الكود"); }, "aria-label": "نسخ" }, storeSvg(SICO.copy, "0 0 24 24", 22)),
-        React.createElement("button", { type: "button", onClick: doZip, "aria-label": "تنزيل" }, storeSvg(SICO.down, "0 0 18 18", 22)),
-        React.createElement("button", { type: "button", onClick: doShare, "aria-label": "مشاركة" }, storeSvg(SICO.share, "0 -960 960 960", 22)),
-      React.createElement("button", { type: "button", className: "ed-gh", onClick: () => storeGithub(item) }, "ادفع على GitHub")
+        React.createElement("button", { type: "button", onClick: () => nav("/you-projects"), "aria-label": t("back") }, "›"),
+        React.createElement("button", { type: "button", onClick: () => save(item), "aria-label": t("you_save") }, storeSvg(SICO.save, "0 0 24 24", 22)),
+        React.createElement("button", { type: "button", onClick: () => nav("/you-project/" + id + "/preview"), "aria-label": t("you_preview") }, storeSvg(SICO.play, "0 0 32 32", 24)),
+        React.createElement("button", { type: "button", onClick: () => { navigator.clipboard && navigator.clipboard.writeText(content || ""); setNote(t("you_copied")); }, "aria-label": t("you_copy") }, storeSvg(SICO.copy, "0 0 24 24", 22)),
+        React.createElement("button", { type: "button", onClick: doZip, "aria-label": t("you_download_btn") }, storeSvg(SICO.down, "0 0 18 18", 22)),
+        React.createElement("button", { type: "button", onClick: doShare, "aria-label": t("you_share") }, storeSvg(SICO.share, "0 -960 960 960", 22)),
+      React.createElement("button", { type: "button", className: "ed-gh", onClick: () => storeGithub(item) }, t("you_push_github"))
       ),
       item.type === "web" ? React.createElement("div", { className: "ed-files" }, (item.files || []).map((f) => React.createElement("button", { key: f.path, type: "button", className: f.path === file ? "on" : "", onClick: () => f.kind === "file" && setFile(f.path) }, (f.kind === "folder" ? "📁 " : "📄 ") + f.path))) : null,
       React.createElement("textarea", { className: "ed-code", value: content, spellCheck: false, onChange: (e) => setContent(e.target.value), onKeyDown: (e) => { if (e.key === "Tab") { e.preventDefault(); const el = e.target; const s = el.selectionStart; const v = content.slice(0, s) + "  " + content.slice(el.selectionEnd); setContent(v); } } }),
       note ? React.createElement("p", { className: "ed-note" }, note) : null,
       item.type === "web" ? React.createElement("button", { type: "button", className: "proj-plus float", onClick: () => setAdd(true) }, storeSvg(SICO.plus, "0 -960 960 960", 28)) : null,
       add ? React.createElement("div", { className: "pub-mask", onClick: () => setAdd(false) }, React.createElement("div", { className: "pub-modal", onClick: (e) => e.stopPropagation() },
-        React.createElement("h2", null, "إضافة"),
-        React.createElement("input", { value: draft, onChange: (e) => setDraft(e.target.value), placeholder: "اسم الملف أو المجلد" }),
-        React.createElement("button", { type: "button", onClick: () => { if (!draft.trim()) return; save(Object.assign({}, item, { files: (item.files || []).concat([{ path: draft.trim(), kind: "file", content: "" }]) })); setAdd(false); setDraft(""); } }, "إنشاء ملف"),
-        React.createElement("button", { type: "button", onClick: () => { if (!draft.trim()) return; save(Object.assign({}, item, { files: (item.files || []).concat([{ path: draft.trim(), kind: "folder", content: "" }]) })); setAdd(false); setDraft(""); } }, "إنشاء مجلد"),
-        React.createElement("label", { className: "proj-file" }, "رفع ملف", React.createElement("input", { type: "file", hidden: true, onChange: (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { save(Object.assign({}, item, { files: (item.files || []).concat([{ path: f.name, kind: "file", content: String(r.result || "") }]) })); setAdd(false); }; r.readAsText(f); } }))
+        React.createElement("h2", null, t("you_add")),
+        React.createElement("input", { value: draft, onChange: (e) => setDraft(e.target.value), placeholder: t("you_file_name") }),
+        React.createElement("button", { type: "button", onClick: () => { if (!draft.trim()) return; save(Object.assign({}, item, { files: (item.files || []).concat([{ path: draft.trim(), kind: "file", content: "" }]) })); setAdd(false); setDraft(""); } }, t("you_new_file")),
+        React.createElement("button", { type: "button", onClick: () => { if (!draft.trim()) return; save(Object.assign({}, item, { files: (item.files || []).concat([{ path: draft.trim(), kind: "folder", content: "" }]) })); setAdd(false); setDraft(""); } }, t("you_new_folder")),
+        React.createElement("label", { className: "proj-file" }, t("you_upload"), React.createElement("input", { type: "file", hidden: true, onChange: (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { save(Object.assign({}, item, { files: (item.files || []).concat([{ path: f.name, kind: "file", content: String(r.result || "") }]) })); setAdd(false); }; r.readAsText(f); } }))
       )) : null
     );
   };
-  const ProjectPreview = ({ item, html, nav, onEdit }) => React.createElement("div", { className: "ed-page" },
-    React.createElement("header", { className: "ed-bar" }, React.createElement("button", { type: "button", onClick: () => nav("/you-projects") }, "›"), React.createElement("strong", null, item.name), React.createElement("button", { type: "button", onClick: onEdit }, "المحرر")),
-    React.createElement("iframe", { className: "ed-preview", sandbox: "allow-scripts allow-forms", srcDoc: html || "<p style='font-family:sans-serif'>لا يوجد محتوى للمعاينة</p>" })
+  const ProjectPreview = ({ item, html, nav, onEdit }) => React.createElement("div", { className: "ed-page", dir: _lang === "ar" ? "rtl" : "ltr" },
+    React.createElement("header", { className: "ed-bar" }, React.createElement("button", { type: "button", onClick: () => nav("/you-projects") }, "›"), React.createElement("strong", null, item.name), React.createElement("button", { type: "button", onClick: onEdit }, t("you_editor"))),
+    React.createElement("iframe", { className: "ed-preview", sandbox: "allow-scripts allow-forms", srcDoc: html || ("<p style='font-family:sans-serif'>" + t("you_no_preview") + "</p>") })
   );
   const ProjectGate = ({ route, nav }) => {
     const id = decodeURIComponent((route.split("/")[2] || "").split("?")[0]);
