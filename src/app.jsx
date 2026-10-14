@@ -2379,20 +2379,19 @@ const Detail=({id,nav,favs,toggle,selStore,expMode,setDetailApp,autoInstall,onTo
         <div className="bg-share-sheet">
           <div className="bg-share-handle"></div>
           <div className="bg-share-title">{t('share_via')}</div>
-          <div className="bg-share-options">
           {[
+            {id:'copy',k:'share_copy',cls:'copy',icon:'copy'},
             {id:'whatsapp',k:'share_wa',cls:'whatsapp',icon:'whatsapp'},
             {id:'telegram',k:'share_tg',cls:'telegram',icon:'telegram'},
             {id:'instagram',k:'share_ig',cls:'instagram',icon:'instagram'},
             {id:'facebook',k:'share_fb',cls:'facebook',icon:'facebook'},
-            {id:'copy',k:'share_copy',cls:'copy',icon:'copy'},
+            {id:'github',k:'share_gh',cls:'github',icon:'github'},
           ].map(opt=>(
-            <button type="button" className="bg-share-option" key={opt.id} onClick={()=>doShareAction(opt.id)}>
+            <div className="bg-share-option" key={opt.id} onClick={()=>doShareAction(opt.id)}>
               <div className={`bg-share-option-icon ${opt.cls}`}><BrandIcon name={opt.icon}/></div>
-              <span className="bg-share-option-label">{t(opt.k)}</span>
-            </button>
+              <div className="bg-share-option-label">{t(opt.k)}</div>
+            </div>
           ))}
-        </div>
         </div>
       </div>
 
