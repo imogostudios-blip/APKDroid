@@ -164,7 +164,7 @@
       nav_apps: "\u062A\u0637\u0628\u064A\u0642\u0627\u062A",
       nav_search: "\u0628\u062D\u062B",
       nav_library: "\u0645\u0643\u062A\u0628\u0629",
-      nav_you: "\u0623\u0641\u0644\u0627\u0645",
+      nav_movies: "\u0627\u0641\u0644\u0627\u0645",
       you_publish: "\u0646\u0634\u0631 \u062A\u0637\u0628\u064A\u0642",
       you_search: "\u0627\u0644\u0628\u062D\u062B \u0641\u064A \u0645\u062A\u062C\u0631 Droid",
       you_menu: "\u0627\u0644\u0642\u0627\u0626\u0645\u0629",
@@ -457,7 +457,7 @@
       nav_apps: "Apps",
       nav_search: "Search",
       nav_library: "Library",
-      nav_you: "Movies",
+      nav_movies: "Movies",
       you_publish: "Publish app",
       you_search: "Search Droid Store",
       you_menu: "Menu",
@@ -1084,7 +1084,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       { p: "/", k: "nav_apps" },
       { p: "/games", k: "nav_games" },
       { p: "/favorites", k: "nav_library" },
-      { p: "/you", k: "nav_you" },
+      { p: "/movies", k: "nav_movies" },
       { p: "/search", k: "nav_search" }
     ].map((it) => /* @__PURE__ */ React.createElement("button", { key: it.p, type: "button", className: "acc-pick-item", onClick: () => {
       setPagesOpen(false);
@@ -1103,19 +1103,14 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     if (kind === "heart") {
       return on ? /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 0 24 24" }, /* @__PURE__ */ React.createElement("path", { d: "M3,5C3,2.791 4.791,1 7,1H17C19.209,1 21,2.791 21,5V20C21,22.472 18.178,23.883 16.2,22.4L12,19.25L7.8,22.4C5.822,23.883 3,22.472 3,20V5Z", fill: "currentColor" })) : /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 0 24 24" }, /* @__PURE__ */ React.createElement("path", { d: "M11.539,17.112C11.876,16.937 12.288,16.967 12.6,17.2L17.4,20.8C18.06,21.294 19,20.824 19,20V5C19,3.895 18.105,3 17,3H7C5.895,3 5,3.895 5,5V20C5,20.824 5.94,21.294 6.6,20.8L11.4,17.2L11.539,17.112ZM21,20C21,22.472 18.178,23.883 16.2,22.4L12,19.249L7.8,22.4C5.822,23.883 3,22.472 3,20V5C3,2.791 4.791,1 7,1H17C19.209,1 21,2.791 21,5V20Z", fill: "currentColor" }));
     }
-    if (kind === "you") {
-      return on ? /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 -960 960 960" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H260Z" })) : /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 -960 960 960" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H260Zm0-80h480q42 0 71-29t29-71q0-42-29-71t-71-29h-60v-80q0-83-58.5-141.5T480-720q-83 0-141.5 58.5T280-520h-20q-58 0-99 41t-41 99q0 58 41 99t99 41Zm220-240Z" }));
-    }
     if (kind === "movies") {
-      const dOn = "M160,800Q127,800 103.5,776.5Q80,753 80,720L80,240Q80,207 103.5,183.5Q127,160 160,160L640,160Q673,160 696.5,183.5Q720,207 720,240L720,420L846,294Q856,284 868,289Q880,294 880,308L880,652Q880,666 868,671Q856,676 846,666L720,540L720,720Q720,753 696.5,776.5Q673,800 640,800L160,800Z";
-      const dOff = "M160,800q-33,0 -56.5,-23.5T80,720v-480q0,-33 23.5,-56.5T160,160h480q33,0 56.5,23.5T720,240v180l126,-126q10,-10 22,-5t12,19v344q0,14 -12,19t-22,-5L720,540v180q0,33 -23.5,56.5T640,800L160,800ZM160,720h480v-480L160,240v480ZM160,720v-480,480Z";
-      return /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 0 960 960", width: "24", height: "24" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: on ? dOn : dOff }));
+      return on ? /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 0 960 960" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M160,800Q127,800 103.5,776.5Q80,753 80,720L80,240Q80,207 103.5,183.5Q127,160 160,160L640,160Q673,160 696.5,183.5Q720,207 720,240L720,420L846,294Q856,284 868,289Q880,294 880,308L880,652Q880,666 868,671Q856,676 846,666L720,540L720,720Q720,753 696.5,776.5Q673,800 640,800L160,800Z" })) : /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 0 960 960" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M160,800q-33,0 -56.5,-23.5T80,720v-480q0,-33 23.5,-56.5T160,160h480q33,0 56.5,23.5T720,240v180l126,-126q10,-10 22,-5t12,19v344q0,14 -12,19t-22,-5L720,540v180q0,33 -23.5,56.5T640,800L160,800ZM160,720h480v-480L160,240v480ZM160,720v-480,480Z" }));
     }
     return null;
   };
   const BottomNav = ({ route, nav }) => {
     const items = [
-      { k: "nav_you", p: "/movies", i: "movies" },
+      { k: "nav_movies", p: "/movies", i: "movies" },
       { k: "nav_library", p: "/favorites", i: "heart" },
       { k: "nav_search", p: "/search", i: "search" },
       { k: "nav_apps", p: "/", i: "home", root: true },
@@ -2529,7 +2524,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     } }, /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", width: "22", height: "22", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" }))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "peek-x", "aria-label": "close", onClick: (e) => {
       e.stopPropagation();
       closePeek();
-    } }, /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", width: "22", height: "22", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" }))), /* @__PURE__ */ React.createElement("img", { className: `peek-img ${peekGo ? "go" : ""}`, style: peekFrom ? { "--l": peekFrom.l + "px", "--t": peekFrom.t + "px", "--w": peekFrom.w + "px", "--h": peekFrom.h + "px" } : void 0, src: peekSrc || app.artworkUrl512 || app.artworkUrl100, alt: "", onClick: (e) => e.stopPropagation() }), /* @__PURE__ */ React.createElement("div", { className: `peek-meta ${peekBare ? "hide" : ""}`, onClick: (e) => e.stopPropagation() }, /* @__PURE__ */ React.createElement("h2", null, app.trackName), /* @__PURE__ */ React.createElement("p", null, app.artistName), /* @__PURE__ */ React.createElement("p", { className: "peek-sub" }, "\u2605 ", rating, " \xB7 ", fmtSize(app.fileSizeBytes), " \xB7 ", app.primaryGenreName || ""), /* @__PURE__ */ React.createElement("button", { type: "button", className: "bg-btn-install", onClick: () => setReqOpen(true) }, t("install")))), isGreenPromo ? null : topBar, /* @__PURE__ */ React.createElement("div", { className: "bg-detail", style: isGreenPromo ? { position: "relative" } : {} }, isGreenPromo && /* @__PURE__ */ React.createElement("div", { className: "green-float-btns" }, /* @__PURE__ */ React.createElement("div", { style: { position: "relative" } }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setGreenMenuOpen(o => !o), "aria-label": t("more_options") }, /* @__PURE__ */ React.createElement(Icon, { name: "dots", className: "w-5 h-5" })), greenMenuOpen && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "dt-scrim", onClick: () => setGreenMenuOpen(false) }), /* @__PURE__ */ React.createElement("div", { className: "dt-menu", role: "menu", style: { position: "absolute", top: "100%", right: 0, marginTop: 8 } }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "dt-item", onClick: () => { setGreenMenuOpen(false); setShareOpen(true); } }, /* @__PURE__ */ React.createElement(BrandIcon, { name: "share" }), /* @__PURE__ */ React.createElement("span", null, t("dt_share"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "dt-item", onClick: () => { setGreenMenuOpen(false); if (app) toggle(app); } }, /* @__PURE__ */ React.createElement(Icon, { name: isF ? "bookmarkFill" : "bookmark", className: "w-5 h-5" }), /* @__PURE__ */ React.createElement("span", null, isF ? t("dt_unsave") : t("dt_save"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "dt-item", onClick: () => { setGreenMenuOpen(false); openInOtherStore(); } }, /* @__PURE__ */ React.createElement(Icon, { name: "external", className: "w-5 h-5" }), /* @__PURE__ */ React.createElement("span", null, t("dt_open_in"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "dt-item", onClick: () => { setGreenMenuOpen(false); onToggleTheme && onToggleTheme(); } }, /* @__PURE__ */ React.createElement(Icon, { name: isDark ? "sun" : "moon", className: "w-5 h-5" }), /* @__PURE__ */ React.createElement("span", null, t("dt_theme"))) )))), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: goBack, "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" }))), promoShot2 && /* @__PURE__ */ React.createElement("div", { className: "bg-exp-hero" }, /* @__PURE__ */ React.createElement("img", { className: "bg-exp-img", src: promoShot2, alt: "", loading: "eager", onClick: (e) => openPeek(e, promoShot2), style: { cursor: "pointer" } }), /* @__PURE__ */ React.createElement("div", { className: "bg-exp-grad" })), /* @__PURE__ */ React.createElement("div", { className: promoShot2 ? "bg-exp-content" : "" }, /* @__PURE__ */ React.createElement("div", { className: "bg-detail-header" }, /* @__PURE__ */ React.createElement("div", { className: "bg-detail-info" }, /* @__PURE__ */ React.createElement("div", { className: "bg-detail-title-row" }, /* @__PURE__ */ React.createElement("h1", { className: "bg-detail-name" }, app.trackName)), dlView.ring && /* @__PURE__ */ React.createElement("div", { className: `dl-status-badge ${dlView.phase === "spin" ? "wait" : ""}` }, dlView.phase === "spin" ? t("dl_fetch_badge") : t("dl_run_badge")), (dlView.phase === "download" || dlView.phase === "postspin") && /* @__PURE__ */ React.createElement("div", { className: "dl-name-pct", "aria-live": "polite" }, Math.round((dlView.pct || 0) * 100), "%"), /* @__PURE__ */ React.createElement("button", { className: "bg-detail-dev", onClick: () => nav(`/search?q=${encodeURIComponent(app.artistName || "")}`) }, app.artistName), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-meta" }, /* @__PURE__ */ React.createElement("span", null, "\u2605 ", rating, " ", ratingCount), /* @__PURE__ */ React.createElement("span", null, app.contentAdvisoryRating || "\u2014"), /* @__PURE__ */ React.createElement("span", null, fmtSize(app.fileSizeBytes)), /* @__PURE__ */ React.createElement("span", null, app.primaryGenreName || ""))), /* @__PURE__ */ React.createElement("div", { className: `dl-icon-wrap ${dlView.ring ? "active" : ""}` }, dlView.ring && /* @__PURE__ */ React.createElement("svg", { className: "dl-ring", viewBox: "0 0 100 100", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("circle", { className: "dl-ring-track", cx: "50", cy: "50", r: "45" }), dlView.phase === "spin" ? /* @__PURE__ */ React.createElement("g", { className: "dl-spin-g" }, /* @__PURE__ */ React.createElement("circle", { className: "dl-ring-spin", cx: "50", cy: "50", r: "45" })) : /* @__PURE__ */ React.createElement(
+    } }, /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", width: "22", height: "22", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" }))), /* @__PURE__ */ React.createElement("img", { className: `peek-img ${peekGo ? "go" : ""}`, style: peekFrom ? { "--l": peekFrom.l + "px", "--t": peekFrom.t + "px", "--w": peekFrom.w + "px", "--h": peekFrom.h + "px" } : void 0, src: peekSrc || app.artworkUrl512 || app.artworkUrl100, alt: "", onClick: (e) => e.stopPropagation() }), /* @__PURE__ */ React.createElement("div", { className: `peek-meta ${peekBare ? "hide" : ""}`, onClick: (e) => e.stopPropagation() }, /* @__PURE__ */ React.createElement("h2", null, app.trackName), /* @__PURE__ */ React.createElement("p", null, app.artistName), /* @__PURE__ */ React.createElement("p", { className: "peek-sub" }, "\u2605 ", rating, " \xB7 ", fmtSize(app.fileSizeBytes), " \xB7 ", app.primaryGenreName || ""), /* @__PURE__ */ React.createElement("button", { type: "button", className: "bg-btn-install", onClick: () => setReqOpen(true) }, t("install")))), isGreenPromo ? null : topBar, /* @__PURE__ */ React.createElement("div", { className: "bg-detail", style: isGreenPromo ? { position: "relative" } : {} }, isGreenPromo && /* @__PURE__ */ React.createElement("div", { className: "green-float-btns" }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: goBack, "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" })), /* @__PURE__ */ React.createElement("div", { style: { position: "relative" } }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setGreenMenuOpen(o => !o), "aria-label": t("more_options") }, /* @__PURE__ */ React.createElement(Icon, { name: "dots", className: "w-5 h-5" })), greenMenuOpen && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "dt-scrim", onClick: () => setGreenMenuOpen(false) }), /* @__PURE__ */ React.createElement("div", { className: "dt-menu", role: "menu", style: { position: "fixed", bottom: 0, left: 0, right: 0, top: "auto", margin: 0, borderRadius: "20px 20px 0 0", maxHeight: "70vh", overflowY: "auto", zIndex: 70, width: "100%" } }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "dt-item", onClick: () => { setGreenMenuOpen(false); setShareOpen(true); } }, /* @__PURE__ */ React.createElement(BrandIcon, { name: "share" }), /* @__PURE__ */ React.createElement("span", null, t("dt_share"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "dt-item", onClick: () => { setGreenMenuOpen(false); if (app) toggle(app); } }, /* @__PURE__ */ React.createElement(Icon, { name: isF ? "bookmarkFill" : "bookmark", className: "w-5 h-5" }), /* @__PURE__ */ React.createElement("span", null, isF ? t("dt_unsave") : t("dt_save"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "dt-item", onClick: () => { setGreenMenuOpen(false); openInOtherStore(); } }, /* @__PURE__ */ React.createElement(Icon, { name: "external", className: "w-5 h-5" }), /* @__PURE__ */ React.createElement("span", null, t("dt_open_in"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "dt-item", onClick: () => { setGreenMenuOpen(false); onToggleTheme && onToggleTheme(); } }, /* @__PURE__ */ React.createElement(Icon, { name: isDark ? "sun" : "moon", className: "w-5 h-5" }), /* @__PURE__ */ React.createElement("span", null, t("dt_theme"))) )))), promoShot2 && /* @__PURE__ */ React.createElement("div", { className: "bg-exp-hero" }, /* @__PURE__ */ React.createElement("img", { className: "bg-exp-img", src: promoShot2, alt: "", loading: "eager", onClick: (e) => openPeek(e, promoShot2), style: { cursor: "pointer" } }), /* @__PURE__ */ React.createElement("div", { className: "bg-exp-grad" })), /* @__PURE__ */ React.createElement("div", { className: promoShot2 ? "bg-exp-content" : "" }, /* @__PURE__ */ React.createElement("div", { className: "bg-detail-header" }, /* @__PURE__ */ React.createElement("div", { className: "bg-detail-info" }, /* @__PURE__ */ React.createElement("div", { className: "bg-detail-title-row" }, /* @__PURE__ */ React.createElement("h1", { className: "bg-detail-name" }, app.trackName)), dlView.ring && /* @__PURE__ */ React.createElement("div", { className: `dl-status-badge ${dlView.phase === "spin" ? "wait" : ""}` }, dlView.phase === "spin" ? t("dl_fetch_badge") : t("dl_run_badge")), (dlView.phase === "download" || dlView.phase === "postspin") && /* @__PURE__ */ React.createElement("div", { className: "dl-name-pct", "aria-live": "polite" }, Math.round((dlView.pct || 0) * 100), "%"), /* @__PURE__ */ React.createElement("button", { className: "bg-detail-dev", onClick: () => nav(`/search?q=${encodeURIComponent(app.artistName || "")}`) }, app.artistName), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-meta" }, /* @__PURE__ */ React.createElement("span", null, "\u2605 ", rating, " ", ratingCount), /* @__PURE__ */ React.createElement("span", null, app.contentAdvisoryRating || "\u2014"), /* @__PURE__ */ React.createElement("span", null, fmtSize(app.fileSizeBytes)), /* @__PURE__ */ React.createElement("span", null, app.primaryGenreName || ""))), /* @__PURE__ */ React.createElement("div", { className: `dl-icon-wrap ${dlView.ring ? "active" : ""}` }, dlView.ring && /* @__PURE__ */ React.createElement("svg", { className: "dl-ring", viewBox: "0 0 100 100", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("circle", { className: "dl-ring-track", cx: "50", cy: "50", r: "45" }), dlView.phase === "spin" ? /* @__PURE__ */ React.createElement("g", { className: "dl-spin-g" }, /* @__PURE__ */ React.createElement("circle", { className: "dl-ring-spin", cx: "50", cy: "50", r: "45" })) : /* @__PURE__ */ React.createElement(
       "circle",
       {
         className: "dl-ring-prog",
@@ -2592,81 +2587,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       lbNext();
     }, "aria-label": "Next" }, "\u203A")), /* @__PURE__ */ React.createElement("img", { className: "bg-lightbox-img", src: shots[lbIdx], alt: "", onClick: (e) => e.stopPropagation(), draggable: false }), /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox-counter" }, lbIdx + 1, " / ", shots.length)), toastMsg && /* @__PURE__ */ React.createElement("div", { className: "bg-toast show" }, toastMsg));
   };
-  
-  const parseMovies = (text) => {
-    const movies = [];
-    const re = /<\/m(\d+)>\s*<\/name=([^<]*)>\s*<\/url=([^<]*)>\s*<\/end>/g;
-    let m;
-    while ((m = re.exec(text))) {
-      movies.push({ id: "m" + m[1], num: m[1], name: (m[2] || "").trim(), url: (m[3] || "").trim() });
-    }
-    return movies;
-  };
-  const ytId = (url) => {
-    if (!url) return "";
-    const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-    return m ? m[1] : "";
-  };
-  const MoviesPage = ({ nav }) => {
-    const [list, setList] = useState([]);
-    const [q, setQ] = useState("");
-    useEffect(() => {
-      fetch("res/movies/movies.json").then(r => r.text()).then(t => setList(parseMovies(t))).catch(() => setList([]));
-    }, []);
-    const filtered = list.filter(m => !q || (m.name || "").toLowerCase().includes(q.toLowerCase()));
-    return /* @__PURE__ */ React.createElement("div", { className: "movies-page", dir: _lang === "ar" ? "rtl" : "ltr" },
-      /* @__PURE__ */ React.createElement("div", { className: "movies-search-wrap" },
-        /* @__PURE__ */ React.createElement("div", { className: "movies-search-bar" },
-          /* @__PURE__ */ React.createElement("svg", { width: "22", height: "22", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2" }, /* @__PURE__ */ React.createElement("circle", { cx: "11", cy: "11", r: "8" }), /* @__PURE__ */ React.createElement("path", { d: "m21 21-4.3-4.3" })),
-          /* @__PURE__ */ React.createElement("input", { type: "text", placeholder: _lang === "ar" ? "ابحث عن فيلم..." : "Search movies...", value: q, onChange: e => setQ(e.target.value), className: "movies-search-input" })
-        )
-      ),
-      /* @__PURE__ */ React.createElement("div", { className: "movies-grid" },
-        filtered.map(m => /* @__PURE__ */ React.createElement("button", { key: m.id, type: "button", className: "movie-card", onClick: () => nav("/movie/" + m.id) },
-          /* @__PURE__ */ React.createElement("div", { className: "movie-thumb" },
-            /* @__PURE__ */ React.createElement("img", { src: "res/movies/movies_photos/" + m.id + ".jpg", alt: m.name, onError: (e) => { e.target.src = "res/movies/movies_photos/" + m.id + ".png"; } })
-          ),
-          /* @__PURE__ */ React.createElement("div", { className: "movie-title" }, m.name)
-        ))
-      ),
-      filtered.length === 0 && /* @__PURE__ */ React.createElement("div", { className: "text-center py-16 text-muted-foreground" }, _lang === "ar" ? "لا توجد أفلام" : "No movies")
-    );
-  };
-  const MovieDetail = ({ id, nav }) => {
-    const [movie, setMovie] = useState(null);
-    const [speed, setSpeed] = useState(1);
-    const iframeRef = useRef(null);
-    useEffect(() => {
-      fetch("res/movies/movies.json").then(r => r.text()).then(t => {
-        const all = parseMovies(t);
-        setMovie(all.find(x => x.id === id) || null);
-      }).catch(() => setMovie(null));
-    }, [id]);
-    const setPlaybackSpeed = (s) => {
-      setSpeed(s);
-      try {
-        const win = iframeRef.current && iframeRef.current.contentWindow;
-        if (win) win.postMessage(JSON.stringify({ event: "command", func: "setPlaybackRate", args: [s] }), "*");
-      } catch (e) {}
-    };
-    if (!movie) return /* @__PURE__ */ React.createElement("div", { className: "p-8 text-center" }, _lang === "ar" ? "جاري التحميل..." : "Loading...");
-    const vid = ytId(movie.url);
-    const embed = vid ? `https://www.youtube.com/embed/${vid}?enablejsapi=1&rel=0` : "";
-    const speeds = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-    return /* @__PURE__ */ React.createElement("div", { className: "movie-detail", dir: _lang === "ar" ? "rtl" : "ltr" },
-      /* @__PURE__ */ React.createElement("div", { className: "movie-player-wrap" },
-        embed ? /* @__PURE__ */ React.createElement("iframe", { ref: iframeRef, className: "movie-iframe", src: embed, title: movie.name, allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowFullScreen: true }) : /* @__PURE__ */ React.createElement("div", { className: "p-8 text-center" }, "Invalid YouTube URL")
-      ),
-      /* @__PURE__ */ React.createElement("h1", { className: "movie-detail-title" }, movie.name),
-      /* @__PURE__ */ React.createElement("div", { className: "movie-controls" },
-        /* @__PURE__ */ React.createElement("div", { className: "movie-speeds" },
-          speeds.map(s => /* @__PURE__ */ React.createElement("button", { key: s, type: "button", className: `movie-speed ${speed === s ? "on" : ""}`, onClick: () => setPlaybackSpeed(s) }, s + "x"))
-        ),
-        /* @__PURE__ */ React.createElement("button", { type: "button", className: "movie-theme-btn", onClick: () => { const html = document.documentElement; const isDark = html.classList.contains("dark"); html.classList.toggle("dark", !isDark); try { localStorage.setItem("apk_theme", isDark ? "light" : "dark"); } catch(e){} } }, _lang === "ar" ? "تبديل الوضع" : "Toggle theme")
-      )
-    );
-  };
-const DownloadsManager = ({ open }) => {
+  const DownloadsManager = ({ open }) => {
     const [tab, setTab] = useState("active");
     const [tick, setTick] = useState(0);
     useEffect(() => {
@@ -3010,7 +2931,7 @@ const DownloadsManager = ({ open }) => {
     const id = decodeURIComponent(route.slice("/you-app/".length));
     const [app, setApp] = useState(null);
     useEffect(() => {
-      Promise.resolve("").then((text) => {
+      fetch("res/apps/apps.json").then((r) => r.text()).then((text) => {
         const list = parseTagged(text);
         setApp(list.find((a) => a.id === id) || null);
       }).catch(() => setApp(null));
@@ -3036,8 +2957,8 @@ const DownloadsManager = ({ open }) => {
     const [ads, setAds] = useState([]);
     const [menu, setMenu] = useState(false);
     useEffect(() => {
-      setApps([]);
-      setAds([]);
+      fetch("res/apps/apps.json").then((r) => r.text()).then((text) => setApps(parseTagged(text))).catch(() => setApps([]));
+      fetch("res/ads/ads.json").then((r) => r.text()).then((t) => setAds(parseAds(t))).catch(() => setAds([]));
     }, []);
     const query = q.trim();
     const shown = apps.filter((a) => !query || String(a.name || "").toLowerCase().indexOf(query.toLowerCase()) >= 0);
@@ -3592,6 +3513,92 @@ const DownloadsManager = ({ open }) => {
     };
     return /* @__PURE__ */ React.createElement("div", { className: "ob-screen", dir: ar ? "rtl" : "ltr" }, /* @__PURE__ */ React.createElement("div", { className: "ob-body" }, /* @__PURE__ */ React.createElement(ObSvg, { className: "ob-logo sm", html: SVG_BLOCKED }), /* @__PURE__ */ React.createElement("p", { className: "ob-legal", style: { opacity: 1, fontSize: "1rem", fontWeight: 700 } }, t("country_blocked")), /* @__PURE__ */ React.createElement("button", { type: "button", className: "ob-select", onClick: () => setOpen(true) }, /* @__PURE__ */ React.createElement("span", null, countryLabel(country2, ar) || t("choose_country")), /* @__PURE__ */ React.createElement("span", null, "\u25BE"))), open && /* @__PURE__ */ React.createElement("div", { className: "ob-sheet-bg", onClick: () => setOpen(false) }, /* @__PURE__ */ React.createElement("div", { className: "ob-sheet", onClick: (e) => e.stopPropagation() }, /* @__PURE__ */ React.createElement("div", { className: "ob-sheet-handle" }), /* @__PURE__ */ React.createElement("input", { className: "ob-sheet-search", value: q, onChange: (e) => setQ(e.target.value), placeholder: ar ? "\u0628\u062D\u062B \u0639\u0646 \u0628\u0644\u062F" : "Search country" }), /* @__PURE__ */ React.createElement("div", { className: "ob-sheet-list" }, list.map((x) => /* @__PURE__ */ React.createElement("button", { key: x.c, type: "button", className: `ob-sheet-item ${country2 === x.c ? "on" : ""}`, onClick: () => pick(x.c) }, ar ? x.ar : x.en))))));
   };
+
+  const parseMovies = (text) => {
+    const lines = String(text || "").split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+    const out = [];
+    let cur = null;
+    lines.forEach(line => {
+      if (line === "</end>" || line === "/end") { if (cur && cur.id) out.push(cur); cur = null; return; }
+      const head = line.match(/^<\/?(m\d+)>$/i);
+      if (head) { cur = { id: head[1], name: "", url: "" }; return; }
+      if (!cur) return;
+      const name = line.match(/^<\/?name=([\s\S]*)>$/);
+      const url = line.match(/^<\/?url=([\s\S]*)>$/);
+      if (name) cur.name = name[1].trim();
+      else if (url) cur.url = url[1].trim();
+    });
+    return out;
+  };
+
+  const MoviesPage = ({ nav, searchQ, setSearchQ }) => {
+    const [movies, setMovies] = useState([]);
+    const [q, setQ] = useState(searchQ || "");
+    useEffect(() => {
+      fetch("res/movies/movies.json").then(r => r.text()).then(text => {
+        const list = parseMovies(text);
+        setMovies(list);
+      }).catch(() => setMovies([]));
+    }, []);
+    const filtered = movies.filter(m => !q || (m.name || "").toLowerCase().includes(q.toLowerCase()));
+    return React.createElement("div", { className: "movies-page" },
+      React.createElement("div", { className: "movies-search-bar" },
+        React.createElement("input", {
+          type: "search",
+          className: "movies-search-input",
+          placeholder: "ابحث عن أفلام...",
+          value: q,
+          onChange: e => { setQ(e.target.value); if (setSearchQ) setSearchQ(e.target.value); }
+        })
+      ),
+      React.createElement("div", { className: "movies-grid" },
+        filtered.map(m => React.createElement("button", {
+          key: m.id,
+          type: "button",
+          className: "movie-card",
+          onClick: () => nav("/movie/" + encodeURIComponent(m.id))
+        },
+          React.createElement("div", { className: "movie-thumb-wrap" },
+            React.createElement("img", { src: "res/movies/movies_photos/" + m.id + ".png", alt: "", onError: e => { e.target.style.display = "none"; } })
+          ),
+          React.createElement("div", { className: "movie-name" }, m.name || m.id)
+        ))
+      )
+    );
+  };
+
+  const MoviePlayer = ({ id, nav, onToggleTheme, isDark }) => {
+    const [movie, setMovie] = useState(null);
+    const [speed, setSpeed] = useState(1);
+    useEffect(() => {
+      fetch("res/movies/movies.json").then(r => r.text()).then(text => {
+        const list = parseMovies(text);
+        setMovie(list.find(m => m.id === id) || null);
+      }).catch(() => {});
+    }, [id]);
+    const ytId = movie && movie.url ? (movie.url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/) || [])[1] : null;
+    const embed = ytId ? `https://www.youtube.com/embed/${ytId}?rel=0` : null;
+    return React.createElement("div", { className: "movie-player-page" },
+      React.createElement("div", { className: "movie-player-bar" },
+        React.createElement("button", { type: "button", className: "nav-chip", onClick: () => nav("/movies"), "aria-label": "رجوع" },
+          React.createElement(Icon, { name: "arrowRight", className: "w-5 h-5" })
+        )
+      ),
+      embed ? React.createElement("div", { className: "yt-wrap" },
+        React.createElement("iframe", { src: embed, title: movie.name, allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowFullScreen: true, className: "yt-iframe" })
+      ) : React.createElement("div", { className: "yt-placeholder" }, "لا يوجد فيديو"),
+      React.createElement("h1", { className: "movie-title" }, movie ? movie.name : "..."),
+      React.createElement("div", { className: "movie-controls" },
+        React.createElement("label", null, "السرعة: "),
+        React.createElement("select", { value: speed, onChange: e => setSpeed(Number(e.target.value)) },
+          [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map(s => React.createElement("option", { key: s, value: s }, s + "x"))
+        ),
+        React.createElement("button", { type: "button", className: "theme-toggle", onClick: onToggleTheme }, isDark ? "فاتح" : "داكن")
+      )
+    );
+  };
+
+
   function App() {
     const [route, nav] = useHash();
     const [theme, setThemeS] = useState(() => getS("apk_theme", "light"));
@@ -3994,8 +4001,8 @@ const DownloadsManager = ({ open }) => {
     else if (route === "/downloads") page = /* @__PURE__ */ React.createElement(DownloadsManager, { open });
     else if (route === "/movies") page = /* @__PURE__ */ React.createElement(MoviesPage, { nav });
     else if (route.startsWith("/movie/")) {
-      const mid = route.split("/")[2] || "";
-      page = /* @__PURE__ */ React.createElement(MovieDetail, { id: mid, nav });
+      const mid = decodeURIComponent(route.slice("/movie/".length));
+      page = /* @__PURE__ */ React.createElement(MoviePlayer, { id: mid, nav, onToggleTheme: toggleTheme, isDark: isDarkNow });
     }
     else if (route === "/you" || route === "/music") page = /* @__PURE__ */ React.createElement(StorePage, { nav });
     else if (route.startsWith("/you-app/")) page = /* @__PURE__ */ React.createElement(StoreInstall, { route, nav });
@@ -4014,7 +4021,7 @@ const DownloadsManager = ({ open }) => {
     }, [route]);
     if (!onboardDone) return /* @__PURE__ */ React.createElement(OnboardFlow, { onFinish: finishOnboard, setLang, setTheme, setExpMode, setStyle2 });
     if (isBlockedCountry(country2)) return /* @__PURE__ */ React.createElement(CountryBlock, { country: country2, setCountry, lang });
-    return /* @__PURE__ */ React.createElement("div", { className: "app-shell", key: lang }, /* @__PURE__ */ React.createElement(AccountHub, { open: accOpen, onClose: () => setAccOpen(false), nav, theme, setTheme, profile, setProfile, lang, night, setNight, style2 }), /* @__PURE__ */ React.createElement(AccPick, { open: themePick, title: t("choose_theme"), onClose: () => setThemePick(false) }, [{ id: "light", label: t("light") }, { id: "dark", label: t("dark") }].map((it) => /* @__PURE__ */ React.createElement("button", { key: it.id, type: "button", className: `acc-pick-item ${themeCur === it.id ? "on" : ""}`, onClick: () => applyThemeMode(it.id) }, /* @__PURE__ */ React.createElement("span", null, it.label), themeCur === it.id && /* @__PURE__ */ React.createElement("span", { style: { marginInlineStart: "auto" } }, "\u2713")))), /* @__PURE__ */ React.createElement("main", { id: "app-scroll", className: "app-main max-w-screen-2xl mx-auto w-full" }, !(isDownloads || route === "/settings" || route === "/search-log" || accOpen || isDetail || route.startsWith("/search") || route === "/you" || route === "/music" || route.startsWith("/you-")) && /* @__PURE__ */ React.createElement(TopNav, { nav, isDetail, onOpenAccount: () => setAccOpen(true), route, photo: profile && profile.photo }), /* @__PURE__ */ React.createElement("div", { className: "app-scroll-fill" }, page)), !hideMini && /* @__PURE__ */ React.createElement(MiniPlayer, { track, playing, progress, duration, onToggle: togglePlay, onClose: closeP, onPrev: playPrev, onNext: playNext, onSeek: seekTo, onOpen: () => nav("/now-playing"), isFav: isSongFav, onFav: toggleSongFav }), !(isDownloads || route === "/settings" || route === "/search-log" || accOpen || route.startsWith("/you-project") || route === "/you-publish" || route === "/you-projects") && /* @__PURE__ */ React.createElement(BottomNav, { route, nav }), offSheet && /* @__PURE__ */ React.createElement(OfflineSheet, { onRetry: () => {
+    return /* @__PURE__ */ React.createElement("div", { className: "app-shell", key: lang }, /* @__PURE__ */ React.createElement(AccountHub, { open: accOpen, onClose: () => setAccOpen(false), nav, theme, setTheme, profile, setProfile, lang, night, setNight, style2 }), /* @__PURE__ */ React.createElement(AccPick, { open: themePick, title: t("choose_theme"), onClose: () => setThemePick(false) }, [{ id: "light", label: t("light") }, { id: "dark", label: t("dark") }].map((it) => /* @__PURE__ */ React.createElement("button", { key: it.id, type: "button", className: `acc-pick-item ${themeCur === it.id ? "on" : ""}`, onClick: () => applyThemeMode(it.id) }, /* @__PURE__ */ React.createElement("span", null, it.label), themeCur === it.id && /* @__PURE__ */ React.createElement("span", { style: { marginInlineStart: "auto" } }, "\u2713")))), /* @__PURE__ */ React.createElement("main", { id: "app-scroll", className: "app-main max-w-screen-2xl mx-auto w-full" }, !(isDownloads || route === "/settings" || route === "/search-log" || accOpen || isDetail || route.startsWith("/search") || route === "/you" || route === "/music" || route.startsWith("/you-") || route === "/movies" || route.startsWith("/movie/")) && /* @__PURE__ */ React.createElement(TopNav, { nav, isDetail, onOpenAccount: () => setAccOpen(true), route, photo: profile && profile.photo }), /* @__PURE__ */ React.createElement("div", { className: "app-scroll-fill" }, page)), !hideMini && /* @__PURE__ */ React.createElement(MiniPlayer, { track, playing, progress, duration, onToggle: togglePlay, onClose: closeP, onPrev: playPrev, onNext: playNext, onSeek: seekTo, onOpen: () => nav("/now-playing"), isFav: isSongFav, onFav: toggleSongFav }), !(isDownloads || route === "/settings" || route === "/search-log" || accOpen || route.startsWith("/you-project") || route === "/you-publish" || route === "/you-projects") && /* @__PURE__ */ React.createElement(BottomNav, { route, nav }), offSheet && /* @__PURE__ */ React.createElement(OfflineSheet, { onRetry: () => {
       probeOnline().then((ok) => setOffSheet(!ok));
     }, onCancel: () => {
       offHold.current = true;
