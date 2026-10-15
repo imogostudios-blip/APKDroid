@@ -1013,7 +1013,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     const showChips = !isDetail && (route === "/" || route === "" || route === "/games" || (route || "").startsWith("/category/"));
     const chips = route === "/games" || (route || "").startsWith("/category/") && GAME_SECTIONS.some((g) => route.indexOf(encodeURIComponent(g.term)) >= 0 || route.indexOf(g.term) >= 0) ? [{ k: "chip_all", path: "/games", term: "" }].concat(GAME_SECTIONS.map((g) => ({ k: g.k, path: "/category/" + encodeURIComponent(g.term), term: g.term }))) : [{ k: "chip_all", path: "/", term: "" }].concat(SEARCH_CATEGORIES.map((c) => ({ k: c.k, path: "/category/" + encodeURIComponent(c.term), term: c.term })));
     const activePath = route || "/";
-    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: `hdr-top-row flex items-center px-4 max-w-screen-2xl mx-auto w-full ${isDetail ? "sticky top-0 z-40 bg-[hsl(var(--bg))]" : ""}`, style: { direction: "ltr" } }, isDetail ? /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: () => window.history.back(), "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" })) : /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: onOpenAccount, "aria-label": t("account") }, photo ? /* @__PURE__ */ React.createElement("img", { src: photo, alt: "", className: "nav-avatar" }) : /* @__PURE__ */ React.createElement(PersonMark, { className: "w-6 h-6" })), /* @__PURE__ */ React.createElement("div", { className: "flex-1" }), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => nav("/"), className: "shrink-0 group", "aria-label": "APKDroid Store" }, /* @__PURE__ */ React.createElement("div", { className: "group-hover:scale-105 transition-transform" }, /* @__PURE__ */ React.createElement(StoreLogo, { size: 48 })))), showChips && /* @__PURE__ */ React.createElement("div", { className: "hdr-chips" }, chips.map((ch) => {
+    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: `hdr-top-row flex items-center px-4 max-w-screen-2xl mx-auto w-full ${isDetail ? "sticky top-0 z-40 bg-[hsl(var(--bg))]" : ""}`, style: { direction: "ltr" } }, isDetail ? /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: () => window.history.back(), "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" })) : /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: onOpenAccount, "aria-label": t("account") }, photo ? /* @__PURE__ */ React.createElement("img", { src: photo, alt: "", className: "nav-avatar" }) : /* @__PURE__ */ React.createElement(PersonMark, { className: "w-8 h-8" })), /* @__PURE__ */ React.createElement("div", { className: "flex-1" }), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => nav("/"), className: "shrink-0 group", "aria-label": "APKDroid Store" }, /* @__PURE__ */ React.createElement("div", { className: "group-hover:scale-105 transition-transform" }, /* @__PURE__ */ React.createElement(StoreLogo, { size: 64 })))), showChips && /* @__PURE__ */ React.createElement("div", { className: "hdr-chips" }, chips.map((ch) => {
       const on = ch.path === "/" || ch.path === "/games" ? activePath === ch.path : activePath === ch.path || ch.term && activePath.indexOf(encodeURIComponent(ch.term)) >= 0;
       return /* @__PURE__ */ React.createElement("button", { key: ch.k + ch.path, type: "button", className: `hdr-chip ${on ? "on" : ""}`, onClick: () => nav(ch.path) }, chipGlyph(ch.k), /* @__PURE__ */ React.createElement("span", null, t(ch.k)));
     })));
@@ -1104,15 +1104,18 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       return on ? /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 0 24 24" }, /* @__PURE__ */ React.createElement("path", { d: "M3,5C3,2.791 4.791,1 7,1H17C19.209,1 21,2.791 21,5V20C21,22.472 18.178,23.883 16.2,22.4L12,19.25L7.8,22.4C5.822,23.883 3,22.472 3,20V5Z", fill: "currentColor" })) : /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 0 24 24" }, /* @__PURE__ */ React.createElement("path", { d: "M11.539,17.112C11.876,16.937 12.288,16.967 12.6,17.2L17.4,20.8C18.06,21.294 19,20.824 19,20V5C19,3.895 18.105,3 17,3H7C5.895,3 5,3.895 5,5V20C5,20.824 5.94,21.294 6.6,20.8L11.4,17.2L11.539,17.112ZM21,20C21,22.472 18.178,23.883 16.2,22.4L12,19.249L7.8,22.4C5.822,23.883 3,22.472 3,20V5C3,2.791 4.791,1 7,1H17C19.209,1 21,2.791 21,5V20Z", fill: "currentColor" }));
     }
     if (kind === "you") {
-      const pathOn = "M160,800Q127,800 103.5,776.5Q80,753 80,720L80,240Q80,207 103.5,183.5Q127,160 160,160L640,160Q673,160 696.5,183.5Q720,207 720,240L720,420L846,294Q856,284 868,289Q880,294 880,308L880,652Q880,666 868,671Q856,676 846,666L720,540L720,720Q720,753 696.5,776.5Q673,800 640,800L160,800Z";
-      const pathOff = "M160,800q-33,0 -56.5,-23.5T80,720v-480q0,-33 23.5,-56.5T160,160h480q33,0 56.5,23.5T720,240v180l126,-126q10,-10 22,-5t12,19v344q0,14 -12,19t-22,-5L720,540v180q0,33 -23.5,56.5T640,800L160,800ZM160,720h480v-480L160,240v480ZM160,720v-480,480Z";
-      return on ? React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 0 960 960" }, React.createElement("path", { fill: "currentColor", d: pathOn })) : React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 0 960 960" }, React.createElement("path", { fill: "currentColor", d: pathOff }));
+      return on ? /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 -960 960 960" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H260Z" })) : /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 -960 960 960" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H260Zm0-80h480q42 0 71-29t29-71q0-42-29-71t-71-29h-60v-80q0-83-58.5-141.5T480-720q-83 0-141.5 58.5T280-520h-20q-58 0-99 41t-41 99q0 58 41 99t99 41Zm220-240Z" }));
+    }
+    if (kind === "movies") {
+      const dOn = "M160,800Q127,800 103.5,776.5Q80,753 80,720L80,240Q80,207 103.5,183.5Q127,160 160,160L640,160Q673,160 696.5,183.5Q720,207 720,240L720,420L846,294Q856,284 868,289Q880,294 880,308L880,652Q880,666 868,671Q856,676 846,666L720,540L720,720Q720,753 696.5,776.5Q673,800 640,800L160,800Z";
+      const dOff = "M160,800q-33,0 -56.5,-23.5T80,720v-480q0,-33 23.5,-56.5T160,160h480q33,0 56.5,23.5T720,240v180l126,-126q10,-10 22,-5t12,19v344q0,14 -12,19t-22,-5L720,540v180q0,33 -23.5,56.5T640,800L160,800ZM160,720h480v-480L160,240v480ZM160,720v-480,480Z";
+      return /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", className, viewBox: "0 0 960 960", width: "24", height: "24" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: on ? dOn : dOff }));
     }
     return null;
   };
   const BottomNav = ({ route, nav }) => {
     const items = [
-      { k: "nav_you", p: "/you", i: "you" },
+      { k: "nav_you", p: "/movies", i: "movies" },
       { k: "nav_library", p: "/favorites", i: "heart" },
       { k: "nav_search", p: "/search", i: "search" },
       { k: "nav_apps", p: "/", i: "home", root: true },
@@ -2109,13 +2112,14 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       if (e.target === e.currentTarget) onClose && onClose();
     } }, /* @__PURE__ */ React.createElement("div", { className: "dt-info-sheet", dir: ar ? "rtl" : "ltr", role: "dialog", "aria-modal": "true", "aria-label": t("dt_info") }, /* @__PURE__ */ React.createElement("div", { className: "dt-info-head" }, /* @__PURE__ */ React.createElement("div", { className: "dt-info-title" }, t("dt_info")), /* @__PURE__ */ React.createElement("button", { type: "button", className: "dt-x", onClick: onClose, "aria-label": t("dt_close") }, /* @__PURE__ */ React.createElement(Icon, { name: "x", className: "w-5 h-5" }))), /* @__PURE__ */ React.createElement("div", { className: "dt-info-body" }, /* @__PURE__ */ React.createElement("div", { className: "dt-info-app" }, /* @__PURE__ */ React.createElement("img", { src: app.artworkUrl512 || app.artworkUrl100 || "", alt: "" }), /* @__PURE__ */ React.createElement("div", { style: { minWidth: 0 } }, /* @__PURE__ */ React.createElement("div", { className: "dt-info-name" }, app.trackName), /* @__PURE__ */ React.createElement("div", { className: "dt-muted", style: { fontSize: ".85rem" } }, app.artistName))), ordered.map((k) => /* @__PURE__ */ React.createElement("div", { className: "dt-row", key: k }, /* @__PURE__ */ React.createElement("div", { className: "dt-row-k" }, /* @__PURE__ */ React.createElement("span", null, label(k)), IT_LABELS[k] && /* @__PURE__ */ React.createElement("span", { className: "dt-key" }, k)), /* @__PURE__ */ React.createElement("div", { className: "dt-row-v" }, /* @__PURE__ */ React.createElement(InfoVal, { k, v: app[k] })))))));
   };
-  const Detail = ({ id, nav, favs, toggle, selStore, expMode, setDetailApp, autoInstall, onToggleTheme, isDark }) => {
+  const Detail = ({ id, nav, favs, toggle, selStore, expMode, setDetailApp, autoInstall, onToggleTheme, isDark, style2 }) => {
     var _a;
     const [app, setApp] = useState(null);
     const [sim, setSim] = useState([]);
     const [ld, setLd] = useState(true);
     const [exp, setExp] = useState(false);
     const [shareOpen, setShareOpen] = useState(false);
+    const [greenMenuOpen, setGreenMenuOpen] = useState(false);
     const [infoOpen, setInfoOpen] = useState(false);
     const [reviews, setReviews] = useState([]);
     const [revLd, setRevLd] = useState(true);
@@ -2319,10 +2323,54 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     }, [id]);
     const shots = (app == null ? void 0 : app.screenshotUrls) || [];
     const promoShot2 = expMode && shots[0] ? shots[0] : null;
+    const isGreenPromo = !style2 && !!promoShot2;
     useEffect(() => {
       document.documentElement.classList.toggle("exp-banner", !!promoShot2);
       return () => document.documentElement.classList.remove("exp-banner");
     }, [promoShot2]);
+    // Drag down to close share sheet
+    useEffect(() => {
+      if (!shareOpen) return;
+      const sheet = document.querySelector(".bg-share-sheet");
+      if (!sheet) return;
+      let startY = 0, dy = 0, pressed = false, dragging = false;
+      const onDown = (e) => {
+        pressed = true; dragging = false; startY = e.clientY; dy = 0;
+      };
+      const onMove = (e) => {
+        if (!pressed) return;
+        dy = e.clientY - startY;
+        if (!dragging && dy > 8) {
+          dragging = true;
+          sheet.style.transition = "none";
+        }
+        if (dragging && dy > 0) sheet.style.transform = "translateY(" + dy + "px)";
+      };
+      const onUp = () => {
+        if (!pressed) return;
+        pressed = false;
+        if (dragging) {
+          dragging = false;
+          sheet.style.transition = "";
+          if (dy > 100) setShareOpen(false);
+          else sheet.style.transform = "";
+        }
+        dy = 0;
+      };
+      sheet.addEventListener("pointerdown", onDown);
+      sheet.addEventListener("pointermove", onMove);
+      sheet.addEventListener("pointerup", onUp);
+      sheet.addEventListener("pointercancel", onUp);
+      return () => {
+        sheet.removeEventListener("pointerdown", onDown);
+        sheet.removeEventListener("pointermove", onMove);
+        sheet.removeEventListener("pointerup", onUp);
+        sheet.removeEventListener("pointercancel", onUp);
+        sheet.style.transform = "";
+        sheet.style.transition = "";
+      };
+    }, [shareOpen]);
+
     const showToast = (msg) => {
       setToastMsg(msg);
       if (toastT.current) clearTimeout(toastT.current);
@@ -2481,7 +2529,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     } }, /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", width: "22", height: "22", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" }))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "peek-x", "aria-label": "close", onClick: (e) => {
       e.stopPropagation();
       closePeek();
-    } }, /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", width: "22", height: "22", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" }))), /* @__PURE__ */ React.createElement("img", { className: `peek-img ${peekGo ? "go" : ""}`, style: peekFrom ? { "--l": peekFrom.l + "px", "--t": peekFrom.t + "px", "--w": peekFrom.w + "px", "--h": peekFrom.h + "px" } : void 0, src: peekSrc || app.artworkUrl512 || app.artworkUrl100, alt: "", onClick: (e) => e.stopPropagation() }), /* @__PURE__ */ React.createElement("div", { className: `peek-meta ${peekBare ? "hide" : ""}`, onClick: (e) => e.stopPropagation() }, /* @__PURE__ */ React.createElement("h2", null, app.trackName), /* @__PURE__ */ React.createElement("p", null, app.artistName), /* @__PURE__ */ React.createElement("p", { className: "peek-sub" }, "\u2605 ", rating, " \xB7 ", fmtSize(app.fileSizeBytes), " \xB7 ", app.primaryGenreName || ""), /* @__PURE__ */ React.createElement("button", { type: "button", className: "bg-btn-install", onClick: () => setReqOpen(true) }, t("install")))), topBar, /* @__PURE__ */ React.createElement("div", { className: "bg-detail" }, promoShot2 && /* @__PURE__ */ React.createElement("div", { className: "bg-exp-hero" }, /* @__PURE__ */ React.createElement("img", { className: "bg-exp-img", src: promoShot2, alt: "", loading: "eager", onClick: (e) => openPeek(e, promoShot2), style: { cursor: "pointer" } }), /* @__PURE__ */ React.createElement("div", { className: "bg-exp-grad" })), /* @__PURE__ */ React.createElement("div", { className: promoShot2 ? "bg-exp-content" : "" }, /* @__PURE__ */ React.createElement("div", { className: "bg-detail-header" }, /* @__PURE__ */ React.createElement("div", { className: "bg-detail-info" }, /* @__PURE__ */ React.createElement("div", { className: "bg-detail-title-row" }, /* @__PURE__ */ React.createElement("h1", { className: "bg-detail-name" }, app.trackName)), dlView.ring && /* @__PURE__ */ React.createElement("div", { className: `dl-status-badge ${dlView.phase === "spin" ? "wait" : ""}` }, dlView.phase === "spin" ? t("dl_fetch_badge") : t("dl_run_badge")), (dlView.phase === "download" || dlView.phase === "postspin") && /* @__PURE__ */ React.createElement("div", { className: "dl-name-pct", "aria-live": "polite" }, Math.round((dlView.pct || 0) * 100), "%"), /* @__PURE__ */ React.createElement("button", { className: "bg-detail-dev", onClick: () => nav(`/search?q=${encodeURIComponent(app.artistName || "")}`) }, app.artistName), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-meta" }, /* @__PURE__ */ React.createElement("span", null, "\u2605 ", rating, " ", ratingCount), /* @__PURE__ */ React.createElement("span", null, app.contentAdvisoryRating || "\u2014"), /* @__PURE__ */ React.createElement("span", null, fmtSize(app.fileSizeBytes)), /* @__PURE__ */ React.createElement("span", null, app.primaryGenreName || ""))), /* @__PURE__ */ React.createElement("div", { className: `dl-icon-wrap ${dlView.ring ? "active" : ""}` }, dlView.ring && /* @__PURE__ */ React.createElement("svg", { className: "dl-ring", viewBox: "0 0 100 100", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("circle", { className: "dl-ring-track", cx: "50", cy: "50", r: "45" }), dlView.phase === "spin" ? /* @__PURE__ */ React.createElement("g", { className: "dl-spin-g" }, /* @__PURE__ */ React.createElement("circle", { className: "dl-ring-spin", cx: "50", cy: "50", r: "45" })) : /* @__PURE__ */ React.createElement(
+    } }, /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", width: "22", height: "22", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" }))), /* @__PURE__ */ React.createElement("img", { className: `peek-img ${peekGo ? "go" : ""}`, style: peekFrom ? { "--l": peekFrom.l + "px", "--t": peekFrom.t + "px", "--w": peekFrom.w + "px", "--h": peekFrom.h + "px" } : void 0, src: peekSrc || app.artworkUrl512 || app.artworkUrl100, alt: "", onClick: (e) => e.stopPropagation() }), /* @__PURE__ */ React.createElement("div", { className: `peek-meta ${peekBare ? "hide" : ""}`, onClick: (e) => e.stopPropagation() }, /* @__PURE__ */ React.createElement("h2", null, app.trackName), /* @__PURE__ */ React.createElement("p", null, app.artistName), /* @__PURE__ */ React.createElement("p", { className: "peek-sub" }, "\u2605 ", rating, " \xB7 ", fmtSize(app.fileSizeBytes), " \xB7 ", app.primaryGenreName || ""), /* @__PURE__ */ React.createElement("button", { type: "button", className: "bg-btn-install", onClick: () => setReqOpen(true) }, t("install")))), isGreenPromo ? null : topBar, /* @__PURE__ */ React.createElement("div", { className: "bg-detail", style: isGreenPromo ? { position: "relative" } : {} }, isGreenPromo && /* @__PURE__ */ React.createElement("div", { className: "green-float-btns" }, /* @__PURE__ */ React.createElement("div", { style: { position: "relative" } }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setGreenMenuOpen(o => !o), "aria-label": t("more_options") }, /* @__PURE__ */ React.createElement(Icon, { name: "dots", className: "w-5 h-5" })), greenMenuOpen && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "dt-scrim", onClick: () => setGreenMenuOpen(false) }), /* @__PURE__ */ React.createElement("div", { className: "dt-menu", role: "menu", style: { position: "absolute", top: "100%", right: 0, marginTop: 8 } }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "dt-item", onClick: () => { setGreenMenuOpen(false); setShareOpen(true); } }, /* @__PURE__ */ React.createElement(BrandIcon, { name: "share" }), /* @__PURE__ */ React.createElement("span", null, t("dt_share"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "dt-item", onClick: () => { setGreenMenuOpen(false); if (app) toggle(app); } }, /* @__PURE__ */ React.createElement(Icon, { name: isF ? "bookmarkFill" : "bookmark", className: "w-5 h-5" }), /* @__PURE__ */ React.createElement("span", null, isF ? t("dt_unsave") : t("dt_save"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "dt-item", onClick: () => { setGreenMenuOpen(false); openInOtherStore(); } }, /* @__PURE__ */ React.createElement(Icon, { name: "external", className: "w-5 h-5" }), /* @__PURE__ */ React.createElement("span", null, t("dt_open_in"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "dt-item", onClick: () => { setGreenMenuOpen(false); onToggleTheme && onToggleTheme(); } }, /* @__PURE__ */ React.createElement(Icon, { name: isDark ? "sun" : "moon", className: "w-5 h-5" }), /* @__PURE__ */ React.createElement("span", null, t("dt_theme"))) )))), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: goBack, "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" }))), promoShot2 && /* @__PURE__ */ React.createElement("div", { className: "bg-exp-hero" }, /* @__PURE__ */ React.createElement("img", { className: "bg-exp-img", src: promoShot2, alt: "", loading: "eager", onClick: (e) => openPeek(e, promoShot2), style: { cursor: "pointer" } }), /* @__PURE__ */ React.createElement("div", { className: "bg-exp-grad" })), /* @__PURE__ */ React.createElement("div", { className: promoShot2 ? "bg-exp-content" : "" }, /* @__PURE__ */ React.createElement("div", { className: "bg-detail-header" }, /* @__PURE__ */ React.createElement("div", { className: "bg-detail-info" }, /* @__PURE__ */ React.createElement("div", { className: "bg-detail-title-row" }, /* @__PURE__ */ React.createElement("h1", { className: "bg-detail-name" }, app.trackName)), dlView.ring && /* @__PURE__ */ React.createElement("div", { className: `dl-status-badge ${dlView.phase === "spin" ? "wait" : ""}` }, dlView.phase === "spin" ? t("dl_fetch_badge") : t("dl_run_badge")), (dlView.phase === "download" || dlView.phase === "postspin") && /* @__PURE__ */ React.createElement("div", { className: "dl-name-pct", "aria-live": "polite" }, Math.round((dlView.pct || 0) * 100), "%"), /* @__PURE__ */ React.createElement("button", { className: "bg-detail-dev", onClick: () => nav(`/search?q=${encodeURIComponent(app.artistName || "")}`) }, app.artistName), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-meta" }, /* @__PURE__ */ React.createElement("span", null, "\u2605 ", rating, " ", ratingCount), /* @__PURE__ */ React.createElement("span", null, app.contentAdvisoryRating || "\u2014"), /* @__PURE__ */ React.createElement("span", null, fmtSize(app.fileSizeBytes)), /* @__PURE__ */ React.createElement("span", null, app.primaryGenreName || ""))), /* @__PURE__ */ React.createElement("div", { className: `dl-icon-wrap ${dlView.ring ? "active" : ""}` }, dlView.ring && /* @__PURE__ */ React.createElement("svg", { className: "dl-ring", viewBox: "0 0 100 100", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("circle", { className: "dl-ring-track", cx: "50", cy: "50", r: "45" }), dlView.phase === "spin" ? /* @__PURE__ */ React.createElement("g", { className: "dl-spin-g" }, /* @__PURE__ */ React.createElement("circle", { className: "dl-ring-spin", cx: "50", cy: "50", r: "45" })) : /* @__PURE__ */ React.createElement(
       "circle",
       {
         className: "dl-ring-prog",
@@ -2527,14 +2575,13 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       return /* @__PURE__ */ React.createElement("div", { className: "bg-review-card", key: r.id || i }, /* @__PURE__ */ React.createElement("div", { className: "bg-review-head" }, /* @__PURE__ */ React.createElement("div", { className: "bg-review-avatar" }, initial), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "bg-review-user-name" }, r.author), r.updated && /* @__PURE__ */ React.createElement("div", { className: "bg-review-date" }, fmtDate(r.updated))), /* @__PURE__ */ React.createElement("div", { className: "bg-review-stars" }, st)), r.title && /* @__PURE__ */ React.createElement("div", { className: "bg-review-title" }, r.title), /* @__PURE__ */ React.createElement("div", { className: "bg-review-content" }, r.content));
     })), reviews && reviews.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "bg-reviews-more-wrap" }, /* @__PURE__ */ React.createElement("button", { className: "rounded-full px-6 py-2 text-sm font-medium border border-[hsl(var(--border))] hover:bg-[hsl(var(--muted))]", disabled: revAllLd, onClick: () => revAll ? setRevAll(false) : loadAllReviews() }, revAllLd ? t("loading") : revAll ? t("hide_reviews") : t("show_more")))), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-section" }, /* @__PURE__ */ React.createElement("h3", null, t("info")), /* @__PURE__ */ React.createElement("div", { className: "bg-info-list" }, /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("version"), ":"), " ", app.version || "\u2014"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("last_update"), ":"), " ", fmtDate(app.currentVersionReleaseDate)), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("size"), ":"), " ", fmtSize(app.fileSizeBytes)), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("age_rating"), ":"), " ", app.contentAdvisoryRating || "\u2014"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("developer"), ":"), " ", app.sellerName || app.artistName), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("category"), ":"), " ", app.primaryGenreName || (app.genres || []).join(", "))))), sim.length > 0 && /* @__PURE__ */ React.createElement(HScroll, { title: t("you_might_like") }, sim.map((a) => /* @__PURE__ */ React.createElement(AppCard, { key: a.trackId, app: a, small: true, onClick: (x) => nav(`/app/${x.trackId}`) }))), /* @__PURE__ */ React.createElement("div", { className: `bg-share-overlay ${shareOpen ? "show" : ""}`, onClick: (e) => {
       if (e.target === e.currentTarget) setShareOpen(false);
-    } }, /* @__PURE__ */ React.createElement("div", { className: "bg-share-sheet" }, /* @__PURE__ */ React.createElement("div", { className: "bg-share-handle" }), /* @__PURE__ */ React.createElement("div", { className: "bg-share-title" }, t("share_via")), [
-      { id: "copy", k: "share_copy", cls: "copy", icon: "copy" },
+    } }, /* @__PURE__ */ React.createElement("div", { className: "bg-share-sheet" }, /* @__PURE__ */ React.createElement("div", { className: "bg-share-handle" }), /* @__PURE__ */ React.createElement("div", { className: "bg-share-title" }, t("share_via")), /* @__PURE__ */ React.createElement("div", { className: "bg-share-options" }, [
       { id: "whatsapp", k: "share_wa", cls: "whatsapp", icon: "whatsapp" },
       { id: "telegram", k: "share_tg", cls: "telegram", icon: "telegram" },
       { id: "instagram", k: "share_ig", cls: "instagram", icon: "instagram" },
       { id: "facebook", k: "share_fb", cls: "facebook", icon: "facebook" },
-      { id: "github", k: "share_gh", cls: "github", icon: "github" }
-    ].map((opt) => /* @__PURE__ */ React.createElement("div", { className: "bg-share-option", key: opt.id, onClick: () => doShareAction(opt.id) }, /* @__PURE__ */ React.createElement("div", { className: `bg-share-option-icon ${opt.cls}` }, /* @__PURE__ */ React.createElement(BrandIcon, { name: opt.icon })), /* @__PURE__ */ React.createElement("div", { className: "bg-share-option-label" }, t(opt.k)))))), infoOpen && /* @__PURE__ */ React.createElement(AppInfoSheet, { app, onClose: () => setInfoOpen(false) }), lbIdx != null && shots[lbIdx] && /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox", onClick: closeLb, onTouchStart: onLbTouchStart, onTouchEnd: onLbTouchEnd }, /* @__PURE__ */ React.createElement("button", { className: "bg-lightbox-close", onClick: (e) => {
+      { id: "copy", k: "share_copy", cls: "copy", icon: "copy" }
+    ].map((opt) => /* @__PURE__ */ React.createElement("button", { type: "button", className: "bg-share-option", key: opt.id, onClick: () => doShareAction(opt.id) }, /* @__PURE__ */ React.createElement("div", { className: `bg-share-option-icon ${opt.cls}` }, /* @__PURE__ */ React.createElement(BrandIcon, { name: opt.icon })), /* @__PURE__ */ React.createElement("span", { className: "bg-share-option-label" }, t(opt.k))))))), infoOpen && /* @__PURE__ */ React.createElement(AppInfoSheet, { app, onClose: () => setInfoOpen(false) }), lbIdx != null && shots[lbIdx] && /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox", onClick: closeLb, onTouchStart: onLbTouchStart, onTouchEnd: onLbTouchEnd }, /* @__PURE__ */ React.createElement("button", { className: "bg-lightbox-close", onClick: (e) => {
       e.stopPropagation();
       closeLb();
     }, "aria-label": "Close" }, "\xD7"), shots.length > 1 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("button", { className: "bg-lightbox-nav prev", onClick: (e) => {
@@ -2545,7 +2592,81 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       lbNext();
     }, "aria-label": "Next" }, "\u203A")), /* @__PURE__ */ React.createElement("img", { className: "bg-lightbox-img", src: shots[lbIdx], alt: "", onClick: (e) => e.stopPropagation(), draggable: false }), /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox-counter" }, lbIdx + 1, " / ", shots.length)), toastMsg && /* @__PURE__ */ React.createElement("div", { className: "bg-toast show" }, toastMsg));
   };
-  const DownloadsManager = ({ open }) => {
+  
+  const parseMovies = (text) => {
+    const movies = [];
+    const re = /<\/m(\d+)>\s*<\/name=([^<]*)>\s*<\/url=([^<]*)>\s*<\/end>/g;
+    let m;
+    while ((m = re.exec(text))) {
+      movies.push({ id: "m" + m[1], num: m[1], name: (m[2] || "").trim(), url: (m[3] || "").trim() });
+    }
+    return movies;
+  };
+  const ytId = (url) => {
+    if (!url) return "";
+    const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    return m ? m[1] : "";
+  };
+  const MoviesPage = ({ nav }) => {
+    const [list, setList] = useState([]);
+    const [q, setQ] = useState("");
+    useEffect(() => {
+      fetch("res/movies/movies.json").then(r => r.text()).then(t => setList(parseMovies(t))).catch(() => setList([]));
+    }, []);
+    const filtered = list.filter(m => !q || (m.name || "").toLowerCase().includes(q.toLowerCase()));
+    return /* @__PURE__ */ React.createElement("div", { className: "movies-page", dir: _lang === "ar" ? "rtl" : "ltr" },
+      /* @__PURE__ */ React.createElement("div", { className: "movies-search-wrap" },
+        /* @__PURE__ */ React.createElement("div", { className: "movies-search-bar" },
+          /* @__PURE__ */ React.createElement("svg", { width: "22", height: "22", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2" }, /* @__PURE__ */ React.createElement("circle", { cx: "11", cy: "11", r: "8" }), /* @__PURE__ */ React.createElement("path", { d: "m21 21-4.3-4.3" })),
+          /* @__PURE__ */ React.createElement("input", { type: "text", placeholder: _lang === "ar" ? "ابحث عن فيلم..." : "Search movies...", value: q, onChange: e => setQ(e.target.value), className: "movies-search-input" })
+        )
+      ),
+      /* @__PURE__ */ React.createElement("div", { className: "movies-grid" },
+        filtered.map(m => /* @__PURE__ */ React.createElement("button", { key: m.id, type: "button", className: "movie-card", onClick: () => nav("/movie/" + m.id) },
+          /* @__PURE__ */ React.createElement("div", { className: "movie-thumb" },
+            /* @__PURE__ */ React.createElement("img", { src: "res/movies/movies_photos/" + m.id + ".jpg", alt: m.name, onError: (e) => { e.target.src = "res/movies/movies_photos/" + m.id + ".png"; } })
+          ),
+          /* @__PURE__ */ React.createElement("div", { className: "movie-title" }, m.name)
+        ))
+      ),
+      filtered.length === 0 && /* @__PURE__ */ React.createElement("div", { className: "text-center py-16 text-muted-foreground" }, _lang === "ar" ? "لا توجد أفلام" : "No movies")
+    );
+  };
+  const MovieDetail = ({ id, nav }) => {
+    const [movie, setMovie] = useState(null);
+    const [speed, setSpeed] = useState(1);
+    const iframeRef = useRef(null);
+    useEffect(() => {
+      fetch("res/movies/movies.json").then(r => r.text()).then(t => {
+        const all = parseMovies(t);
+        setMovie(all.find(x => x.id === id) || null);
+      }).catch(() => setMovie(null));
+    }, [id]);
+    const setPlaybackSpeed = (s) => {
+      setSpeed(s);
+      try {
+        const win = iframeRef.current && iframeRef.current.contentWindow;
+        if (win) win.postMessage(JSON.stringify({ event: "command", func: "setPlaybackRate", args: [s] }), "*");
+      } catch (e) {}
+    };
+    if (!movie) return /* @__PURE__ */ React.createElement("div", { className: "p-8 text-center" }, _lang === "ar" ? "جاري التحميل..." : "Loading...");
+    const vid = ytId(movie.url);
+    const embed = vid ? `https://www.youtube.com/embed/${vid}?enablejsapi=1&rel=0` : "";
+    const speeds = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+    return /* @__PURE__ */ React.createElement("div", { className: "movie-detail", dir: _lang === "ar" ? "rtl" : "ltr" },
+      /* @__PURE__ */ React.createElement("div", { className: "movie-player-wrap" },
+        embed ? /* @__PURE__ */ React.createElement("iframe", { ref: iframeRef, className: "movie-iframe", src: embed, title: movie.name, allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowFullScreen: true }) : /* @__PURE__ */ React.createElement("div", { className: "p-8 text-center" }, "Invalid YouTube URL")
+      ),
+      /* @__PURE__ */ React.createElement("h1", { className: "movie-detail-title" }, movie.name),
+      /* @__PURE__ */ React.createElement("div", { className: "movie-controls" },
+        /* @__PURE__ */ React.createElement("div", { className: "movie-speeds" },
+          speeds.map(s => /* @__PURE__ */ React.createElement("button", { key: s, type: "button", className: `movie-speed ${speed === s ? "on" : ""}`, onClick: () => setPlaybackSpeed(s) }, s + "x"))
+        ),
+        /* @__PURE__ */ React.createElement("button", { type: "button", className: "movie-theme-btn", onClick: () => { const html = document.documentElement; const isDark = html.classList.contains("dark"); html.classList.toggle("dark", !isDark); try { localStorage.setItem("apk_theme", isDark ? "light" : "dark"); } catch(e){} } }, _lang === "ar" ? "تبديل الوضع" : "Toggle theme")
+      )
+    );
+  };
+const DownloadsManager = ({ open }) => {
     const [tab, setTab] = useState("active");
     const [tick, setTick] = useState(0);
     useEffect(() => {
@@ -2889,7 +3010,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     const id = decodeURIComponent(route.slice("/you-app/".length));
     const [app, setApp] = useState(null);
     useEffect(() => {
-      fetch("res/apps/apps.json").then((r) => r.text()).then((text) => {
+      Promise.resolve("").then((text) => {
         const list = parseTagged(text);
         setApp(list.find((a) => a.id === id) || null);
       }).catch(() => setApp(null));
@@ -2909,147 +3030,40 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       )
     );
   };
-  const parseMovies = (text) => {
-    const lines = String(text || "").split(/\r?\n/).map((x) => x.trim()).filter(Boolean);
-    const out = [];
-    let cur = null;
-    lines.forEach((line) => {
-      if (line === "</end>" || line === "/end") { if (cur && cur.id) out.push(cur); cur = null; return; }
-      const head = line.match(/^<\/?(m\d+)>$/i);
-      if (head) { cur = { id: head[1], name: "", url: "" }; return; }
-      if (!cur) return;
-      const name = line.match(/^<\/?name=([\s\S]*)>$/);
-      const url = line.match(/^<\/?url=([\s\S]*)>$/);
-      if (name) cur.name = name[1].trim();
-      else if (url) cur.url = url[1].trim();
-    });
-    return out;
-  };
-
-  const extractYouTubeId = (url) => {
-    if (!url) return "";
-    const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([a-zA-Z0-9_-]{11})/);
-    return m ? m[1] : "";
-  };
-
-  const MoviesPage = ({ nav }) => {
-    const [q, setQ] = React.useState("");
-    const [movies, setMovies] = React.useState([]);
-    React.useEffect(() => {
-      fetch("res/movies/movies.json").then((r) => r.text()).then((text) => setMovies(parseMovies(text))).catch(() => setMovies([]));
+  const StorePage = ({ nav }) => {
+    const [q, setQ] = useState("");
+    const [apps, setApps] = useState([]);
+    const [ads, setAds] = useState([]);
+    const [menu, setMenu] = useState(false);
+    useEffect(() => {
+      setApps([]);
+      setAds([]);
     }, []);
-    const query = q.trim().toLowerCase();
-    const shown = movies.filter((m) => !query || String(m.name || "").toLowerCase().indexOf(query) >= 0);
-    return React.createElement("div", { className: "movies-page", dir: _lang === "ar" ? "rtl" : "ltr", style: { paddingBottom: "80px" } },
-      React.createElement("div", { className: "movies-top", style: { padding: "16px 12px 8px", background: "hsl(var(--background))" } },
-        React.createElement("input", {
-          className: "movies-search",
-          value: q,
-          onChange: (e) => setQ(e.target.value),
-          placeholder: _lang === "ar" ? "ابحث عن أفلام" : "Search movies",
-          "aria-label": "Search movies",
-          style: {
-            width: "100%",
-            height: "56px",
-            fontSize: "18px",
-            padding: "0 20px",
-            borderRadius: "28px",
-            border: "1px solid hsl(var(--border))",
-            background: "hsl(var(--card))",
-            boxShadow: "0 1px 6px rgba(0,0,0,0.1)",
-            outline: "none"
-          }
-        })
+    const query = q.trim();
+    const shown = apps.filter((a) => !query || String(a.name || "").toLowerCase().indexOf(query.toLowerCase()) >= 0);
+    const rows = chunk8(shown);
+    const blocks = [];
+    rows.forEach((row, i) => {
+      blocks.push(React.createElement("div", { key: "r" + i, className: "store-row" }, row.map((a) => React.createElement("button", { key: a.id || a.file, type: "button", className: "store-app", onClick: () => nav("/you-app/" + encodeURIComponent(a.id || a.file)) }, React.createElement("img", { src: "res/apps/icons_apps/" + (a.file || a.id) + ".png", alt: "" }), React.createElement("span", null, a.name || a.id)))));
+      if ((i + 1) % 3 === 0 && ads.length) blocks.push(React.createElement("div", { key: "ad" + i, className: "store-ad-wrap" }, React.createElement(StoreAd, { ad: ads[Math.floor(i / 3) % ads.length] })));
+    });
+    if (!rows.length && ads.length) blocks.push(React.createElement("div", { key: "ad0", className: "store-ad-wrap" }, ads.map((ad) => React.createElement(StoreAd, { key: ad.id, ad }))));
+    return React.createElement("div", { className: "store-page", dir: _lang === "ar" ? "rtl" : "ltr" },
+      React.createElement("div", { className: "store-top" },
+        React.createElement("button", { type: "button", className: "store-ico", onClick: () => nav("/you-publish"), "aria-label": t("you_publish") }, storeSvg(SICO.cloud, "0 -960 960 960", 26)),
+        React.createElement("input", { className: "store-search", value: q, onChange: (e) => setQ(e.target.value), placeholder: t("you_search"), "aria-label": t("you_search") }),
+        React.createElement("button", { type: "button", className: "store-ico", onClick: () => setMenu(true), "aria-label": t("you_menu") }, storeSvg(SICO.menu, "0 -960 960 960", 26))
       ),
-      !shown.length ? React.createElement("p", { style: { textAlign: "center", padding: "40px 20px", color: "hsl(var(--muted-foreground))" } }, _lang === "ar" ? "لا توجد أفلام" : "No movies found") : null,
-      React.createElement("div", { className: "movies-grid", style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", padding: "8px" } },
-        shown.map((m) => React.createElement("button", {
-          key: m.id,
-          type: "button",
-          onClick: () => nav("/you-movie/" + m.id),
-          style: { background: "none", border: "none", padding: 0, cursor: "pointer", textAlign: "center" }
-        },
-          React.createElement("img", {
-            src: "res/movies/movies_photos/" + m.id + ".png",
-            alt: m.name || "",
-            style: { width: "100%", aspectRatio: "9/16", objectFit: "cover", borderRadius: "0", display: "block" },
-            onError: (e) => { e.target.style.background = "#333"; e.target.alt = "No image"; }
-          }),
-          React.createElement("div", { style: { marginTop: "6px", fontSize: "14px", fontWeight: "500", color: "hsl(var(--foreground))", lineHeight: "1.3", padding: "0 4px" } }, m.name || m.id)
-        ))
-      )
+      query && !shown.length ? React.createElement("p", { className: "store-empty" }, t("you_no_results")) : null,
+      !query && !shown.length ? React.createElement("p", { className: "store-empty" }, t("you_no_apps")) : null,
+      blocks,
+      menu ? React.createElement("div", { className: "store-mask", onClick: () => setMenu(false) }, React.createElement("aside", { className: "store-drawer", onClick: (e) => e.stopPropagation() },
+        React.createElement("h2", null, t("you_store")),
+        React.createElement("button", { type: "button", onClick: () => nav("/settings") }, storeSvg(SICO.gear, "0 0 24 24", 22), React.createElement("span", null, t("you_settings"))),
+        React.createElement("button", { type: "button", onClick: () => nav("/you-projects") }, storeSvg(SICO.devices, "0 0 24 24", 22), React.createElement("span", null, t("you_my_projects")))
+      )) : null
     );
   };
-
-  const MovieDetail = ({ route, nav }) => {
-    const id = route.split("/you-movie/")[1] || "";
-    const [movie, setMovie] = React.useState(null);
-    const [speed, setSpeed] = React.useState(1);
-    const playerRef = React.useRef(null);
-    React.useEffect(() => {
-      fetch("res/movies/movies.json").then((r) => r.text()).then((text) => {
-        const all = parseMovies(text);
-        const found = all.find((m) => m.id === id);
-        setMovie(found || null);
-      }).catch(() => setMovie(null));
-    }, [id]);
-    const ytId = movie ? extractYouTubeId(movie.url) : "";
-    const speeds = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-    const setPlaybackSpeed = (s) => {
-      setSpeed(s);
-      if (playerRef.current && playerRef.current.setPlaybackRate) {
-        try { playerRef.current.setPlaybackRate(s); } catch (e) {}
-      }
-    };
-    React.useEffect(() => {
-      if (!ytId) return;
-      const tag = document.createElement("script");
-      tag.src = "https://www.youtube.com/iframe_api";
-      const first = document.getElementsByTagName("script")[0];
-      first.parentNode.insertBefore(tag, first);
-      window.onYouTubeIframeAPIReady = () => {
-        playerRef.current = new YT.Player("yt-player", {
-          videoId: ytId,
-          playerVars: { playsinline: 1, rel: 0, modestbranding: 1 },
-          events: { onReady: (e) => { try { e.target.setPlaybackRate(speed); } catch (err) {} } }
-        });
-      };
-      return () => { if (playerRef.current && playerRef.current.destroy) playerRef.current.destroy(); };
-    }, [ytId]);
-    if (!movie) return React.createElement("div", { style: { padding: "40px", textAlign: "center" } }, "Movie not found");
-    return React.createElement("div", { className: "movie-detail", dir: _lang === "ar" ? "rtl" : "ltr", style: { background: "hsl(var(--background))", minHeight: "100vh", paddingBottom: "80px" } },
-      React.createElement("button", { type: "button", onClick: () => nav("/you"), style: { position: "absolute", top: "12px", left: "12px", zIndex: 10, background: "rgba(0,0,0,0.6)", color: "#fff", border: "none", borderRadius: "50%", width: "36px", height: "36px", fontSize: "20px" } }, "‹"),
-      React.createElement("div", { id: "yt-player", style: { width: "100%", aspectRatio: "16/9", background: "#000" } }),
-      React.createElement("h1", { style: { fontSize: "20px", fontWeight: "600", padding: "16px 16px 8px", margin: 0, color: "hsl(var(--foreground))" } }, movie.name || id),
-      React.createElement("div", { style: { padding: "0 16px 16px", display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "center" } },
-        React.createElement("span", { style: { fontSize: "14px", color: "hsl(var(--muted-foreground))" } }, _lang === "ar" ? "السرعة:" : "Speed:"),
-        speeds.map((s) => React.createElement("button", {
-          key: s,
-          type: "button",
-          onClick: () => setPlaybackSpeed(s),
-          style: {
-            padding: "6px 12px",
-            borderRadius: "16px",
-            border: "1px solid hsl(var(--border))",
-            background: speed === s ? "hsl(var(--primary))" : "hsl(var(--card))",
-            color: speed === s ? "#fff" : "hsl(var(--foreground))",
-            fontSize: "13px"
-          }
-        }, s + "x")),
-        React.createElement("button", {
-          type: "button",
-          onClick: () => {
-            const root = document.documentElement;
-            const isDark = root.classList.contains("dark");
-            if (isDark) root.classList.remove("dark"); else root.classList.add("dark");
-          },
-          style: { marginLeft: "auto", padding: "6px 12px", borderRadius: "16px", border: "1px solid hsl(var(--border))", background: "hsl(var(--card))", color: "hsl(var(--foreground))", fontSize: "13px" }
-        }, _lang === "ar" ? "داكن/فاتح" : "Dark/Light")
-      )
-    );
-  };
-
-  const StorePage = ({ nav }) => React.createElement(MoviesPage, { nav });
   const PublishPage = ({ nav }) => {
     const [mode, setMode] = useState("");
     const [form, setForm] = useState({ name: "", mail: "", link: "", msg: "" });
@@ -3975,11 +3989,15 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       const _p = route.split("?");
       const _id = _p[0].split("/")[2] || "";
       const _qi = new URLSearchParams(_p[1] || "").get("install") === "1";
-      page = /* @__PURE__ */ React.createElement(Detail, { id: _id, nav, favs, toggle, selStore, expMode, setDetailApp, autoInstall: _qi, onToggleTheme: toggleTheme, isDark: isDarkNow });
+      page = /* @__PURE__ */ React.createElement(Detail, { id: _id, nav, favs, toggle, selStore, expMode, setDetailApp, autoInstall: _qi, onToggleTheme: toggleTheme, isDark: isDarkNow, style2 });
     } else if (route === "/favorites") page = /* @__PURE__ */ React.createElement(Favs, { favs, songFavs, open, toggle, toggleSongFav, play: playFromList });
     else if (route === "/downloads") page = /* @__PURE__ */ React.createElement(DownloadsManager, { open });
-    else if (route === "/you" || route === "/music") page = React.createElement(MoviesPage, { nav });
-    else if (route.startsWith("/you-movie/")) page = React.createElement(MovieDetail, { route, nav });
+    else if (route === "/movies") page = /* @__PURE__ */ React.createElement(MoviesPage, { nav });
+    else if (route.startsWith("/movie/")) {
+      const mid = route.split("/")[2] || "";
+      page = /* @__PURE__ */ React.createElement(MovieDetail, { id: mid, nav });
+    }
+    else if (route === "/you" || route === "/music") page = /* @__PURE__ */ React.createElement(StorePage, { nav });
     else if (route.startsWith("/you-app/")) page = /* @__PURE__ */ React.createElement(StoreInstall, { route, nav });
     else if (route === "/you-publish") page = /* @__PURE__ */ React.createElement(PublishPage, { nav });
     else if (route === "/you-projects") page = /* @__PURE__ */ React.createElement(ProjectsPage, { nav });
