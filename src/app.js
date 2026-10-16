@@ -1,5 +1,7 @@
 (() => {
   const { useState, useEffect, useRef, useCallback } = React;
+  // Equalizer frequency bands used by the audio graph.
+  const EQ_FREQS = [60, 230, 910, 3600, 14000];
   const _mem = {};
   let _idb = null;
   const IDB_NAME = "apkdroid_store";
