@@ -233,6 +233,23 @@ html.style2.dark .dl-name-pct,html.style2.black .dl-name-pct{color:#A8C7FA}
 .bg-reviews-loading,.bg-reviews-empty{text-align:center;color:hsl(var(--muted-fg));padding:16px 8px;font-size:.88rem}
 .bg-info-list{display:flex;flex-direction:column;gap:8px;font-size:.86rem;color:hsl(var(--fg))}
 .bg-info-list b{font-weight:600}
+.bg-share-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:400;display:flex;align-items:flex-end;justify-content:center;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;pointer-events:none}
+.bg-share-overlay.show{opacity:1;visibility:visible;pointer-events:auto}
+.bg-share-sheet{width:100%;max-width:480px;background:hsl(var(--card));border-radius:24px 24px 0 0;padding:10px 20px 20px;transform:translateY(110%);transition:transform .38s cubic-bezier(.22,.9,.3,1);height:50vh;max-height:50vh;overflow:hidden;box-shadow:0 -10px 30px rgba(0,0,0,.5);color:hsl(var(--fg));display:flex;flex-direction:column}
+.bg-share-overlay.show .bg-share-sheet{transform:translateY(0)}
+.bg-share-handle{width:46px;height:5px;border-radius:10px;background:hsl(var(--border));margin:4px auto 14px;flex-shrink:0}
+.bg-share-title{text-align:center;font-weight:800;font-size:1.1rem;margin-bottom:22px;color:hsl(var(--fg));flex-shrink:0}
+.bg-share-options{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 10px;overflow-y:auto;flex:1}
+.bg-share-option{background:transparent;border:none;color:hsl(var(--fg));display:flex;flex-direction:column;align-items:center;gap:8px;font-weight:700;font-size:.85rem;padding:6px 0;border-radius:12px;cursor:pointer;transition:background .15s}
+.bg-share-option:hover,.bg-share-option:active{background:hsl(var(--muted))}
+.bg-share-option-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:#ffffff;flex-shrink:0}
+.bg-share-option-icon svg{width:28px;height:28px}
+.bg-share-option-icon.whatsapp{background:#25d366}
+.bg-share-option-icon.telegram{background:#229ed9}
+.bg-share-option-icon.instagram{background:linear-gradient(45deg,#f09433,#dc2743,#bc1888)}
+.bg-share-option-icon.facebook{background:#1877f2}
+.bg-share-option-icon.copy{background:hsl(var(--primary));color:hsl(var(--primary-fg))}
+.bg-share-option-label{font-size:.85rem;font-weight:700;text-align:center}
 .bg-toast{position:fixed;bottom:calc(4rem + 16px);left:50%;transform:translateX(-50%) translateY(100px);background:#323232;color:#fff;padding:12px 24px;border-radius:8px;font-size:.9rem;z-index:500;opacity:0;transition:transform .3s,opacity .3s;max-width:90vw;text-align:center}
 .bg-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 @media(min-width:640px){.bg-toast{bottom:24px}}
@@ -975,15 +992,61 @@ html:not(.style2).dark .hdr-chip.on, html:not(.style2).black .hdr-chip.on { back
 }
 .download-btn:hover { opacity: 0.9; }
 
-/* APKDroid settings switch and install metadata strip */
-.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-inline:4px;font-family:system-ui,sans-serif;font-size:16px;font-weight:700}
-.sw{flex:none;position:relative;width:52px;height:32px;border-radius:16px;border:2px solid #53686A;background:#D3DDDB;cursor:pointer;padding:0;transition:background-color .2s,border-color .2s}
-.sw::after{content:"";position:absolute;top:6px;inset-inline-start:6px;width:16px;height:16px;border-radius:50%;background:#53686A;transition:inset-inline-start .25s cubic-bezier(.05,.7,.1,1),top .25s,width .25s,height .25s,background-color .2s}
-.sw[aria-checked="true"]{background:#0F766E;border-color:#0F766E}
-.sw[aria-checked="true"]::after{top:2px;inset-inline-start:22px;width:24px;height:24px;background:#F4F7F6}
-.sw:focus-visible{outline:3px solid #0F766E;outline-offset:3px}
-.bg-detail-meta{box-sizing:border-box;width:calc(100% + 108px);margin-top:8px;padding:10px 12px;border:1px solid hsl(var(--border));border-radius:12px;background:hsl(var(--card));gap:8px 14px;line-height:1.4}
-.bg-detail-meta span{white-space:nowrap}
+/* Custom switch for style2 toggle */
+.switch-row {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 12px;
+padding-inline: 4px;
+font-family: system-ui, sans-serif;
+font-size: 16px;
+font-weight: 700;
+}
 
-.bg-detail-dev{box-sizing:border-box;width:calc(100% + 108px);margin:8px 0 0;padding:10px 12px 0;border:1px solid hsl(var(--border));border-bottom:0;border-radius:12px 12px 0 0;background:hsl(var(--card))}
-.bg-detail-meta{margin-top:0;border-top:0;border-radius:0 0 12px 12px}
+/* زر المفتاح نفسه */
+.sw {
+flex: none;
+position: relative;
+width: 52px;
+height: 32px;
+border-radius: 16px;
+border: 2px solid #53686A;
+background: #D3DDDB;
+cursor: pointer;
+padding: 0;
+transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* الدائرة المتحركة داخل المفتاح */
+.sw::after {
+content: "";
+position: absolute;
+top: 6px;
+inset-inline-start: 6px;
+width: 16px;
+height: 16px;
+border-radius: 50%;
+background: #53686A;
+transition: inset-inline-start 0.25s cubic-bezier(0.05, 0.7, 0.1, 1), top 0.25s, width 0.25s, height 0.25s, background-color 0.2s;
+}
+
+/* حالة التفعيل (عندما يكون المفتاح مُضاء/مُفعل) */
+.sw[aria-checked="true"] {
+background: #0F766E;
+border-color: #0F766E;
+}
+
+.sw[aria-checked="true"]::after {
+top: 2px;
+inset-inline-start: 22px;
+width: 24px;
+height: 24px;
+background: #F4F7F6;
+}
+
+/* تأثير التركيز للوصولية */
+.sw:focus-visible {
+outline: 3px solid #0F766E;
+outline-offset: 3px;
+}
