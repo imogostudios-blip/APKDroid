@@ -3521,17 +3521,23 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     lines.forEach(line => {
       if (line === "</end>" || line === "/end") { if (cur && cur.id) out.push(cur); cur = null; return; }
       const head = line.match(/^<\/?(m\d+)>$/i);
-      if (head) { cur = { id: head[1], name: "", url: "" }; return; }
+      if (head) { cur = { id: head[1], name: "", url: "", dir: "A", download: "", category: "" }; return; }
       if (!cur) return;
       const name = line.match(/^<\/?name=([\s\S]*)>$/);
       const url = line.match(/^<\/?url=([\s\S]*)>$/);
+      const dir = line.match(/^<\/?dir=([\s\S]*)>$/);
+      const download = line.match(/^<\/?download=([\s\S]*)>$/);
+      const category = line.match(/^<\/?category=([\s\S]*)>$/);
       if (name) cur.name = name[1].trim();
       else if (url) cur.url = url[1].trim();
+      else if (dir) cur.dir = (dir[1].trim().toUpperCase() === "B") ? "B" : "A";
+      else if (download) cur.download = download[1].trim();
+      else if (category) cur.category = category[1].trim();
     });
     return out;
   };
 
-  const MoviesPage = ({ nav, searchQ, setSearchQ }) => {
+  const MoviesPage = ({ nav, searchQ, setSearchQ, photo, onOpenAccount }) => {
     const [movies, setMovies] = useState([]);
     const [q, setQ] = useState(searchQ || "");
     useEffect(() => {
@@ -3540,29 +3546,43 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
         setMovies(list);
       }).catch(() => setMovies([]));
     }, []);
-    const filtered = movies.filter(m => !q || (m.name || "").toLowerCase().includes(q.toLowerCase()));
+    const ql = (q || "").trim().toLowerCase();
+    const filtered = movies.filter(m => !ql || 
+      (m.name || "").toLowerCase().includes(ql) || 
+      (m.category || "").toLowerCase().includes(ql)
+    );
     return React.createElement("div", { className: "movies-page" },
-      React.createElement("div", { className: "movies-search-bar" },
+      React.createElement("div", { className: "movies-search-bar", style: { display: "flex", alignItems: "center", gap: "10px", direction: "ltr" } },
+        React.createElement("button", { 
+          type: "button", 
+          className: "movies-avatar", 
+          onClick: onOpenAccount, 
+          "aria-label": "الحساب" 
+        }, photo ? React.createElement("img", { src: photo, alt: "" }) : React.createElement("span", null, "GO")),
         React.createElement("input", {
           type: "search",
           className: "movies-search-input",
-          placeholder: "ابحث عن أفلام...",
+          placeholder: "ابحث عن أفلام أو تصنيف...",
           value: q,
-          onChange: e => { setQ(e.target.value); if (setSearchQ) setSearchQ(e.target.value); }
+          onChange: e => { setQ(e.target.value); if (setSearchQ) setSearchQ(e.target.value); },
+          style: { flex: 1 }
         })
       ),
       React.createElement("div", { className: "movies-grid" },
-        filtered.map(m => React.createElement("button", {
-          key: m.id,
-          type: "button",
-          className: "movie-card",
-          onClick: () => nav("/movie/" + encodeURIComponent(m.id))
-        },
-          React.createElement("div", { className: "movie-thumb-wrap" },
-            React.createElement("img", { src: "res/movies/movies_photos/" + m.id + ".png", alt: "", onError: e => { e.target.style.display = "none"; } })
-          ),
-          React.createElement("div", { className: "movie-name" }, m.name || m.id)
-        ))
+        filtered.map(m => {
+          const isWide = (m.dir || "A").toUpperCase() === "B";
+          return React.createElement("button", {
+            key: m.id,
+            type: "button",
+            className: "movie-card" + (isWide ? " movie-card-wide" : ""),
+            onClick: () => nav("/movie/" + encodeURIComponent(m.id))
+          },
+            React.createElement("div", { className: "movie-thumb-wrap" + (isWide ? " movie-thumb-wide" : "") },
+              React.createElement("img", { src: "res/movies/movies_photos/" + m.id + ".png", alt: "", onError: e => { e.target.style.display = "none"; } })
+            ),
+            React.createElement("div", { className: "movie-name" }, m.name || m.id)
+          );
+        })
       )
     );
   };
@@ -3593,7 +3613,14 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
         React.createElement("select", { value: speed, onChange: e => setSpeed(Number(e.target.value)) },
           [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map(s => React.createElement("option", { key: s, value: s }, s + "x"))
         ),
-        React.createElement("button", { type: "button", className: "theme-toggle", onClick: onToggleTheme }, isDark ? "فاتح" : "داكن")
+        React.createElement("button", { type: "button", className: "theme-toggle", onClick: onToggleTheme }, isDark ? "فاتح" : "داكن"),
+        movie && movie.download ? React.createElement("a", { 
+          href: movie.download, 
+          target: "_blank", 
+          rel: "noopener noreferrer", 
+          className: "download-btn",
+          style: { display: "inline-block", padding: "6px 14px", borderRadius: "8px", background: "hsl(var(--primary))", color: "#fff", textDecoration: "none", fontFamily: "inherit", marginTop: "8px" }
+        }, "تنزيل") : null
       )
     );
   };
@@ -3999,7 +4026,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       page = /* @__PURE__ */ React.createElement(Detail, { id: _id, nav, favs, toggle, selStore, expMode, setDetailApp, autoInstall: _qi, onToggleTheme: toggleTheme, isDark: isDarkNow, style2 });
     } else if (route === "/favorites") page = /* @__PURE__ */ React.createElement(Favs, { favs, songFavs, open, toggle, toggleSongFav, play: playFromList });
     else if (route === "/downloads") page = /* @__PURE__ */ React.createElement(DownloadsManager, { open });
-    else if (route === "/movies") page = /* @__PURE__ */ React.createElement(MoviesPage, { nav });
+    else if (route === "/movies") page = /* @__PURE__ */ React.createElement(MoviesPage, { nav, photo: profile && profile.photo, onOpenAccount: () => setAccOpen(true) });
     else if (route.startsWith("/movie/")) {
       const mid = decodeURIComponent(route.slice("/movie/".length));
       page = /* @__PURE__ */ React.createElement(MoviePlayer, { id: mid, nav, onToggleTheme: toggleTheme, isDark: isDarkNow });
