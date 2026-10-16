@@ -2213,33 +2213,60 @@ const Detail=({id,nav,favs,toggle,selStore,expMode,setDetailApp,autoInstall,onTo
             </div>
           </div>
 
-          {/* ===== Original APKDroid specs bar — left exactly as-is, per request ===== */}
-        <div className="flex items-center overflow-x-auto px-4 py-3 border-y border-[hsl(var(--border))] gap-8 mt-4">
-          <div className="flex flex-col items-center shrink-0">
-            <span className="text-xs text-muted-foreground uppercase font-semibold mb-1">{app.userRatingCount>0?`${(app.userRatingCount/1000).toFixed(1)}K RATINGS`:'RATINGS'}</span>
-            <span className="text-[22px] font-bold text-muted-foreground">{app.averageUserRating?.toFixed(1)||'N/A'}</span>
-            <Stars r={app.averageUserRating||0} s="w-3 h-3"></Stars>
-          </div>
-          <div className="w-px h-10 bg-[hsl(var(--border))] shrink-0"></div>
-          <div className="flex flex-col items-center shrink-0">
-            <span className="text-xs text-muted-foreground uppercase font-semibold mb-1">AGE</span>
-            <span className="text-[22px] font-bold text-muted-foreground">{app.contentAdvisoryRating||'—'}</span>
-            <span className="text-xs text-muted-foreground mt-1">{t('years_old')}</span>
-          </div>
-          <div className="w-px h-10 bg-[hsl(var(--border))] shrink-0"></div>
-          <div className="flex flex-col items-center shrink-0">
-            <span className="text-xs text-muted-foreground uppercase font-semibold mb-1">CHART</span>
-            <span className="text-[22px] font-bold text-muted-foreground">#1</span>
-            <span className="text-xs text-muted-foreground mt-1">{app.primaryGenreName}</span>
-          </div>
-          <div className="w-px h-10 bg-[hsl(var(--border))] shrink-0"></div>
-          <div className="flex flex-col items-center shrink-0">
-            <span className="text-xs text-muted-foreground uppercase font-semibold mb-1">DEVELOPER</span>
-            <span className="text-[22px] font-bold text-muted-foreground w-12 h-7 bg-[hsl(var(--muted))] rounded flex items-center justify-center">{(app.artistName||'?').charAt(0)}</span>
-            <span className="text-[10px] text-muted-foreground mt-1 truncate max-w-[80px]">{app.artistName}</span>
-          </div>
-        </div>
-        {/* ===== end unchanged specs bar ===== */}
+          {/* Specs bar: old style only for green (expMode), new Play Store style for blue */}
+          {expMode ? (
+            <div className="flex items-center overflow-x-auto px-4 py-3 border-y border-[hsl(var(--border))] gap-8 mt-4">
+              <div className="flex flex-col items-center shrink-0">
+                <span className="text-xs text-muted-foreground uppercase font-semibold mb-1">{app.userRatingCount>0?`${(app.userRatingCount/1000).toFixed(1)}K RATINGS`:'RATINGS'}</span>
+                <span className="text-[22px] font-bold text-muted-foreground">{app.averageUserRating?.toFixed(1)||'N/A'}</span>
+                <Stars r={app.averageUserRating||0} s="w-3 h-3"></Stars>
+              </div>
+              <div className="w-px h-10 bg-[hsl(var(--border))] shrink-0"></div>
+              <div className="flex flex-col items-center shrink-0">
+                <span className="text-xs text-muted-foreground uppercase font-semibold mb-1">AGE</span>
+                <span className="text-[22px] font-bold text-muted-foreground">{app.contentAdvisoryRating||'—'}</span>
+                <span className="text-xs text-muted-foreground mt-1">{t('years_old')}</span>
+              </div>
+              <div className="w-px h-10 bg-[hsl(var(--border))] shrink-0"></div>
+              <div className="flex flex-col items-center shrink-0">
+                <span className="text-xs text-muted-foreground uppercase font-semibold mb-1">CHART</span>
+                <span className="text-[22px] font-bold text-muted-foreground">#1</span>
+                <span className="text-xs text-muted-foreground mt-1">{app.primaryGenreName}</span>
+              </div>
+              <div className="w-px h-10 bg-[hsl(var(--border))] shrink-0"></div>
+              <div className="flex flex-col items-center shrink-0">
+                <span className="text-xs text-muted-foreground uppercase font-semibold mb-1">DEVELOPER</span>
+                <span className="text-[22px] font-bold text-muted-foreground w-12 h-7 bg-[hsl(var(--muted))] rounded flex items-center justify-center">{(app.artistName||'?').charAt(0)}</span>
+                <span className="text-[10px] text-muted-foreground mt-1 truncate max-w-[80px]">{app.artistName}</span>
+              </div>
+            </div>
+          ) : (
+            <div className="play-stats-bar flex items-center justify-between px-4 py-2 border-y border-[hsl(var(--border))] mt-3">
+              <div className="flex flex-col items-center text-center min-w-0 flex-1">
+                <div className="text-sm font-semibold text-muted-foreground">{app.userRatingCount ? (app.userRatingCount > 1000000 ? (app.userRatingCount/1000000).toFixed(1)+'+ مليون' : app.userRatingCount.toLocaleString()) : '—'}</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">عمليات تنزيل</div>
+              </div>
+              <div className="w-px h-8 bg-[hsl(var(--border))] shrink-0 mx-1"></div>
+              <div className="flex flex-col items-center text-center min-w-0 flex-1">
+                <div className="text-sm font-semibold">{fmtSize(app.fileSizeBytes)}</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">الحجم</div>
+              </div>
+              <div className="w-px h-8 bg-[hsl(var(--border))] shrink-0 mx-1"></div>
+              <div className="flex flex-col items-center text-center min-w-0 flex-1">
+                <div className="text-sm font-semibold flex items-center gap-1">
+                  <span className="text-orange-400">⚠</span> {app.contentAdvisoryRating||'—'}
+                </div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">العمر المناسب</div>
+              </div>
+              <div className="w-px h-8 bg-[hsl(var(--border))] shrink-0 mx-1"></div>
+              <div className="flex flex-col items-center text-center min-w-0 flex-1">
+                <div className="text-sm font-semibold flex items-center gap-1">
+                  ★ {app.averageUserRating?.toFixed(1)||'N/A'}
+                </div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">{app.userRatingCount ? app.userRatingCount.toLocaleString() + ' تقييم' : 'تقييم'}</div>
+              </div>
+            </div>
+          )}
           <div className="bg-detail-actions">
             {dlView.active?(
               <div className="flex gap-2 w-full">
