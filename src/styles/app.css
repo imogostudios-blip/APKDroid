@@ -1050,11 +1050,12 @@ html:not(.style2).dark .hdr-chip.on, html:not(.style2).black .hdr-chip.on { back
 /* Thinner install button for blue style (style2) */
 html.style2 .bg-btn-install,
 html.style2 .bg-btn-store {
-  height: 40px !important;
-  padding: 0 24px !important;
-  font-size: 15px !important;
-  border-radius: 20px !important;
-  min-height: 40px;
+  height: 36px !important;
+  padding: 0 20px !important;
+  font-size: 14px !important;
+  border-radius: 18px !important;
+  min-height: 36px !important;
+  line-height: 36px !important;
 }
 
 /* Play Store style stats bar for blue style */
