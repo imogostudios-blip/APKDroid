@@ -2241,7 +2241,7 @@ const Detail=({id,nav,favs,toggle,selStore,expMode,setDetailApp,autoInstall,onTo
               </div>
             </div>
           ) : (
-            <div className="play-stats-bar flex items-center justify-between px-4 py-2 border-y border-[hsl(var(--border))] mt-3">
+            <div className="play-stats-bar flex items-center justify-between px-4 py-2 mt-3">
               <div className="flex flex-col items-center text-center min-w-0 flex-1">
                 <div className="text-sm font-semibold text-muted-foreground">{app.userRatingCount ? (app.userRatingCount > 1000000 ? (app.userRatingCount/1000000).toFixed(1)+'+ مليون' : app.userRatingCount.toLocaleString()) : '—'}</div>
                 <div className="text-[11px] text-muted-foreground mt-0.5">عمليات تنزيل</div>
@@ -2267,19 +2267,21 @@ const Detail=({id,nav,favs,toggle,selStore,expMode,setDetailApp,autoInstall,onTo
               </div>
             </div>
           )}
-          <div className="bg-detail-actions">
+          <div className="bg-detail-actions" style={{marginTop:12}}>
             {dlView.active?(
               <div className="flex gap-2 w-full">
                 <input type="file" ref={fileInputRef} style={{display:'none'}} accept="*/*" onChange={()=>{}} />
                 {dlView.phase==='done'?(
-                  <button type="button" className="bg-btn-cancel" onClick={openFilesPicker}>{t('req_open_files')}</button>
+                  <>
+                    <button type="button" className="bg-btn-cancel thin-btn" onClick={openFilesPicker}>{t('req_open_files')}</button>
+                    <button type="button" className="bg-btn-store thin-btn" onClick={()=>beginInstall(true)}>{t('reinstall')}</button>
+                  </>
                 ):(
-                  <button type="button" className="bg-btn-cancel" onClick={cancelInstall}>{t('req_cancel')}</button>
+                  <button type="button" className="bg-btn-cancel thin-btn" style={{width:'100%'}} onClick={cancelInstall}>{t('req_cancel')}</button>
                 )}
-                <button type="button" className="bg-btn-store" onClick={()=>beginInstall(true)}>{t('reinstall')}</button>
               </div>
             ):(
-              <button type="button" className="bg-btn-install" onClick={()=>setReqOpen(true)}>{t('install')}</button>
+              <button type="button" className="bg-btn-install thin-btn" onClick={()=>setReqOpen(true)}>{t('install')}</button>
             )}
           </div>
         </div>
