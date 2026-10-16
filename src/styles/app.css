@@ -1046,3 +1046,21 @@ html:not(.style2).dark .hdr-chip.on, html:not(.style2).black .hdr-chip.on { back
   outline: 3px solid #0F766E;
   outline-offset: 3px;
 }
+
+/* Thinner install button for blue style (style2) */
+html.style2 .bg-btn-install,
+html.style2 .bg-btn-store {
+  height: 40px !important;
+  padding: 0 24px !important;
+  font-size: 15px !important;
+  border-radius: 20px !important;
+  min-height: 40px;
+}
+
+/* Play Store style stats bar for blue style */
+.play-stats-bar {
+  font-family: system-ui, -apple-system, sans-serif;
+}
+.play-stats-bar .text-sm {
+  line-height: 1.2;
+}
