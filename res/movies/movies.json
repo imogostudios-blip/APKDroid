@@ -1,8 +1,26 @@
 </m1>
 </name=Sample Movie 1>
 </url=https://www.youtube.com/watch?v=dQw4w9WgXcQ>
+</dir=A>
+</download=https://example.com/download1.mp4>
+</category=اكشن>
 </end>
 </m2>
 </name=Sample Movie 2>
-</url=https://www.youtube.com/watch?v=9bZkp7q19f0>
+</url=https://www.youtube.com/watch?v=jNQXAC9IVRw>
+</dir=B>
+</download=https://example.com/download2.mp4>
+</category=كوميدي>
+</end>
+</m3>
+</name=Sample Vertical 3>
+</url=https://www.youtube.com/watch?v=dQw4w9WgXcQ>
+</dir=A>
+</category=رعب>
+</end>
+</m4>
+</name=Sample Wide 4>
+</url=https://www.youtube.com/watch?v=jNQXAC9IVRw>
+</dir=B>
+</category=اطفال>
 </end>
