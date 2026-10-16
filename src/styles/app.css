@@ -1065,3 +1065,22 @@ html.style2 .bg-btn-store {
 .play-stats-bar .text-sm {
   line-height: 1.2;
 }
+
+/* Thin buttons matching the install button size */
+.thin-btn,
+html.style2 .bg-btn-install,
+html.style2 .bg-btn-store,
+html.style2 .bg-btn-cancel {
+  height: 36px !important;
+  padding: 0 16px !important;
+  font-size: 14px !important;
+  border-radius: 18px !important;
+  min-height: 36px !important;
+  line-height: 36px !important;
+}
+
+.bg-btn-cancel.thin-btn {
+  background: hsl(var(--muted));
+  color: hsl(var(--fg));
+  border: 1px solid hsl(var(--border));
+}
