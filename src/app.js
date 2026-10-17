@@ -1861,10 +1861,11 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     apkmirror: { id: "apkmirror", label: "APKMirror", icon: "apkpure", platform: "android", buildUrl: (name) => `https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s=${encodeURIComponent(name)}` },
     happymod: { id: "happymod", labelKey: "store_happymod", label: "HappyMod", icon: "happymod", platform: "android", buildUrl: (name) => `https://happymod.com/search.html?q=${encodeURIComponent(name)}` },
     uptodown: { id: "uptodown", labelKey: "store_uptodown", label: "Uptodown", icon: "uptodown", platform: "android", buildUrl: (name) => `https://en.uptodown.com/android/search/${encodeURIComponent(name)}` },
+    apkdroid: { id: "apkdroid", label: "APKDroid", icon: "apkdroid", platform: "android", buildUrl: (name) => `https://droidrepositories.blogspot.com/search?q=${encodeURIComponent(name)}&m=1` },
     apple: { id: "apple", label: "App Store", icon: "applestore", platform: "ios", buildUrl: (name, app) => app && app.trackViewUrl ? app.trackViewUrl : `https://apps.apple.com/search?term=${encodeURIComponent(name)}` },
     microsoft: { id: "microsoft", label: "Microsoft Store", icon: "microsoft", platform: "windows", buildUrl: (name) => `https://apps.microsoft.com/search?query=${encodeURIComponent(name)}` }
   };
-  const INSTALL_SOURCE_IDS = ["direct", "google", "apkpure", "apkcombo", "apkmirror", "happymod", "uptodown"];
+  const INSTALL_SOURCE_IDS = ["direct", "google", "apkpure", "apkcombo", "apkmirror", "happymod", "uptodown", "apkdroid"];
   const storeLabel = (cfg) => cfg ? cfg.labelKey ? t(cfg.labelKey) : cfg.label || cfg.id : "";
   const normalizeStore = (id) => INSTALL_SOURCE_IDS.includes(id) ? id : "direct";
   const corsWraps = (u) => [
@@ -1995,7 +1996,8 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       share: /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", width: "20", height: "20" }, /* @__PURE__ */ React.createElement("circle", { cx: "18", cy: "5", r: "3" }), /* @__PURE__ */ React.createElement("circle", { cx: "6", cy: "12", r: "3" }), /* @__PURE__ */ React.createElement("circle", { cx: "18", cy: "19", r: "3" }), /* @__PURE__ */ React.createElement("line", { x1: "8.6", y1: "10.5", x2: "15.4", y2: "6.5" }), /* @__PURE__ */ React.createElement("line", { x1: "8.6", y1: "13.5", x2: "15.4", y2: "17.5" })),
       direct: /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", width: "20", height: "20" }, /* @__PURE__ */ React.createElement("path", { d: "M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" }), /* @__PURE__ */ React.createElement("polyline", { points: "7 10 12 15 17 10" }), /* @__PURE__ */ React.createElement("line", { x1: "12", y1: "15", x2: "12", y2: "3" }), /* @__PURE__ */ React.createElement("path", { d: "M8 21h8" })),
       happymod: /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", width: "20", height: "20" }, /* @__PURE__ */ React.createElement("circle", { cx: "12", cy: "12", r: "10", fill: "currentColor", opacity: ".18" }), /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M7.2 15.2V8.8h2.1l2.7 4.3 2.7-4.3h2.1v6.4h-1.7V11.4l-2.4 3.8h-1.4L8.9 11.4v3.8H7.2z" })),
-      uptodown: /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", width: "20", height: "20" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M6 4h12v3.2H6V4zm2.2 5.2h7.6L12 20 8.2 9.2z" }))
+      uptodown: /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", width: "20", height: "20" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "M6 4h12v3.2H6V4zm2.2 5.2h7.6L12 20 8.2 9.2z" })),
+      apkdroid: /* @__PURE__ */ React.createElement("svg", { viewBox: "0 -960 960 960", width: "20", height: "20" }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", d: "m720-80 120-120-28-28-72 72v-164h-40v164l-72-72-28 28L720-80ZM480-800 243-663l237 137 237-137-237-137ZM120-321v-318q0-22 10.5-40t29.5-29l280-161q10-5 19.5-8t20.5-3q11 0 21 3t19 8l280 161q19 11 29.5 29t10.5 40v159h-80v-116L479-434 200-596v274l240 139v92L160-252q-19-11-29.5-29T120-321ZM578.5-58.5Q520-117 520-200t58.5-141.5Q637-400 720-400t141.5 58.5Q920-283 920-200T861.5-58.5Q803 0 720 0T578.5-58.5ZM480-491Z" }))
     };
     return svgs[name] || null;
   };
