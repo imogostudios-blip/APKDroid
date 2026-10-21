@@ -11,18 +11,18 @@ const _openIdb=()=>new Promise((res,rej)=>{
   r.onsuccess=()=>res(r.result);
   r.onerror=()=>rej(r.error);
 });
-const _idbPut=(k,v)=>{if(!_idb)return;try{_idb.transaction(IDB_STORE,'readwrite').objectStore(IDB_STORE).put(v,k)}catch(e){}};
-const _idbDel=k=>{if(!_idb)return;try{_idb.transaction(IDB_STORE,'readwrite').objectStore(IDB_STORE).delete(k)}catch(e){}};
+const _idbPut=(k,v)=>{if(!_idb)return;try{_idb.transaction(IDB_STORE,'readwrite').objectStore(IDB_STORE).put(v,k)}catch{}};
+const _idbDel=k=>{if(!_idb)return;try{_idb.transaction(IDB_STORE,'readwrite').objectStore(IDB_STORE).delete(k)}catch{}};
 const getS=(k,d)=>{if(!Object.prototype.hasOwnProperty.call(_mem,k))return d;const v=_mem[k];return v==null?d:v};
 const setS=(k,v)=>{_mem[k]=v;_idbPut(k,v);return true};
 const delS=k=>{delete _mem[k];_idbDel(k)};
 const listS=prefix=>{const out=[];for(const k in _mem){if(k.indexOf(prefix)===0)out.push(k)}return out};
 const wipeStore=()=>{
-  try{Object.keys(_mem).forEach(k=>delete _mem[k])}catch(e){}
-  try{if(_idb)_idb.transaction(IDB_STORE,'readwrite').objectStore(IDB_STORE).clear()}catch(e){}
-  try{localStorage.clear()}catch(e){}
-  try{sessionStorage.clear()}catch(e){}
-  try{location.hash='#/'}catch(e){}
+  try{Object.keys(_mem).forEach(k=>delete _mem[k])}catch{}
+  try{if(_idb)_idb.transaction(IDB_STORE,'readwrite').objectStore(IDB_STORE).clear()}catch{}
+  try{localStorage.clear()}catch{}
+  try{sessionStorage.clear()}catch{}
+  try{location.hash='#/'}catch{}
   location.reload();
 };
 const _bootStore=async()=>{
@@ -50,12 +50,12 @@ const _bootStore=async()=>{
     for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf('apk_')===0)keys.push(k)}
     keys.forEach(k=>{
       if(!Object.prototype.hasOwnProperty.call(_mem,k)){
-        try{const raw=localStorage.getItem(k);if(raw!=null&&raw!=='')_mem[k]=JSON.parse(raw);_idbPut(k,_mem[k])}catch(e){}
+        try{const raw=localStorage.getItem(k);if(raw!=null&&raw!=='')_mem[k]=JSON.parse(raw);_idbPut(k,_mem[k])}catch{}
       }
-      try{localStorage.removeItem(k)}catch(e){}
+      try{localStorage.removeItem(k)}catch{}
     });
-  }catch(e){}
-  try{_lang=getS('apk_lang',_lang||'ar')}catch(e){}
+  }catch{}
+  try{_lang=getS('apk_lang',_lang||'ar')}catch{}
 };
 
 const STORE_LOGO_SRC='res/icons/icon-source.png';
@@ -256,7 +256,7 @@ const listAllDownloads=()=>{
       const rec=getS(k,null);
       if(rec&&rec.startMs)out.push({...rec,trackId:rec.trackId||k.slice(7)});
     });
-  }catch(e){}
+  }catch{}
   return out.sort((a,b)=>(b.startMs||0)-(a.startMs||0));
 };
 const isPaidApp=app=>{
@@ -297,7 +297,7 @@ const openLocalStores=()=>{
     '/store',
   ];
   try{window.location.href=intents[0]}catch(e){
-    try{window.location.href=intents[1]}catch(e2){try{window.location.href=intents[2]}catch(e){}}
+    try{window.location.href=intents[1]}catch(e2){try{window.location.href=intents[2]}catch{}}
   }
 };
 const computeDlProgress=(rec,now)=>{
@@ -1007,194 +1007,135 @@ const probeOnline=()=>new Promise(resolve=>{
     fetch('https://www.gstatic.com/generate_204',{method:'GET',mode:'no-cors',cache:'no-store'}).then(()=>{clearTimeout(timer);finish(true)}).catch(()=>{clearTimeout(timer);finish(false)});
   }catch(e){clearTimeout(timer);finish(false)}
 });
-const OfflineSheet=({onRetry,onCancel})=> (
-  <div className="off-sheet-mask" role="dialog" aria-modal="true">
-    <div className="off-sheet">
-      <div className="off-sheet-ico" aria-hidden="true">
-        <span className="off-wifi">
-          <svg viewBox="0 0 24 24" width="28" height="28"><path fill="#fff" d="M1 9l2 2c2.88-2.88 6.79-4.08 10.53-3.62l1.19-1.19C9.89 5.15 4.86 6.16 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c1.42-1.42 3.28-2.08 5.12-1.96l1.47-1.47C10.54 11.18 7.36 11.72 5 13z"></path></svg>
-        </span>
-        <span className="off-face">🤔</span>
-      </div>
-      <h3>{_lang==='ar'?'أنت غير متصل بالإنترنت':'You are offline'}</h3>
-      <p>{_lang==='ar'?'بعض الميزات غير متوفرة.':'Some features are unavailable.'}</p>
-      <div className="off-sheet-actions">
-        <button type="button" className="off-btn off-btn-go" onClick={onRetry}>{_lang==='ar'?'إعادة المحاولة':'Retry'}</button>
-        <button type="button" className="off-btn off-btn-no" onClick={onCancel}>{_lang==='ar'?'إلغاء':'Cancel'}</button>
-      </div>
-    </div>
-  </div>
-);
+const OfflineSheet=({onRetry,onCancel,onOpenAccount,photo})=>{
+  const [view,setView]=useState('main');
+  const [gameOpen,setGameOpen]=useState(null);
+  const [htmlGame,setHtmlGame]=useState(null);
+  const fileRef=useRef(null);
+  const canvasRef=useRef(null);
+  const gameRef=useRef(null);
 
-const SATELLITE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 300 225">
-  <g>
-    <path d="M183.755 92.384l23.355-9.985 3.734 8.735-23.355 9.985z" fill="#78909C"/>
-    <path d="M300.016 105.501l-75.215 32.156-41.472-97.007 75.215-32.156z" fill="#B0BEC5"/>
-    <path d="M237.06 70.417l-28.504 12.186L192.36 44.72l28.504-12.186zm34.422-14.723L242.978 67.88l-16.196-37.883 28.504-12.186zm-15.38 59.184l-28.504 12.186-16.196-37.883 28.504-12.186zm34.37-14.591l-28.504 12.186-16.196-37.883 28.504-12.186z" fill="#00616E"/>
-    <path d="M81.281 63.336l81.192-34.711 52.754 123.397-81.192 34.711z" fill="#B0BEC5"/>
-    <path d="M157.1 187.2l-3.7-8.7 43.8-18.8 3.7 8.7" fill="#90A4AE"/>
-    <path d="M103.432 20.379l2.53-2.271 15.364 17.114-2.53 2.271z" fill="#78909C"/>
-    <path d="M91.9 41.4c9.3 5.6 21.6 4.7 30.1-2.9s10.7-19.7 6.1-29.6L91.9 41.4z" fill="#B0BEC5"/>
-    <path d="M84.237 134.88l23.355-9.985 3.734 8.735-23.355 9.985zm3.333-56.887l81.192-34.711 1.612 3.77-81.192 34.711zm39.776 93.116l81.192-34.711 1.612 3.77-81.192 34.711z" fill="#78909C"/>
-    <path d="M131 105.5c-1.2 0-2.5-0.2-3.6-0.7-2.4-1-4.3-2.8-5.3-5.2l3.5-1.5c0.6 1.5 1.8 2.6 3.2 3.2 1.5 0.6 3.1 0.6 4.5-0.1 1.5-0.6 2.6-1.8 3.2-3.2 0.6-1.5 0.6-3.1-0.1-4.5l3.5-1.5c1 2.4 1.1 5 0.1 7.5-1 2.4-2.8 4.3-5.2 5.3-1.2 0.4-2.5 0.7-3.8 0.7zm22.8-8.9c-1.2 0-2.5-0.2-3.6-0.7-2.4-1-4.3-2.8-5.3-5.2l3.5-1.5c0.6 1.5 1.8 2.6 3.2 3.2s3.1 0.6 4.5-0.1c1.5-0.6 2.6-1.8 3.2-3.2 0.6-1.5 0.6-3.1-0.1-4.5l3.5-1.5c1 2.4 1.1 5 0.1 7.5-1 2.4-2.8 4.3-5.2 5.3-1.2 0.4-2.5 0.7-3.8 0.7zM139.5 119c-1.9-4.4 2.2-10.3 9.1-13.3 6.9-2.9 14-1.8 15.9 2.6l-25 10.7z" fill="#455A64"/>
-    <path d="M146.8 130c-1.2 0.5-2.6 0-3.1-1.2l-4.2-9.8 4.3-1.9 4.2 9.8c0.5 1.2 0 2.6-1.2 3.1z" fill="#ECEFF1"/>
-    <path d="M148.5 122c-1.2 0.5-2.6 0-3.1-1.2l-1.6-3.6 4.3-1.9 1.6 3.6c0.5 1.2 0 2.6-1.2 3.1z" fill="#ECEFF1"/>
-    <path d="M116.665 184.37L41.45 216.526l-41.472-97.007 75.215-32.156z" fill="#B0BEC5"/>
-    <path d="M53.709 149.286l-28.504 12.186-16.196-37.883 28.504-12.186zm34.422-14.723l-28.504 12.186-16.196-37.883L71.935 96.68zm-15.432 59.316l-28.504 12.186-16.196-37.883 28.504-12.186zm34.422-14.723l-28.504 12.186-16.196-37.883 28.504-12.186z" fill="#00616E"/>
-  </g>
-</svg>`;
-
-const BalloonGame = () => {
-  const canvasRef = useRef(null);
-  const [running, setRunning] = useState(false);
-  const [score, setScore] = useState(0);
-  const gameRef = useRef({ y: 150, vy: 0, obstacles: [], frame: 0 });
-
-  useEffect(() => {
-    if (!running) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let anim;
-    const loop = () => {
-      const g = gameRef.current;
-      g.frame++;
-      g.vy += 0.4; // gravity
-      g.y += g.vy;
-      if (g.y < 0) { g.y = 0; g.vy = 0; }
-      if (g.y > canvas.height - 40) { g.y = canvas.height - 40; g.vy = 0; setRunning(false); }
-      // obstacles
-      if (g.frame % 80 === 0) {
-        g.obstacles.push({ x: canvas.width, y: Math.random() * (canvas.height - 80) + 20, w: 30, h: 60 });
-      }
-      g.obstacles.forEach(o => o.x -= 4);
-      g.obstacles = g.obstacles.filter(o => o.x > -50);
-      // collision
-      for (const o of g.obstacles) {
-        if (o.x < 60 && o.x + o.w > 20 && g.y + 30 > o.y && g.y < o.y + o.h) {
-          setRunning(false);
-          return;
-        }
-      }
-      setScore(s => s + 1);
-      // draw
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#0F9D58';
+  useEffect(()=>{
+    if(gameOpen!=='balloon' || !canvasRef.current) return;
+    const canvas=canvasRef.current;
+    const ctx=canvas.getContext('2d');
+    let running=true;
+    let y=180, vy=0, score=0;
+    const loop=()=>{
+      if(!running) return;
+      ctx.fillStyle='#0a0a1a';
+      ctx.fillRect(0,0,320,480);
+      vy+=0.4;
+      y+=vy;
+      if(y>420){y=420;vy=0;}
+      if(y<40){y=40;vy=0;}
+      ctx.fillStyle='#ff6b6b';
       ctx.beginPath();
-      ctx.ellipse(40, g.y + 15, 18, 25, 0, 0, Math.PI * 2);
+      ctx.ellipse(160,y,28,36,0,0,Math.PI*2);
       ctx.fill();
-      ctx.fillStyle = '#fff';
-      g.obstacles.forEach(o => ctx.fillRect(o.x, o.y, o.w, o.h));
-      anim = requestAnimationFrame(loop);
+      ctx.fillStyle='#fff';
+      ctx.font='20px sans-serif';
+      ctx.fillText('النقاط: '+Math.floor(score),20,40);
+      score+=0.1;
+      requestAnimationFrame(loop);
     };
-    anim = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(anim);
-  }, [running]);
+    const onDown=()=>{vy=-7;};
+    canvas.addEventListener('pointerdown',onDown);
+    gameRef.current={stop:()=>{running=false;canvas.removeEventListener('pointerdown',onDown);}};
+    loop();
+    return ()=>{running=false;};
+  },[gameOpen]);
 
-  const jump = () => { if (running) gameRef.current.vy = -7; };
+  const startBalloon=()=>setGameOpen('balloon');
+  const closeGame=()=>{setGameOpen(null);if(gameRef.current)gameRef.current.stop();};
 
-  return (
-    <div style={{textAlign:'center', padding:20}}>
-      <canvas ref={canvasRef} width={320} height={200} style={{border:'1px solid #333', background:'#000', borderRadius:12, maxWidth:'100%'}} onClick={jump} onTouchStart={e=>{e.preventDefault();jump();}} />
-      <p style={{color:'#aaa', margin:'8px 0'}}>النقاط: {score} — اضغط أو انقر للارتفاع</p>
-      <button type="button" className="off-btn off-btn-go" onClick={()=>{gameRef.current={y:100,vy:0,obstacles:[],frame:0}; setScore(0); setRunning(true);}}>
-        {running ? 'جاري اللعب...' : 'تشغيل'}
-      </button>
-    </div>
-  );
-};
-
-const HtmlGameLoader = () => {
-  const [srcDoc, setSrcDoc] = useState('');
-  const [name, setName] = useState('');
-  const onFile = e => {
-    const f = e.target.files && e.target.files[0];
-    if (!f) return;
-    setName(f.name);
-    const r = new FileReader();
-    r.onload = () => setSrcDoc(String(r.result || ''));
-    r.readAsText(f);
+  const onFile=(e)=>{
+    const f=e.target.files&&e.target.files[0];
+    if(!f)return;
+    const url=URL.createObjectURL(f);
+    setHtmlGame(url);
+    setGameOpen('html');
   };
-  return (
-    <div style={{padding:16, textAlign:'center'}}>
-      <p style={{color:'#888', fontSize:13, marginBottom:12}}>اختر لعبة بملف html من الملفات و العبها هنا</p>
-      <input type="file" accept=".html,.htm" onChange={onFile} style={{marginBottom:16}} />
-      {name && <p style={{color:'#0F9D58', fontSize:13}}>تم تحميل: {name}</p>}
-      {srcDoc && (
-        <iframe srcDoc={srcDoc} style={{width:'100%', height:300, border:'none', borderRadius:12, background:'#111'}} sandbox="allow-scripts allow-same-origin" />
-      )}
-    </div>
-  );
-};
 
-const OfflineFullPage = ({onRetry, onOffline, onOpenAccount, photo}) => {
-  const [sub, setSub] = useState('main'); // main | help | balloon | html
-  if (sub === 'help') {
+  if(view==='solutions'){
     return (
       <div className="offline-full">
-        <button type="button" className="offline-back" onClick={()=>setSub('main')}>← رجوع</button>
-        <h2 style={{color:'#fff', textAlign:'center', margin:'20px 0'}}>حلول لمشاكل الشبكة و الاتصال</h2>
-        <div style={{color:'#aaa', fontSize:15, lineHeight:1.7, padding:'0 20px', textAlign:'right'}}>
-          <p>تأكد من تفعيل Wi-Fi على جهازك و اذا كان مفعل تأكد انك متصل بشبكة الانترنت المحلية بشكل صحيح اذا كانت المشبكة موصلة و لا يتوفر اتصال بالانترنت تحقق من كابل الانترنت بأنه موصل في جهاز التوجيه بشكل سليم او تأكد من حالة كابل الهاتف لأنه قد يكون تالف و كحل سريع استخدم بيانات الجوال و اذا كنت تستخدمها بالفعل و لا يتوفر اتصال بالانترنت تحقق من اشتراكك اذا كنت مشترك بباقة انترنت.</p>
-          <p style={{marginTop:16}}>"إذا لم يجدي هذا نفعا قد يكون بلدك محظور يمكنك تغيير إعدادات منطقتك من الإعدادات دائما".</p>
+        <div className="offline-solutions">
+          <h2>حلول لمشاكل الشبكة و الاتصال</h2>
+          <p>تأكد من تفعيل Wi-Fi على جهازك و اذا كان مفعل تأكد انك متصل بشبكة الانترنت المحلية بشكل صحيح اذا كانت الشبكة موصلة و لا يتوفر اتصال بالانترنت تحقق من كابل الانترنت بأنه موصل في جهاز التوجيه بشكل سليم او تأكد من حالة كابل الهاتف لأنه قد يكون تالف و كحل سريع استخدم بيانات الجوال و اذا كنت تستخدمها بالفعل و لا يتوفر اتصال بالانترنت تحقق من اشتراكك اذا كنت مشترك بباقة انترنت.</p>
+          <p>إذا لم يجدي هذا نفعا قد يكون بلدك محظور يمكنك تغيير إعدادات منطقتك من الإعدادات دائما.</p>
+          <button type="button" className="offline-back" onClick={()=>setView('main')}>رجوع</button>
         </div>
       </div>
     );
   }
-  if (sub === 'balloon') {
-    return (
-      <div className="offline-full">
-        <button type="button" className="offline-back" onClick={()=>setSub('main')}>← رجوع</button>
-        <h3 style={{color:'#fff', textAlign:'center'}}>Hot Air Balloon</h3>
-        <BalloonGame />
-      </div>
-    );
-  }
-  if (sub === 'html') {
-    return (
-      <div className="offline-full">
-        <button type="button" className="offline-back" onClick={()=>setSub('main')}>← رجوع</button>
-        <h3 style={{color:'#fff', textAlign:'center'}}>اختيار لعبة</h3>
-        <HtmlGameLoader />
-      </div>
-    );
-  }
+
   return (
     <div className="offline-full">
       <button type="button" className="offline-profile" onClick={onOpenAccount} aria-label="الملف الشخصي">
-        {photo ? <img src={photo} alt="" /> : <span>👤</span>}
+        {photo?<img src={photo} alt=""/>:<span style={{fontSize:20}}>👤</span>}
       </button>
-      <div className="offline-center">
-        <div className="offline-sat" dangerouslySetInnerHTML={{__html: SATELLITE_SVG}} />
-        <h1 className="offline-title">أنت غير متصل بالخادم</h1>
-        <p className="offline-sub">
-          يرجى التحقق من الاتصال أو تفعيل بيانات الجوال{' '}
-          <span className="offline-more" onClick={()=>setSub('help')}>مزيد</span>
-        </p>
-        <div className="offline-actions">
-          <button type="button" className="offline-btn primary" onClick={onRetry}>إعادة المحاولة</button>
-          <button type="button" className="offline-btn" onClick={onOffline}>دخول بدون اتصال</button>
+      <div className="offline-sat" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="180" height="135" viewBox="0 0 300 225">
+          <g>
+            <path d="M183.755 92.384l23.355-9.985 3.734 8.735-23.355 9.985z" fill="#78909C"/>
+            <path d="M300.016 105.501l-75.215 32.156-41.472-97.007 75.215-32.156z" fill="#B0BEC5"/>
+            <path d="M237.06 70.417l-28.504 12.186L192.36 44.72l28.504-12.186zm34.422-14.723L242.978 67.88l-16.196-37.883 28.504-12.186zm-15.38 59.184l-28.504 12.186-16.196-37.883 28.504-12.186zm34.37-14.591l-28.504 12.186-16.196-37.883 28.504-12.186z" fill="#00616E"/>
+            <path d="M81.281 63.336l81.192-34.711 52.754 123.397-81.192 34.711z" fill="#B0BEC5"/>
+            <path d="M157.1 187.2l-3.7-8.7 43.8-18.8 3.7 8.7" fill="#90A4AE"/>
+            <path d="M103.432 20.379l2.53-2.271 15.364 17.114-2.53 2.271z" fill="#78909C"/>
+            <path d="M91.9 41.4c9.3 5.6 21.6 4.7 30.1-2.9s10.7-19.7 6.1-29.6L91.9 41.4z" fill="#B0BEC5"/>
+            <path d="M84.237 134.88l23.355-9.985 3.734 8.735-23.355 9.985zm3.333-56.887l81.192-34.711 1.612 3.77-81.192 34.711zm39.776 93.116l81.192-34.711 1.612 3.77-81.192 34.711z" fill="#78909C"/>
+            <path d="M131 105.5c-1.2 0-2.5-0.2-3.6-0.7-2.4-1-4.3-2.8-5.3-5.2l3.5-1.5c0.6 1.5 1.8 2.6 3.2 3.2 1.5 0.6 3.1 0.6 4.5-0.1 1.5-0.6 2.6-1.8 3.2-3.2 0.6-1.5 0.6-3.1-0.1-4.5l3.5-1.5c1 2.4 1.1 5 0.1 7.5-1 2.4-2.8 4.3-5.2 5.3-1.2 0.4-2.5 0.7-3.8 0.7zm22.8-8.9c-1.2 0-2.5-0.2-3.6-0.7-2.4-1-4.3-2.8-5.3-5.2l3.5-1.5c0.6 1.5 1.8 2.6 3.2 3.2s3.1 0.6 4.5-0.1c1.5-0.6 2.6-1.8 3.2-3.2 0.6-1.5 0.6-3.1-0.1-4.5l3.5-1.5c1 2.4 1.1 5 0.1 7.5-1 2.4-2.8 4.3-5.2 5.3-1.2 0.4-2.5 0.7-3.8 0.7zM139.5 119c-1.9-4.4 2.2-10.3 9.1-13.3 6.9-2.9 14-1.8 15.9 2.6l-25 10.7z" fill="#455A64"/>
+            <path d="M146.8 130c-1.2 0.5-2.6 0-3.1-1.2l-4.2-9.8 4.3-1.9 4.2 9.8c0.5 1.2 0 2.6-1.2 3.1z" fill="#ECEFF1"/>
+            <path d="M148.5 122c-1.2 0.5-2.6 0-3.1-1.2l-1.6-3.6 4.3-1.9 1.6 3.6c0.5 1.2 0 2.6-1.2 3.1z" fill="#ECEFF1"/>
+            <path d="M116.665 184.37L41.45 216.526l-41.472-97.007 75.215-32.156z" fill="#B0BEC5"/>
+            <path d="M53.709 149.286l-28.504 12.186-16.196-37.883 28.504-12.186zm34.422-14.723l-28.504 12.186-16.196-37.883L71.935 96.68zm-15.432 59.316l-28.504 12.186-16.196-37.883 28.504-12.186zm34.422-14.723l-28.504 12.186-16.196-37.883 28.504-12.186z" fill="#00616E"/>
+          </g>
+        </svg>
+      </div>
+      <h2 className="offline-title">أنت غير متصل بالخادم.</h2>
+      <p className="offline-sub">
+        يرجى التحقق من الاتصال أو تفعيل بيانات الجوال و كلمة <span className="offline-more" onClick={()=>setView('solutions')}>مزيد</span>
+      </p>
+      <div className="offline-btns">
+        <button type="button" className="offline-btn offline-btn-retry" onClick={onRetry}>إعادة المحاولة</button>
+        <button type="button" className="offline-btn offline-btn-offline" onClick={onCancel}>دخول بدون اتصال</button>
+      </div>
+      <div className="offline-games-title">اللعب أثناء الانتظار</div>
+      <div className="offline-game-row">
+        <div className="offline-game-info">
+          <div className="offline-game-name">Hot Air Balloon</div>
+        </div>
+        <div style={{display:'flex',alignItems:'center'}}>
+          <button type="button" className="offline-play-btn" onClick={startBalloon}>تشغيل</button>
+          <div className="offline-game-icon">🎈</div>
         </div>
       </div>
-      <div className="offline-games">
-        <h3>اللعب أثناء الانتظار</h3>
-        <div className="offline-game-row">
-          <button type="button" className="offline-play-btn" onClick={()=>setSub('balloon')}>تشغيل</button>
-          <div>
-            <div className="offline-game-name">Hot Air Balloon</div>
-          </div>
-          <div className="offline-game-ico">🎈</div>
+      <div className="offline-game-row">
+        <div className="offline-game-info">
+          <div className="offline-game-name">اختيار لعبة</div>
+          <div className="offline-game-desc">اختر لعبة بملف html من الملفات و العبها هنا</div>
         </div>
-        <div className="offline-game-row">
-          <button type="button" className="offline-play-btn" onClick={()=>setSub('html')}>تشغيل</button>
-          <div>
-            <div className="offline-game-name">اختيار لعبة</div>
-            <div className="offline-game-hint">اختر لعبة بملف html من الملفات و العبها هنا</div>
-          </div>
-          <div className="offline-game-ico">🎮</div>
+        <div style={{display:'flex',alignItems:'center'}}>
+          <button type="button" className="offline-play-btn" onClick={()=>fileRef.current&&fileRef.current.click()}>تشغيل</button>
+          <div className="offline-game-icon">🎮</div>
         </div>
       </div>
+      <input ref={fileRef} type="file" accept=".html,.htm" style={{display:'none'}} onChange={onFile}/>
+      {gameOpen==='balloon'&&(
+        <div className="balloon-game">
+          <button type="button" className="balloon-close" onClick={closeGame}>✕</button>
+          <canvas ref={canvasRef} width="320" height="480" className="balloon-canvas"/>
+          <p style={{marginTop:12,color:'#aaa'}}>اضغط أو المس الشاشة لرفع المنطاد</p>
+        </div>
+      )}
+      {gameOpen==='html'&&htmlGame&&(
+        <div className="balloon-game" style={{background:'#000'}}>
+          <button type="button" className="balloon-close" onClick={()=>{setGameOpen(null);URL.revokeObjectURL(htmlGame);setHtmlGame(null);}}>✕</button>
+          <iframe src={htmlGame} style={{width:'100%',height:'100%',border:'none'}} title="لعبة"/>
+        </div>
+      )}
     </div>
   );
 };
@@ -1797,7 +1738,7 @@ async function resolveDirectApk(app){
         const pick=pickAptoideApp(list,name,bundle);
         const path=extractApkPath(pick);
         if(path)return{url:path,pkg:pick.package||bundle,title:pick.name||name};
-      }catch(e){}
+      }catch{}
     }
   }
   if(bundle){
@@ -1820,7 +1761,7 @@ const triggerApkDownload=(url,filename)=>{
     a.style.display='none';
     document.body.appendChild(a);
     a.click();
-    setTimeout(()=>{try{a.remove()}catch(e){}},1500);
+    setTimeout(()=>{try{a.remove()}catch{}},1500);
     return true;
   }catch{
     try{window.location.href=url;return true}catch{return false}
@@ -2080,7 +2021,7 @@ const Detail=({id,nav,favs,toggle,selStore,expMode,setDetailApp,autoInstall,onTo
         fileInputRef.current.click();
         return;
       }
-    }catch(e){}
+    }catch{}
     const q=encodeURIComponent(name);
     const tries=[
       `intent:#Intent;action=android.intent.action.GET_CONTENT;type=*/*;S.android.intent.extra.TITLE=${q};end`,
@@ -2146,11 +2087,11 @@ const Detail=({id,nav,favs,toggle,selStore,expMode,setDetailApp,autoInstall,onTo
           try{
             const cur=getDlRec(app.trackId);
             if(cur){cur.installHref=found.url;setS(dlKey(app.trackId),cur)}
-          }catch(e){}
+          }catch{}
           try{
             const cur=getDlRec(app.trackId);
             if(cur&&!cur.runMs){cur.runMs=Date.now();setS(dlKey(app.trackId),cur)}
-          }catch(e){}
+          }catch{}
           showToast(t('dl_direct_ok'));
         }else{
           showToast(t('dl_direct_fail'));
@@ -2166,7 +2107,7 @@ const Detail=({id,nav,favs,toggle,selStore,expMode,setDetailApp,autoInstall,onTo
     try{
       const cur=getDlRec(app.trackId);
       if(cur&&!cur.runMs){cur.runMs=Date.now();setS(dlKey(app.trackId),cur)}
-    }catch(e){}
+    }catch{}
     showToast(t('dl_direct_ok'));
   },[dlView.active,dlView.phase,app,selStore]);
 
@@ -2220,7 +2161,7 @@ const Detail=({id,nav,favs,toggle,selStore,expMode,setDetailApp,autoInstall,onTo
       const seen=new Set();const uniq=[];
       for(const r of all){const k=r.id||`${r.author}|${r.updated}|${r.title}`;if(!seen.has(k)){seen.add(k);uniq.push(r)}}
       setReviews(uniq);setRevAll(true);
-    }catch(e){}finally{setRevAllLd(false)}
+    }catch{}finally{setRevAllLd(false)}
   };
 
   const isF=!!app&&(favs||[]).some(f=>f&&String(f.trackId)===String(app.trackId));
@@ -3799,7 +3740,7 @@ function App(){
         link.href=url;link.dataset.blob=url;
         if(prev)URL.revokeObjectURL(prev);
       }).catch(()=>{});
-    }catch(e){}
+    }catch{}
   },[theme,night,route,accOpen]);
   useEffect(()=>{installImgFallback()},[]);
   useEffect(()=>{document.documentElement.classList.toggle('style2',!!style2);setS('apk_style2',!!style2)},[style2]);
@@ -3844,7 +3785,7 @@ function App(){
         gain.connect(ctxRef.current.destination);
       }
       if(ctxRef.current.state==='suspended')ctxRef.current.resume();
-      try{sourceRef.current&&sourceRef.current.disconnect()}catch(e){}
+      try{sourceRef.current&&sourceRef.current.disconnect()}catch{}
       const src=ctxRef.current.createMediaElementSource(el);
       sourceRef.current=src;
       src.connect(filtersRef.current[0]);
@@ -3906,7 +3847,7 @@ function App(){
 
   const playAt=(list,idx)=>{
     const song=list[idx];if(!song||!song.previewUrl)return;
-    if(audio.current){try{audio.current.pause()}catch(e){}audio.current=null}
+    if(audio.current){try{audio.current.pause()}catch{}audio.current=null}
     const a=new Audio(song.previewUrl);
     a.preload='auto';
     a.volume=typeof volume==='number'?volume:1;
@@ -3917,11 +3858,11 @@ function App(){
     const start=()=>{
       setTrack(song);setQueue(list);setQIdx(idx);setPlaying(true);setProgress(0);setDuration(song.duration||0);
       // Only wire Web Audio EQ when enabled — otherwise keep normal element playback (avoids silence from CORS)
-      if(eqOn){try{ensureAudioGraph(a)}catch(e){}}
+      if(eqOn){try{ensureAudioGraph(a)}catch{}}
     };
     const tryPlay=()=>a.play().then(start).catch(()=>{
       // Retry without crossOrigin if stream blocks
-      try{a.crossOrigin=null}catch(e){}
+      try{a.crossOrigin=null}catch{}
       a.play().then(start).catch(()=>{setTrack(song);setQueue(list);setQIdx(idx);setPlaying(false)});
     });
     tryPlay();
@@ -4001,7 +3942,7 @@ function App(){
       </main>
       {!hideMini&&<MiniPlayer track={track} playing={playing} progress={progress} duration={duration} onToggle={togglePlay} onClose={closeP} onPrev={playPrev} onNext={playNext} onSeek={seekTo} onOpen={()=>nav('/now-playing')} isFav={isSongFav} onFav={toggleSongFav}/>}
       {!(isDownloads||route==='/settings'||route==='/search-log'||accOpen||route.startsWith('/you-project')||route==='/you-publish'||route==='/you-projects')&&<BottomNav route={route} nav={nav}></BottomNav>}
-      {offSheet&&<OfflineFullPage onRetry={()=>{probeOnline().then(ok=>setOffSheet(!ok))}} onOffline={()=>{offHold.current=true;setOffSheet(false)}} onOpenAccount={()=>setAccOpen(true)} photo={profile&&profile.photo} />}
+      {offSheet&&<OfflineSheet onRetry={()=>{probeOnline().then(ok=>setOffSheet(!ok))}} onCancel={()=>{offHold.current=true;setOffSheet(false)}} onOpenAccount={()=>setAccOpen(true)} photo={profile&&profile.photo}></OfflineSheet>}
     </div>
   );
 }

@@ -1358,7 +1358,127 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       finish(false);
     }
   });
-  const OfflineSheet = ({ onRetry, onCancel }) => /* @__PURE__ */ React.createElement("div", { className: "off-sheet-mask", role: "dialog", "aria-modal": "true" }, /* @__PURE__ */ React.createElement("div", { className: "off-sheet" }, /* @__PURE__ */ React.createElement("div", { className: "off-sheet-ico", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("span", { className: "off-wifi" }, /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", width: "28", height: "28" }, /* @__PURE__ */ React.createElement("path", { fill: "#fff", d: "M1 9l2 2c2.88-2.88 6.79-4.08 10.53-3.62l1.19-1.19C9.89 5.15 4.86 6.16 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c1.42-1.42 3.28-2.08 5.12-1.96l1.47-1.47C10.54 11.18 7.36 11.72 5 13z" }))), /* @__PURE__ */ React.createElement("span", { className: "off-face" }, "\u{1F914}")), /* @__PURE__ */ React.createElement("h3", null, _lang === "ar" ? "\u0623\u0646\u062A \u063A\u064A\u0631 \u0645\u062A\u0635\u0644 \u0628\u0627\u0644\u0625\u0646\u062A\u0631\u0646\u062A" : "You are offline"), /* @__PURE__ */ React.createElement("p", null, _lang === "ar" ? "\u0628\u0639\u0636 \u0627\u0644\u0645\u064A\u0632\u0627\u062A \u063A\u064A\u0631 \u0645\u062A\u0648\u0641\u0631\u0629." : "Some features are unavailable."), /* @__PURE__ */ React.createElement("div", { className: "off-sheet-actions" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "off-btn off-btn-go", onClick: onRetry }, _lang === "ar" ? "\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629" : "Retry"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "off-btn off-btn-no", onClick: onCancel }, _lang === "ar" ? "\u0625\u0644\u063A\u0627\u0621" : "Cancel"))));
+  const OfflineSheet = ({ onRetry, onCancel, onOpenAccount, photo }) => {
+    const [view, setView] = useState("main");
+    const [gameOpen, setGameOpen] = useState(null);
+    const [htmlGame, setHtmlGame] = useState(null);
+    const fileRef = useRef(null);
+    const canvasRef = useRef(null);
+    const gameRef = useRef(null);
+    useEffect(() => {
+      if (gameOpen !== "balloon" || !canvasRef.current) return;
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      let running = true;
+      let y = 180, vy = 0, score = 0;
+      const loop = () => {
+        if (!running) return;
+        ctx.fillStyle = "#0a0a1a";
+        ctx.fillRect(0, 0, 320, 480);
+        vy += 0.4;
+        y += vy;
+        if (y > 420) { y = 420; vy = 0; }
+        if (y < 40) { y = 40; vy = 0; }
+        ctx.fillStyle = "#ff6b6b";
+        ctx.beginPath();
+        ctx.ellipse(160, y, 28, 36, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.font = "20px sans-serif";
+        ctx.fillText("النقاط: " + Math.floor(score), 20, 40);
+        score += 0.1;
+        requestAnimationFrame(loop);
+      };
+      const onDown = () => { vy = -7; };
+      canvas.addEventListener("pointerdown", onDown);
+      gameRef.current = { stop: () => { running = false; canvas.removeEventListener("pointerdown", onDown); } };
+      loop();
+      return () => { running = false; };
+    }, [gameOpen]);
+    const startBalloon = () => setGameOpen("balloon");
+    const closeGame = () => { setGameOpen(null); if (gameRef.current) gameRef.current.stop(); };
+    const onFile = (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      const url = URL.createObjectURL(f);
+      setHtmlGame(url);
+      setGameOpen("html");
+    };
+    if (view === "solutions") {
+      return React.createElement("div", { className: "offline-full" },
+        React.createElement("div", { className: "offline-solutions" },
+          React.createElement("h2", null, "حلول لمشاكل الشبكة و الاتصال"),
+          React.createElement("p", null, "تأكد من تفعيل Wi-Fi على جهازك و اذا كان مفعل تأكد انك متصل بشبكة الانترنت المحلية بشكل صحيح اذا كانت الشبكة موصلة و لا يتوفر اتصال بالانترنت تحقق من كابل الانترنت بأنه موصل في جهاز التوجيه بشكل سليم او تأكد من حالة كابل الهاتف لأنه قد يكون تالف و كحل سريع استخدم بيانات الجوال و اذا كنت تستخدمها بالفعل و لا يتوفر اتصال بالانترنت تحقق من اشتراكك اذا كنت مشترك بباقة انترنت."),
+          React.createElement("p", null, "إذا لم يجدي هذا نفعا قد يكون بلدك محظور يمكنك تغيير إعدادات منطقتك من الإعدادات دائما."),
+          React.createElement("button", { type: "button", className: "offline-back", onClick: () => setView("main") }, "رجوع")
+        )
+      );
+    }
+    return React.createElement("div", { className: "offline-full" },
+      React.createElement("button", { type: "button", className: "offline-profile", onClick: onOpenAccount, "aria-label": "الملف الشخصي" },
+        photo ? React.createElement("img", { src: photo, alt: "" }) : React.createElement("span", { style: { fontSize: 20 } }, "👤")
+      ),
+      React.createElement("div", { className: "offline-sat", "aria-hidden": "true" },
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "180", height: "135", viewBox: "0 0 300 225" },
+          React.createElement("g", null,
+            React.createElement("path", { d: "M183.755 92.384l23.355-9.985 3.734 8.735-23.355 9.985z", fill: "#78909C" }),
+            React.createElement("path", { d: "M300.016 105.501l-75.215 32.156-41.472-97.007 75.215-32.156z", fill: "#B0BEC5" }),
+            React.createElement("path", { d: "M237.06 70.417l-28.504 12.186L192.36 44.72l28.504-12.186zm34.422-14.723L242.978 67.88l-16.196-37.883 28.504-12.186zm-15.38 59.184l-28.504 12.186-16.196-37.883 28.504-12.186zm34.37-14.591l-28.504 12.186-16.196-37.883 28.504-12.186z", fill: "#00616E" }),
+            React.createElement("path", { d: "M81.281 63.336l81.192-34.711 52.754 123.397-81.192 34.711z", fill: "#B0BEC5" }),
+            React.createElement("path", { d: "M157.1 187.2l-3.7-8.7 43.8-18.8 3.7 8.7", fill: "#90A4AE" }),
+            React.createElement("path", { d: "M103.432 20.379l2.53-2.271 15.364 17.114-2.53 2.271z", fill: "#78909C" }),
+            React.createElement("path", { d: "M91.9 41.4c9.3 5.6 21.6 4.7 30.1-2.9s10.7-19.7 6.1-29.6L91.9 41.4z", fill: "#B0BEC5" }),
+            React.createElement("path", { d: "M84.237 134.88l23.355-9.985 3.734 8.735-23.355 9.985zm3.333-56.887l81.192-34.711 1.612 3.77-81.192 34.711zm39.776 93.116l81.192-34.711 1.612 3.77-81.192 34.711z", fill: "#78909C" }),
+            React.createElement("path", { d: "M131 105.5c-1.2 0-2.5-0.2-3.6-0.7-2.4-1-4.3-2.8-5.3-5.2l3.5-1.5c0.6 1.5 1.8 2.6 3.2 3.2 1.5 0.6 3.1 0.6 4.5-0.1 1.5-0.6 2.6-1.8 3.2-3.2 0.6-1.5 0.6-3.1-0.1-4.5l3.5-1.5c1 2.4 1.1 5 0.1 7.5-1 2.4-2.8 4.3-5.2 5.3-1.2 0.4-2.5 0.7-3.8 0.7zm22.8-8.9c-1.2 0-2.5-0.2-3.6-0.7-2.4-1-4.3-2.8-5.3-5.2l3.5-1.5c0.6 1.5 1.8 2.6 3.2 3.2s3.1 0.6 4.5-0.1c1.5-0.6 2.6-1.8 3.2-3.2 0.6-1.5 0.6-3.1-0.1-4.5l3.5-1.5c1 2.4 1.1 5 0.1 7.5-1 2.4-2.8 4.3-5.2 5.3-1.2 0.4-2.5 0.7-3.8 0.7zM139.5 119c-1.9-4.4 2.2-10.3 9.1-13.3 6.9-2.9 14-1.8 15.9 2.6l-25 10.7z", fill: "#455A64" }),
+            React.createElement("path", { d: "M146.8 130c-1.2 0.5-2.6 0-3.1-1.2l-4.2-9.8 4.3-1.9 4.2 9.8c0.5 1.2 0 2.6-1.2 3.1z", fill: "#ECEFF1" }),
+            React.createElement("path", { d: "M148.5 122c-1.2 0.5-2.6 0-3.1-1.2l-1.6-3.6 4.3-1.9 1.6 3.6c0.5 1.2 0 2.6-1.2 3.1z", fill: "#ECEFF1" }),
+            React.createElement("path", { d: "M116.665 184.37L41.45 216.526l-41.472-97.007 75.215-32.156z", fill: "#B0BEC5" }),
+            React.createElement("path", { d: "M53.709 149.286l-28.504 12.186-16.196-37.883 28.504-12.186zm34.422-14.723l-28.504 12.186-16.196-37.883L71.935 96.68zm-15.432 59.316l-28.504 12.186-16.196-37.883 28.504-12.186zm34.422-14.723l-28.504 12.186-16.196-37.883 28.504-12.186z", fill: "#00616E" })
+          )
+        )
+      ),
+      React.createElement("h2", { className: "offline-title" }, "أنت غير متصل بالخادم."),
+      React.createElement("p", { className: "offline-sub" },
+        "يرجى التحقق من الاتصال أو تفعيل بيانات الجوال و كلمة ",
+        React.createElement("span", { className: "offline-more", onClick: () => setView("solutions") }, "مزيد")
+      ),
+      React.createElement("div", { className: "offline-btns" },
+        React.createElement("button", { type: "button", className: "offline-btn offline-btn-retry", onClick: onRetry }, "إعادة المحاولة"),
+        React.createElement("button", { type: "button", className: "offline-btn offline-btn-offline", onClick: onCancel }, "دخول بدون اتصال")
+      ),
+      React.createElement("div", { className: "offline-games-title" }, "اللعب أثناء الانتظار"),
+      React.createElement("div", { className: "offline-game-row" },
+        React.createElement("div", { className: "offline-game-info" },
+          React.createElement("div", { className: "offline-game-name" }, "Hot Air Balloon")
+        ),
+        React.createElement("div", { style: { display: "flex", alignItems: "center" } },
+          React.createElement("button", { type: "button", className: "offline-play-btn", onClick: startBalloon }, "تشغيل"),
+          React.createElement("div", { className: "offline-game-icon" }, "🎈")
+        )
+      ),
+      React.createElement("div", { className: "offline-game-row" },
+        React.createElement("div", { className: "offline-game-info" },
+          React.createElement("div", { className: "offline-game-name" }, "اختيار لعبة"),
+          React.createElement("div", { className: "offline-game-desc" }, "اختر لعبة بملف html من الملفات و العبها هنا")
+        ),
+        React.createElement("div", { style: { display: "flex", alignItems: "center" } },
+          React.createElement("button", { type: "button", className: "offline-play-btn", onClick: () => fileRef.current && fileRef.current.click() }, "تشغيل"),
+          React.createElement("div", { className: "offline-game-icon" }, "🎮")
+        )
+      ),
+      React.createElement("input", { ref: fileRef, type: "file", accept: ".html,.htm", style: { display: "none" }, onChange: onFile }),
+      gameOpen === "balloon" && React.createElement("div", { className: "balloon-game" },
+        React.createElement("button", { type: "button", className: "balloon-close", onClick: closeGame }, "✕"),
+        React.createElement("canvas", { ref: canvasRef, width: "320", height: "480", className: "balloon-canvas" }),
+        React.createElement("p", { style: { marginTop: 12, color: "#aaa" } }, "اضغط أو المس الشاشة لرفع المنطاد")
+      ),
+      gameOpen === "html" && htmlGame && React.createElement("div", { className: "balloon-game", style: { background: "#000" } },
+        React.createElement("button", { type: "button", className: "balloon-close", onClick: () => { setGameOpen(null); URL.revokeObjectURL(htmlGame); setHtmlGame(null); } }, "✕"),
+        React.createElement("iframe", { src: htmlGame, style: { width: "100%", height: "100%", border: "none" }, title: "لعبة" })
+      )
+    );
+  };
+
   const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", { className: "net-off net-in", role: "alert" }, /* @__PURE__ */ React.createElement("div", { className: "net-off-block" }, /* @__PURE__ */ React.createElement("div", { className: "net-off-ico", dangerouslySetInnerHTML: { __html: SVG_WIFI_OFF } }), /* @__PURE__ */ React.createElement("p", null, "\u062A\u0645 \u0642\u0637\u0639 \u0627\u0644\u0625\u062A\u0635\u0627\u0644 \u0628\u0627\u0644\u0625\u0646\u062A\u0631\u0646\u062A \u062A\u062D\u0642\u0642 \u0645\u0646 \u0627\u0644\u062E\u0627\u062F\u0645"), /* @__PURE__ */ React.createElement("div", { className: "net-off-actions" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "net-off-btn", onClick: onRetry }, "\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629"), /* @__PURE__ */ React.createElement("button", { type: "button", className: "net-off-btn net-off-btn-alt", onClick: sendNetNotice }, "\u0625\u0631\u0633\u0627\u0644 \u0625\u0634\u0639\u0627\u0631"))));
   const BLANK_PX = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
   const installImgFallback = () => {
@@ -4053,7 +4173,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     }, onCancel: () => {
       offHold.current = true;
       setOffSheet(false);
-    } }));
+    }, onOpenAccount: () => setAccOpen(true), photo: profile && profile.photo }));
   }
   class ErrorBoundary extends React.Component {
     constructor(p) {
