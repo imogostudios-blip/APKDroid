@@ -1445,36 +1445,6 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       React.createElement("div", { className: "offline-btns" },
         React.createElement("button", { type: "button", className: "offline-btn offline-btn-retry", onClick: onRetry }, "إعادة المحاولة"),
         React.createElement("button", { type: "button", className: "offline-btn offline-btn-offline", onClick: onCancel }, "دخول بدون اتصال")
-      ),
-      React.createElement("div", { className: "offline-games-title" }, "اللعب أثناء الانتظار"),
-      React.createElement("div", { className: "offline-game-row" },
-        React.createElement("div", { className: "offline-game-info" },
-          React.createElement("div", { className: "offline-game-name" }, "Hot Air Balloon")
-        ),
-        React.createElement("div", { style: { display: "flex", alignItems: "center" } },
-          React.createElement("button", { type: "button", className: "offline-play-btn", onClick: startBalloon }, "تشغيل"),
-          React.createElement("div", { className: "offline-game-icon" }, "🎈")
-        )
-      ),
-      React.createElement("div", { className: "offline-game-row" },
-        React.createElement("div", { className: "offline-game-info" },
-          React.createElement("div", { className: "offline-game-name" }, "اختيار لعبة"),
-          React.createElement("div", { className: "offline-game-desc" }, "اختر لعبة بملف html من الملفات و العبها هنا")
-        ),
-        React.createElement("div", { style: { display: "flex", alignItems: "center" } },
-          React.createElement("button", { type: "button", className: "offline-play-btn", onClick: () => fileRef.current && fileRef.current.click() }, "تشغيل"),
-          React.createElement("div", { className: "offline-game-icon" }, "🎮")
-        )
-      ),
-      React.createElement("input", { ref: fileRef, type: "file", accept: ".html,.htm", style: { display: "none" }, onChange: onFile }),
-      gameOpen === "balloon" && React.createElement("div", { className: "balloon-game" },
-        React.createElement("button", { type: "button", className: "balloon-close", onClick: closeGame }, "✕"),
-        React.createElement("canvas", { ref: canvasRef, width: "320", height: "480", className: "balloon-canvas" }),
-        React.createElement("p", { style: { marginTop: 12, color: "#aaa" } }, "اضغط أو المس الشاشة لرفع المنطاد")
-      ),
-      gameOpen === "html" && htmlGame && React.createElement("div", { className: "balloon-game", style: { background: "#000" } },
-        React.createElement("button", { type: "button", className: "balloon-close", onClick: () => { setGameOpen(null); URL.revokeObjectURL(htmlGame); setHtmlGame(null); } }, "✕"),
-        React.createElement("iframe", { src: htmlGame, style: { width: "100%", height: "100%", border: "none" }, title: "لعبة" })
       )
     );
   };

@@ -1102,41 +1102,7 @@ const OfflineSheet=({onRetry,onCancel,onOpenAccount,photo})=>{
         <button type="button" className="offline-btn offline-btn-retry" onClick={onRetry}>إعادة المحاولة</button>
         <button type="button" className="offline-btn offline-btn-offline" onClick={onCancel}>دخول بدون اتصال</button>
       </div>
-      <div className="offline-games-title">اللعب أثناء الانتظار</div>
-      <div className="offline-game-row">
-        <div className="offline-game-info">
-          <div className="offline-game-name">Hot Air Balloon</div>
-        </div>
-        <div style={{display:'flex',alignItems:'center'}}>
-          <button type="button" className="offline-play-btn" onClick={startBalloon}>تشغيل</button>
-          <div className="offline-game-icon">🎈</div>
-        </div>
-      </div>
-      <div className="offline-game-row">
-        <div className="offline-game-info">
-          <div className="offline-game-name">اختيار لعبة</div>
-          <div className="offline-game-desc">اختر لعبة بملف html من الملفات و العبها هنا</div>
-        </div>
-        <div style={{display:'flex',alignItems:'center'}}>
-          <button type="button" className="offline-play-btn" onClick={()=>fileRef.current&&fileRef.current.click()}>تشغيل</button>
-          <div className="offline-game-icon">🎮</div>
-        </div>
-      </div>
-      <input ref={fileRef} type="file" accept=".html,.htm" style={{display:'none'}} onChange={onFile}/>
-      {gameOpen==='balloon'&&(
-        <div className="balloon-game">
-          <button type="button" className="balloon-close" onClick={closeGame}>✕</button>
-          <canvas ref={canvasRef} width="320" height="480" className="balloon-canvas"/>
-          <p style={{marginTop:12,color:'#aaa'}}>اضغط أو المس الشاشة لرفع المنطاد</p>
-        </div>
-      )}
-      {gameOpen==='html'&&htmlGame&&(
-        <div className="balloon-game" style={{background:'#000'}}>
-          <button type="button" className="balloon-close" onClick={()=>{setGameOpen(null);URL.revokeObjectURL(htmlGame);setHtmlGame(null);}}>✕</button>
-          <iframe src={htmlGame} style={{width:'100%',height:'100%',border:'none'}} title="لعبة"/>
-        </div>
-      )}
-    </div>
+          </div>
   );
 };
 const NetOffline = ({onRetry}) => (
