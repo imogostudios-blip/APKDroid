@@ -1383,7 +1383,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
         " الاتصال بالخادم."
       ),
       React.createElement("div", { className: "fo-buttons" },
-        React.createElement("button", { type: "button", className: "fo-btn fo-btn-primary", onClick: onSendNotice }, "إرسال إشعار"),
+        React.createElement("button", { type: "button", className: "fo-btn fo-btn-primary", onClick: onEnterOffline }, "متابعة بلا اتصال"),
         React.createElement("button", { type: "button", className: "fo-btn fo-btn-outline", onClick: onRetry }, "إعادة المحاولة")
       ),
       React.createElement("h3", { className: "fo-games-title" }, "اللعب أثناء الانتظار"),

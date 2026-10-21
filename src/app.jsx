@@ -1048,7 +1048,7 @@ const FullOfflinePage = ({ onRetry, onSendNotice, onOpenAccount, onEnterOffline 
         <h1 className="fo-title">أنت غير متصل بالخادم.</h1>
         <p className="fo-subtitle">يرجى التحقق من الاتصال أو تفعيل إعداد تلقي إشعار عند استعادة <span className="fo-more-link" onClick={() => setShowSolutions(true)}>مزيد</span> الاتصال بالخادم.</p>
         <div className="fo-buttons">
-          <button type="button" className="fo-btn fo-btn-primary" onClick={onSendNotice}>إرسال إشعار</button>
+          <button type="button" className="fo-btn fo-btn-primary" onClick={onEnterOffline}>متابعة بلا اتصال</button>
           <button type="button" className="fo-btn fo-btn-outline" onClick={onRetry}>إعادة المحاولة</button>
         </div>
         <h3 className="fo-games-title">اللعب أثناء الانتظار</h3>
