@@ -1085,25 +1085,192 @@ html.style2 .bg-btn-cancel {
   border: 1px solid hsl(var(--border));
 }
 
-/* Offline full page */
-.offline-full{position:fixed;inset:0;z-index:200;background:#000;color:#fff;display:flex;flex-direction:column;overflow:auto;font-family:inherit}
-.offline-profile{position:absolute;top:16px;right:16px;width:44px;height:44px;border-radius:50%;background:#1c1e22;border:none;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;z-index:10}
-.offline-profile img{width:100%;height:100%;object-fit:cover}
-.offline-profile span{font-size:22px}
-.offline-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px 20px;text-align:center}
-.offline-sat{width:min(70vw,280px);margin-bottom:20px}
-.offline-sat svg{width:100%;height:auto;display:block}
-.offline-title{font-size:1.6rem;font-weight:800;margin:0 0 12px;color:#fff}
-.offline-sub{font-size:.95rem;color:#9aa0a6;margin:0 0 28px;max-width:320px;line-height:1.6}
-.offline-more{color:#0F9D58;cursor:pointer;font-weight:600}
-.offline-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.offline-btn{min-height:48px;padding:0 28px;border-radius:999px;border:1px solid #5f6368;background:transparent;color:#fff;font-weight:700;font-size:1rem;cursor:pointer;font-family:inherit}
-.offline-btn.primary{background:#1a73e8;border-color:#1a73e8;color:#fff}
-.offline-games{padding:20px 16px 40px;border-top:1px solid #222}
-.offline-games h3{text-align:center;margin:0 0 16px;font-size:1.1rem;color:#fff}
-.offline-game-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #222}
-.offline-play-btn{min-width:80px;min-height:36px;border-radius:999px;border:1px solid #5f6368;background:transparent;color:#8ab4f8;font-weight:600;cursor:pointer;font-family:inherit}
-.offline-game-name{font-weight:600;color:#fff}
-.offline-game-hint{font-size:.8rem;color:#9aa0a6;margin-top:2px}
-.offline-game-ico{width:48px;height:48px;border-radius:12px;background:#1c1e22;display:flex;align-items:center;justify-content:center;font-size:24px;margin-inline-start:auto}
-.offline-back{position:absolute;top:16px;left:16px;background:transparent;border:none;color:#8ab4f8;font-size:1rem;cursor:pointer;z-index:10}
+/* Full offline page */
+.offline-full {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  color: #fff;
+  overflow-y: auto;
+  direction: rtl;
+  font-family: inherit;
+  padding: 16px 20px 40px;
+  box-sizing: border-box;
+}
+.offline-profile {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #222;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+.offline-profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.offline-sat {
+  display: flex;
+  justify-content: center;
+  margin: 60px 0 24px;
+}
+.offline-sat svg {
+  width: 180px;
+  height: auto;
+}
+.offline-title {
+  text-align: center;
+  font-size: 1.45rem;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: #fff;
+}
+.offline-sub {
+  text-align: center;
+  font-size: 0.92rem;
+  color: #9aa;
+  line-height: 1.55;
+  margin: 0 0 28px;
+  padding: 0 12px;
+}
+.offline-more {
+  color: #0F9D58;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+.offline-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+.offline-btn {
+  border-radius: 24px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  min-width: 140px;
+}
+.offline-btn-retry {
+  background: #1a73e8;
+  color: #fff;
+}
+.offline-btn-offline {
+  background: transparent;
+  color: #1a73e8;
+  border: 1px solid #1a73e8;
+}
+.offline-games-title {
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 18px;
+}
+.offline-game-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #111;
+  border-radius: 16px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+.offline-game-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.offline-game-name {
+  font-size: 1rem;
+  font-weight: 500;
+}
+.offline-game-desc {
+  font-size: 0.78rem;
+  color: #888;
+}
+.offline-play-btn {
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.offline-game-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 12px;
+  font-size: 24px;
+}
+.offline-solutions {
+  padding: 20px;
+}
+.offline-solutions h2 {
+  text-align: center;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+.offline-solutions p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #ccc;
+  margin-bottom: 14px;
+}
+.offline-back {
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 24px;
+  margin-top: 20px;
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.balloon-game {
+  position: fixed;
+  inset: 0;
+  background: #0a0a1a;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.balloon-canvas {
+  background: linear-gradient(#1a1a2e, #16213e);
+  border-radius: 12px;
+  touch-action: none;
+}
+.balloon-close {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+}
