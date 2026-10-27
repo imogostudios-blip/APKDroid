@@ -540,6 +540,8 @@ const TopNav=({nav,isDetail,onOpenAccount,route,photo})=>{
   const activePath=route||'/';
   return(
     <>
+      <div className="top-ext"></div>
+      <div className="top-ext-spacer"></div>
       <div className={`hdr-top-row flex items-center px-4 max-w-screen-2xl mx-auto w-full ${isDetail?'sticky top-0 z-40 bg-[hsl(var(--bg))]':''}`} style={{direction:'ltr'}}>
         {isDetail ? (
           <button type="button" className="nav-chip shrink-0" onClick={()=>window.history.back()} aria-label={t('back')}>
@@ -762,6 +764,7 @@ const BottomNav=({route,nav})=>{
           );
         })}
       </div>
+      <div className="bot-ext"></div>
     </nav>
   );
 };
