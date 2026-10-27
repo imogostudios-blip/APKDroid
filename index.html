@@ -32,5 +32,34 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(function () {});
 }
 </script>
+
+<script>
+/* Fullscreen: auto-attempt on load + on any interaction (like the game) */
+(function(){
+  function requestFS(){
+    var d = document.documentElement;
+    var req = d.requestFullscreen || d.webkitRequestFullscreen || d.mozRequestFullScreen || d.msRequestFullscreen;
+    if(req && !document.fullscreenElement && !document.webkitFullscreenElement){
+      try{ req.call(d); }catch(e){}
+    }
+  }
+  // Try automatically shortly after load (same technique as the game)
+  window.addEventListener('load', function(){
+    setTimeout(requestFS, 120);
+    setTimeout(requestFS, 600);
+  });
+  // Also on any user interaction anywhere
+  ['click','touchstart','pointerdown','keydown'].forEach(function(ev){
+    document.addEventListener(ev, requestFS, {capture:true, passive:true});
+  });
+  // Keep trying briefly in case the first auto attempt is blocked
+  var tries = 0;
+  var iv = setInterval(function(){
+    requestFS();
+    if(++tries > 8) clearInterval(iv);
+  }, 800);
+})();
+</script>
+
 </body>
 </html>
