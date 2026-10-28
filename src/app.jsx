@@ -1780,6 +1780,12 @@ const DetailTopBar=({app,isFav,onToggleFav,onShare,onOpenIn,onToggleTheme,isDark
                       <Icon name="info" className="w-5 h-5"></Icon>
                       <span>{t('dt_info')}</span>
                     </button>
+                    {!document.documentElement.classList.contains('style2') && (
+                      <button type="button" role="menuitem" className="dt-item" onClick={run(onToggleFav)}>
+                        <Icon name={isFav?'bookmarkFill':'bookmark'} className="w-5 h-5"></Icon>
+                        <span>{_lang==='ar'?'إضافة إلى المفضلة':'Add to favorites'}</span>
+                      </button>
+                    )}
                   </div>
                 </>
               )}
@@ -2336,7 +2342,16 @@ const Detail=({id,nav,favs,toggle,selStore,expMode,setDetailApp,autoInstall,onTo
                 )}
               </div>
             ):(
-              <button type="button" className="bg-btn-install thin-btn" onClick={()=>setReqOpen(true)}>{t('install')}</button>
+              document.documentElement.classList.contains('style2') ? (
+                <button type="button" className="bg-btn-install thin-btn" onClick={()=>setReqOpen(true)}>{t('install')}</button>
+              ) : (
+                <button type="button" className="btn-install-apkcombo" onClick={()=>{
+                  // Open the selected platform link exactly like the old install flow
+                  beginInstall(false);
+                }}>
+                  INSTALL
+                </button>
+              )
             )}
           </div>
         </div>
