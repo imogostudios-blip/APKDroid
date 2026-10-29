@@ -2109,6 +2109,19 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
         sheet.style.transition = "";
       };
     }, [open]);
+    // Close options menu when clicking outside (green style)
+    useEffect(() => {
+      if (!open || document.documentElement.classList.contains("style2")) return;
+      const onDocClick = (e) => {
+        const menu = document.querySelector("html:not(.style2) .dt-menu");
+        const btn = document.querySelector(".dt-menu-wrap button");
+        if (menu && !menu.contains(e.target) && (!btn || !btn.contains(e.target))) {
+          setOpen(false);
+        }
+      };
+      document.addEventListener("click", onDocClick, true);
+      return () => document.removeEventListener("click", onDocClick, true);
+    }, [open]);
     const run = (fn) => () => {
       setOpen(false);
       if (fn) fn();
@@ -2534,18 +2547,19 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
           if (app) toggle(app);
         },
         onShare: () => {
-        const playUrl = "https://play.google.com/store/search?q=" + encodeURIComponent(app.trackName || "") + "&c=apps";
-        if (navigator.share) {
-          navigator.share({
-            title: app.trackName || "",
-            text: app.trackName || "",
-            url: playUrl
-          }).catch(() => {});
-        } else {
-          if (navigator.clipboard) navigator.clipboard.writeText(playUrl).then(() => showToast(t("toast_copied"))).catch(() => showToast(t("toast_copied")));
-          else showToast(t("toast_copied"));
-        }
-      },
+          const shareUrl = window.location.href;
+          const title = app.trackName || "APKDroid";
+          if (navigator.share) {
+            navigator.share({
+              title: title,
+              text: title + " - " + (app.artistName || ""),
+              url: shareUrl
+            }).catch(() => {});
+          } else {
+            if (navigator.clipboard) navigator.clipboard.writeText(shareUrl).then(() => showToast(t("toast_copied"))).catch(() => showToast(t("toast_copied")));
+            else showToast(t("toast_copied"));
+          }
+        },
         onOpenIn: openInOtherStore,
         onToggleTheme,
         isDark: !!isDark,
