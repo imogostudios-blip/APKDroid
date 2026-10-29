@@ -1325,7 +1325,7 @@ html:not(.style2) .bg-detail-actions {
   overflow: hidden;
 }
 html:not(.style2) .bg-screenshots {
-  margin-top: 12px;
+  margin-top: 6px;
   clear: both;
 }
 
@@ -1334,7 +1334,7 @@ html:not(.style2) .bg-screenshots {
   width: 46px;
   height: 46px;
   min-width: 46px;
-  background: #5f6368;
+  background: #1E1F20;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -1362,4 +1362,33 @@ html:not(.style2) .bg-screenshots {
   float: none;
   margin: 0;
   flex-shrink: 0;
+}
+
+/* Blue style light theme bottom bar */
+html.style2:not(.dark):not(.black) .bot-nav {
+  background: #F0F4F9 !important;
+  border-color: #E0E3E7 !important;
+}
+html.style2:not(.dark):not(.black) .nav-pill-on {
+  background: #C2E7FF !important;
+}
+html.style2:not(.dark):not(.black) .nav-ico-on {
+  color: #004A77 !important;
+}
+html.style2:not(.dark):not(.black) .bot-nav button:not(.nav-ico-on),
+html.style2:not(.dark):not(.black) .bot-nav button:not(.nav-ico-on) svg {
+  color: #444746 !important;
+}
+
+/* Green top half-screen menu */
+html:not(.style2) .green-float-btns .dt-menu {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--fg));
+  box-shadow: 0 8px 30px rgba(0,0,0,.4);
+  padding: 16px 8px 24px;
+  border: none;
+}
+html:not(.style2) .green-float-btns .dt-menu .dt-item {
+  padding: 14px 16px;
+  font-size: 1rem;
 }
