@@ -1380,15 +1380,20 @@ html.style2:not(.dark):not(.black) .bot-nav button:not(.nav-ico-on) svg {
   color: #444746 !important;
 }
 
-/* Green top half-screen menu */
+/* Green full top menu (not a window) */
 html:not(.style2) .green-float-btns .dt-menu {
-  background: hsl(var(--card)) !important;
+  background: hsl(var(--bg)) !important;
   color: hsl(var(--fg));
-  box-shadow: 0 8px 30px rgba(0,0,0,.4);
-  padding: 16px 8px 24px;
+  box-shadow: none;
+  padding: 60px 16px 40px;
   border: none;
+  border-radius: 0 !important;
 }
 html:not(.style2) .green-float-btns .dt-menu .dt-item {
-  padding: 14px 16px;
-  font-size: 1rem;
+  padding: 16px 12px;
+  font-size: 1.05rem;
+  border-radius: 8px;
+}
+html:not(.style2) .green-float-btns .dt-scrim {
+  background: transparent;
 }
