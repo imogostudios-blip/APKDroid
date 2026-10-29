@@ -2345,16 +2345,12 @@ const Detail=({id,nav,favs,toggle,selStore,expMode,setDetailApp,autoInstall,onTo
               document.documentElement.classList.contains('style2') ? (
                 <button type="button" className="bg-btn-install thin-btn" onClick={()=>setReqOpen(true)}>{t('install')}</button>
               ) : (
-                <div className="green-install-row" style={{display:'flex', alignItems:'center', gap:'10px', width:'100%', justifyContent:'flex-end'}}>
-                  <button type="button" className="btn-fav-square" onClick={()=>{if(app)toggle(app)}} aria-label={isF?t('dt_unsave'):t('dt_save')}>
-                    <Icon name={isF?'bookmarkFill':'bookmark'} className="w-5 h-5"></Icon>
-                  </button>
-                  <button type="button" className="btn-install-apkcombo" onClick={()=>{
-                    beginInstall(false);
-                  }}>
-                    INSTALL
-                  </button>
-                </div>
+                <button type="button" className="btn-install-apkcombo" onClick={()=>{
+                  // Open the selected platform link exactly like the old install flow
+                  beginInstall(false);
+                }}>
+                  INSTALL
+                </button>
               )
             )}
           </div>
