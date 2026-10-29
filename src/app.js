@@ -2109,22 +2109,36 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
         sheet.style.transition = "";
       };
     }, [open]);
-    // Close options menu when clicking outside (green style)
+    // Close options menu when clicking/tapping anywhere outside it
     useEffect(() => {
-      if (!open || document.documentElement.classList.contains("style2")) return;
-      const onDocClick = (e) => {
-        const menu = document.querySelector("html:not(.style2) .dt-menu");
-        const btn = document.querySelector(".dt-menu-wrap button");
-        if (menu && !menu.contains(e.target) && (!btn || !btn.contains(e.target))) {
-          setOpen(false);
-        }
+      if (!open) return;
+      let attached = false;
+      const onOutside = (e) => {
+        if (!attached) return;
+        const menu = document.querySelector(".dt-menu");
+        const wrap = document.querySelector(".dt-menu-wrap");
+        if (menu && menu.contains(e.target)) return;
+        if (wrap && wrap.contains(e.target)) return;
+        setOpen(false);
       };
-      document.addEventListener("click", onDocClick, true);
-      return () => document.removeEventListener("click", onDocClick, true);
+      // Delay so the same click that opened the menu does not immediately close it
+      const t = setTimeout(() => {
+        attached = true;
+        document.addEventListener("pointerdown", onOutside, true);
+        document.addEventListener("touchstart", onOutside, true);
+        document.addEventListener("click", onOutside, true);
+      }, 50);
+      return () => {
+        clearTimeout(t);
+        document.removeEventListener("pointerdown", onOutside, true);
+        document.removeEventListener("touchstart", onOutside, true);
+        document.removeEventListener("click", onOutside, true);
+      };
     }, [open]);
-    const run = (fn) => () => {
-      setOpen(false);
+    const run = (fn) => (e) => {
+      if (e && e.stopPropagation) e.stopPropagation();
       if (fn) fn();
+      setOpen(false);
     };
     const ar = _lang === "ar";
     return /* @__PURE__ */ React.createElement("div", { className: "hdr-top-row dt-bar flex items-center px-4 max-w-screen-2xl mx-auto w-full sticky top-0 z-40 bg-[hsl(var(--bg))]", style: { direction: "ltr" } }, /* @__PURE__ */ React.createElement("div", { className: "dt-left" }, app && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "dt-menu-wrap" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: () => setOpen((o) => !o), "aria-label": t("more_options"), "aria-haspopup": "menu", "aria-expanded": open }, /* @__PURE__ */ React.createElement(Icon, { name: "dots", className: "w-5 h-5" })), open && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "dt-scrim", onClick: () => setOpen(false) }), /* @__PURE__ */ React.createElement("div", { className: "dt-menu", role: "menu", dir: ar ? "rtl" : "ltr" }, /* @__PURE__ */ React.createElement("button", { type: "button", role: "menuitem", className: "dt-item", onClick: run(onShare) }, /* @__PURE__ */ React.createElement(BrandIcon, { name: "share" }), /* @__PURE__ */ React.createElement("span", null, t("dt_share"))), /* @__PURE__ */ React.createElement("button", { type: "button", role: "menuitem", className: "dt-item", onClick: run(onOpenIn) }, /* @__PURE__ */ React.createElement(Icon, { name: "external", className: "w-5 h-5" }), /* @__PURE__ */ React.createElement("span", null, t("dt_open_in"))), /* @__PURE__ */ React.createElement("button", { type: "button", role: "menuitem", className: "dt-item", onClick: run(onToggleTheme) }, /* @__PURE__ */ React.createElement(Icon, { name: isDark ? "sun" : "moon", className: "w-5 h-5" }), /* @__PURE__ */ React.createElement("span", null, t("dt_theme"))), /* @__PURE__ */ React.createElement("button", { type: "button", role: "menuitem", className: "dt-item", onClick: run(onInfo) }, /* @__PURE__ */ React.createElement(Icon, { name: "info", className: "w-5 h-5" }), /* @__PURE__ */ React.createElement("span", null, t("dt_info"))), !document.documentElement.classList.contains("style2") && /* @__PURE__ */ React.createElement("button", { type: "button", role: "menuitem", className: "dt-item", onClick: run(onToggleFav) }, /* @__PURE__ */ React.createElement(Icon, { name: isFav ? "bookmarkFill" : "bookmark", className: "w-5 h-5" }), /* @__PURE__ */ React.createElement("span", null, _lang === "ar" ? "إضافة إلى المفضلة" : "Add to favorites" ))))), /* @__PURE__ */ React.createElement("button", { type: "button", className: `nav-chip dt-fav shrink-0 ${isFav ? "on" : ""}`, onClick: onToggleFav, "aria-label": isFav ? t("dt_unsave") : t("dt_save"), "aria-pressed": !!isFav }, /* @__PURE__ */ React.createElement(Icon, { name: isFav ? "bookmarkFill" : "bookmark", className: "w-5 h-5" })))), /* @__PURE__ */ React.createElement("div", { className: "flex-1" }), /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: onBack, "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "arrowRight", className: "w-5 h-5" })));
@@ -2547,17 +2561,25 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
           if (app) toggle(app);
         },
         onShare: () => {
-          const shareUrl = window.location.href;
-          const title = app.trackName || "APKDroid";
-          if (navigator.share) {
-            navigator.share({
-              title: title,
-              text: title + " - " + (app.artistName || ""),
-              url: shareUrl
-            }).catch(() => {});
-          } else {
-            if (navigator.clipboard) navigator.clipboard.writeText(shareUrl).then(() => showToast(t("toast_copied"))).catch(() => showToast(t("toast_copied")));
-            else showToast(t("toast_copied"));
+          try {
+            const shareUrl = window.location.href;
+            const title = (app && app.trackName) || "APKDroid";
+            const text = title + (app && app.artistName ? " - " + app.artistName : "");
+            if (typeof navigator !== "undefined" && navigator.share) {
+              navigator.share({ title, text, url: shareUrl }).catch(function () {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                  navigator.clipboard.writeText(shareUrl).then(function () { showToast(t("toast_copied")); }).catch(function () { showToast(t("toast_copied")); });
+                } else {
+                  showToast(t("toast_copied"));
+                }
+              });
+            } else if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(shareUrl).then(function () { showToast(t("toast_copied")); }).catch(function () { showToast(t("toast_copied")); });
+            } else {
+              showToast(t("toast_copied"));
+            }
+          } catch (err) {
+            try { showToast(t("toast_copied")); } catch (e2) {}
           }
         },
         onOpenIn: openInOtherStore,
