@@ -571,9 +571,9 @@ html:not(.style2) .dt-item {
   align-items: center;
   gap: 16px;
   width: 100%;
-  padding: 14px 8px;
+  padding: 14px 12px;
   border: none;
-  background: transparent;
+  background: #252525;
   color: inherit;
   font-family: inherit;
   font-size: 1rem;
@@ -581,13 +581,16 @@ html:not(.style2) .dt-item {
   border-radius: 12px;
   cursor: pointer;
   text-align: start;
-  margin: 2px 0;
+  margin: 4px 0;
 }
 html:not(.style2) .dt-item:hover,
 html:not(.style2) .dt-item:active {
-  background: hsl(var(--fg) / .08);
+  background: #333333;
 }
-html:not(.style2) .dt-item svg {
+html:not(.style2) .dt-menu[dir="rtl"] .dt-item {
+  flex-direction: row-reverse;
+  text-align: end;
+}
   width: 24px;
   height: 24px;
   flex-shrink: 0;
