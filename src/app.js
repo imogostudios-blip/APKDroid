@@ -2109,9 +2109,9 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
         sheet.style.transition = "";
       };
     }, [open]);
-    // Close options menu when clicking/tapping anywhere outside it
+    // Close options menu when clicking/tapping anywhere outside it (green style only)
     useEffect(() => {
-      if (!open) return;
+      if (!open || document.documentElement.classList.contains("style2")) return;
       let attached = false;
       const onOutside = (e) => {
         if (!attached) return;
