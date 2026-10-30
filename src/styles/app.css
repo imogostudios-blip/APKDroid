@@ -519,7 +519,7 @@ html:not(.dark):not(.black) .lib-wrap .settings-box { background: hsl(var(--card
 .dt-bar .nav-chip svg { width: 20px; height: 20px; }
 .dt-left { display: flex; align-items: center; gap: 4px; }
 .dt-menu-wrap { position: relative; }
-.dt-scrim { position: fixed; inset: 0; z-index: 450; background: rgba(0,0,0,.55); pointer-events: auto; cursor: pointer; }
+.dt-scrim { position: fixed; inset: 0; z-index: 1; background: transparent; }
 .dt-menu { position: absolute; top: calc(100% + 4px); left: 0; z-index: 2; min-width: 236px; max-width: calc(100vw - 24px); padding: 6px; background: hsl(var(--card)); color: hsl(var(--fg)); border: 1px solid hsl(var(--border)); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.28); transform-origin: top left; animation: dtPop .14s ease-out; }
 @keyframes dtPop { from { opacity: 0; transform: scale(.92); } to { opacity: 1; transform: scale(1); } }
 /* Bottom sheet options menu for green style three-dots */
