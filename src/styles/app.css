@@ -1030,12 +1030,13 @@ html.dark:not(.style2).exp-banner .green-float-btns button,html:not(.style2).exp
   cursor: pointer;
   text-align: start;
 }
+.movie-card:nth-child(3n+1),
 .movie-card-wide {
   grid-column: 1 / -1;
 }
 .movie-thumb-wrap {
   width: 100%;
-  aspect-ratio: 9 / 16;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: hsl(var(--muted));
   border-radius: 0;
@@ -1072,17 +1073,29 @@ html:not(.style2) .hdr-chip.on svg { color: #fff; fill: #fff; }
 html:not(.style2).dark .hdr-chip.on, html:not(.style2).black .hdr-chip.on { background: #00E676 !important; color: #fff; }
 
 .download-btn {
-  padding: 6px 14px;
+  padding: 8px 16px;
   border-radius: 8px;
-  background: hsl(var(--primary, 142 76% 36%));
-  color: #fff;
+  background: #FFA100;
+  color: #000;
   text-decoration: none;
   font-family: inherit;
-  font-weight: 600;
+  font-weight: 700;
   margin-top: 4px;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
 }
 .download-btn:hover { opacity: 0.9; }
+.movie-content {
+  padding: 12px 16px;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: hsl(var(--fg));
+}
+.movie-content p { margin: 0 0 8px; }
 
 /* Custom switch style for style2 toggle - blue style without ads */
 .switch-row {
