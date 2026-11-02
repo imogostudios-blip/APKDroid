@@ -3730,42 +3730,70 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     return /* @__PURE__ */ React.createElement("div", { className: "ob-screen", dir: ar ? "rtl" : "ltr" }, /* @__PURE__ */ React.createElement("div", { className: "ob-body" }, /* @__PURE__ */ React.createElement(ObSvg, { className: "ob-logo sm", html: SVG_BLOCKED }), /* @__PURE__ */ React.createElement("p", { className: "ob-legal", style: { opacity: 1, fontSize: "1rem", fontWeight: 700 } }, t("country_blocked")), /* @__PURE__ */ React.createElement("button", { type: "button", className: "ob-select", onClick: () => setOpen(true) }, /* @__PURE__ */ React.createElement("span", null, countryLabel(country2, ar) || t("choose_country")), /* @__PURE__ */ React.createElement("span", null, "\u25BE"))), open && /* @__PURE__ */ React.createElement("div", { className: "ob-sheet-bg", onClick: () => setOpen(false) }, /* @__PURE__ */ React.createElement("div", { className: "ob-sheet", onClick: (e) => e.stopPropagation() }, /* @__PURE__ */ React.createElement("div", { className: "ob-sheet-handle" }), /* @__PURE__ */ React.createElement("input", { className: "ob-sheet-search", value: q, onChange: (e) => setQ(e.target.value), placeholder: ar ? "\u0628\u062D\u062B \u0639\u0646 \u0628\u0644\u062F" : "Search country" }), /* @__PURE__ */ React.createElement("div", { className: "ob-sheet-list" }, list.map((x) => /* @__PURE__ */ React.createElement("button", { key: x.c, type: "button", className: `ob-sheet-item ${country2 === x.c ? "on" : ""}`, onClick: () => pick(x.c) }, ar ? x.ar : x.en))))));
   };
 
-  const parseMovies = (text) => {
-    const lines = String(text || "").split(/\r?\n/).map(x => x.trim()).filter(Boolean);
-    const out = [];
-    let cur = null;
-    lines.forEach(line => {
-      if (line === "</end>" || line === "/end") { if (cur && cur.id) out.push(cur); cur = null; return; }
-      const head = line.match(/^<\/?(m\d+)>$/i);
-      if (head) { cur = { id: head[1], name: "", url: "", dir: "A", download: "", category: "" }; return; }
-      if (!cur) return;
-      const name = line.match(/^<\/?name=([\s\S]*)>$/);
-      const url = line.match(/^<\/?url=([\s\S]*)>$/);
-      const dir = line.match(/^<\/?dir=([\s\S]*)>$/);
-      const download = line.match(/^<\/?download=([\s\S]*)>$/);
-      const category = line.match(/^<\/?category=([\s\S]*)>$/);
-      if (name) cur.name = name[1].trim();
-      else if (url) cur.url = url[1].trim();
-      else if (dir) cur.dir = (dir[1].trim().toUpperCase() === "B") ? "B" : "A";
-      else if (download) cur.download = download[1].trim();
-      else if (category) cur.category = category[1].trim();
+  const BLOGGER_POSTS_URL = "https://www.googleapis.com/blogger/v3/blogs/4628461165286710836/posts?key=AIzaSyA6ydmMYw6vhmuZnXzoWftcnZ-601GokuU&maxResults=50";
+  const BLOGGER_POST_URL = (id) => `https://www.googleapis.com/blogger/v3/blogs/4628461165286710836/posts/${id}?key=AIzaSyA6ydmMYw6vhmuZnXzoWftcnZ-601GokuU`;
+
+  const extractVideoInfo = (html) => {
+    if (!html) return { ytId: null, videoUrl: null, thumb: null, cleanHtml: "" };
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    let ytId = null;
+    let videoUrl = null;
+    // YouTube embed
+    const iframes = tmp.querySelectorAll("iframe");
+    iframes.forEach(iframe => {
+      const src = iframe.getAttribute("src") || "";
+      const m = src.match(/(?:youtube\.com\/embed\/|youtu\.be\/|youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/);
+      if (m) ytId = m[1];
+      else if (src && !videoUrl) videoUrl = src;
     });
-    return out;
+    // Direct video tags
+    const videos = tmp.querySelectorAll("video, source");
+    videos.forEach(v => {
+      const src = v.getAttribute("src");
+      if (src && /\.(mp4|webm|ogg)(\?|$)/i.test(src)) videoUrl = src;
+    });
+    // Also check for any mp4 links
+    if (!videoUrl && !ytId) {
+      const links = tmp.querySelectorAll("a[href]");
+      links.forEach(a => {
+        const href = a.getAttribute("href") || "";
+        if (/\.(mp4|webm)(\?|$)/i.test(href)) videoUrl = href;
+      });
+    }
+    // Remove video elements for clean text
+    tmp.querySelectorAll("iframe, video, .separator").forEach(el => el.remove());
+    const cleanHtml = tmp.innerHTML.replace(/&nbsp;/g, " ").trim();
+    const thumb = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null;
+    return { ytId, videoUrl, thumb, cleanHtml };
   };
 
   const MoviesPage = ({ nav, searchQ, setSearchQ, photo, onOpenAccount }) => {
     const [movies, setMovies] = useState([]);
     const [q, setQ] = useState(searchQ || "");
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
-      fetch("res/movies/movies.json").then(r => r.text()).then(text => {
-        const list = parseMovies(text);
-        setMovies(list);
-      }).catch(() => setMovies([]));
+      fetch(BLOGGER_POSTS_URL)
+        .then(r => r.json())
+        .then(data => {
+          const items = (data.items || []).map(p => {
+            const info = extractVideoInfo(p.content);
+            return {
+              id: p.id,
+              name: p.title || "",
+              content: p.content || "",
+              ...info
+            };
+          });
+          setMovies(items);
+          setLoading(false);
+        })
+        .catch(() => { setMovies([]); setLoading(false); });
     }, []);
     const ql = (q || "").trim().toLowerCase();
     const filtered = movies.filter(m => !ql || 
       (m.name || "").toLowerCase().includes(ql) || 
-      (m.category || "").toLowerCase().includes(ql)
+      (m.cleanHtml || "").toLowerCase().includes(ql)
     );
     return React.createElement("div", { className: "movies-page" },
       React.createElement("div", { className: "movies-search-bar", style: { display: "flex", alignItems: "center", gap: "10px", direction: "ltr" } },
@@ -3784,17 +3812,19 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
           style: { flex: 1 }
         })
       ),
+      loading ? React.createElement("div", { style: { padding: "20px", textAlign: "center" } }, "جاري التحميل...") :
       React.createElement("div", { className: "movies-grid" },
-        filtered.map(m => {
-          const isWide = (m.dir || "A").toUpperCase() === "B";
+        filtered.map((m, idx) => {
+          const isWide = idx % 3 === 0;
           return React.createElement("button", {
             key: m.id,
             type: "button",
             className: "movie-card" + (isWide ? " movie-card-wide" : ""),
             onClick: () => nav("/movie/" + encodeURIComponent(m.id))
           },
-            React.createElement("div", { className: "movie-thumb-wrap" + (isWide ? " movie-thumb-wide" : "") },
-              React.createElement("img", { src: "res/movies/movies_photos/" + m.id + ".png", alt: "", onError: e => { e.target.style.display = "none"; } })
+            React.createElement("div", { className: "movie-thumb-wrap" },
+              m.thumb ? React.createElement("img", { src: m.thumb, alt: "", onError: e => { e.target.style.display = "none"; } }) :
+              React.createElement("div", { style: { width: "100%", height: "100%", background: "#111", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" } }, "▶")
             ),
             React.createElement("div", { className: "movie-name" }, m.name || m.id)
           );
@@ -3806,41 +3836,57 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
   const MoviePlayer = ({ id, nav, onToggleTheme, isDark }) => {
     const [movie, setMovie] = useState(null);
     const [speed, setSpeed] = useState(1);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
-      fetch("res/movies/movies.json").then(r => r.text()).then(text => {
-        const list = parseMovies(text);
-        setMovie(list.find(m => m.id === id) || null);
-      }).catch(() => {});
+      fetch(BLOGGER_POST_URL(id))
+        .then(r => r.json())
+        .then(p => {
+          const info = extractVideoInfo(p.content);
+          setMovie({
+            id: p.id,
+            name: p.title || "",
+            content: p.content || "",
+            ...info
+          });
+          setLoading(false);
+        })
+        .catch(() => { setLoading(false); });
     }, [id]);
-    const ytId = movie && movie.url ? (movie.url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/) || [])[1] : null;
-    const embed = ytId ? `https://www.youtube.com/embed/${ytId}?rel=0` : null;
+    const embed = movie && movie.ytId ? `https://www.youtube.com/embed/${movie.ytId}?rel=0` : null;
+    const directVideo = movie && movie.videoUrl && !movie.ytId ? movie.videoUrl : null;
+    const downloadUrl = movie && (movie.videoUrl || (movie.ytId ? `https://www.youtube.com/watch?v=${movie.ytId}` : null));
     return React.createElement("div", { className: "movie-player-page" },
       React.createElement("div", { className: "movie-player-bar" },
         React.createElement("button", { type: "button", className: "nav-chip", onClick: () => nav("/movies"), "aria-label": "رجوع" },
           React.createElement(Icon, { name: "arrowRight", className: "w-5 h-5" })
         )
       ),
-      embed ? React.createElement("div", { className: "yt-wrap" },
-        React.createElement("iframe", { src: embed, title: movie.name, allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowFullScreen: true, className: "yt-iframe" })
-      ) : React.createElement("div", { className: "yt-placeholder" }, "لا يوجد فيديو"),
-      React.createElement("h1", { className: "movie-title" }, movie ? movie.name : "..."),
-      React.createElement("div", { className: "movie-controls" },
-        React.createElement("label", null, "السرعة: "),
-        React.createElement("select", { value: speed, onChange: e => setSpeed(Number(e.target.value)) },
-          [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map(s => React.createElement("option", { key: s, value: s }, s + "x"))
-        ),
-        React.createElement("button", { type: "button", className: "theme-toggle", onClick: onToggleTheme }, isDark ? "فاتح" : "داكن"),
-        movie && movie.download ? React.createElement("a", { 
-          href: movie.download, 
-          target: "_blank", 
-          rel: "noopener noreferrer", 
-          className: "download-btn",
-          style: { display: "inline-block", padding: "6px 14px", borderRadius: "8px", background: "hsl(var(--primary))", color: "#fff", textDecoration: "none", fontFamily: "inherit", marginTop: "8px" }
-        }, "تنزيل") : null
+      loading ? React.createElement("div", { style: { padding: "40px", textAlign: "center" } }, "جاري التحميل...") :
+      React.createElement(React.Fragment, null,
+        React.createElement("h1", { className: "movie-title" }, movie ? movie.name : "..."),
+        embed ? React.createElement("div", { className: "yt-wrap" },
+          React.createElement("iframe", { src: embed, title: movie.name, allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowFullScreen: true, className: "yt-iframe" })
+        ) : directVideo ? React.createElement("div", { className: "yt-wrap" },
+          React.createElement("video", { src: directVideo, controls: true, style: { width: "100%", height: "100%" }, className: "yt-iframe" })
+        ) : React.createElement("div", { className: "yt-placeholder" }, "لا يوجد فيديو"),
+        movie && movie.cleanHtml ? React.createElement("div", { className: "movie-content", dangerouslySetInnerHTML: { __html: movie.cleanHtml } }) : null,
+        React.createElement("div", { className: "movie-controls" },
+          React.createElement("label", null, "السرعة: "),
+          React.createElement("select", { value: speed, onChange: e => setSpeed(Number(e.target.value)) },
+            [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map(s => React.createElement("option", { key: s, value: s }, s + "x"))
+          ),
+          React.createElement("button", { type: "button", className: "theme-toggle", onClick: onToggleTheme }, isDark ? "فاتح" : "داكن"),
+          downloadUrl ? React.createElement("a", { 
+            href: downloadUrl, 
+            target: "_blank", 
+            rel: "noopener noreferrer", 
+            className: "download-btn",
+            download: movie.name || "video"
+          }, "تنزيل") : null
+        )
       )
     );
   };
-
 
   function App() {
     const [route, nav] = useHash();
