@@ -255,7 +255,7 @@ html.style2.dark .dl-name-pct,html.style2.black .dl-name-pct{color:#A8C7FA}
 @media(min-width:640px){.bg-toast{bottom:24px}}
 /* ===== Style 2 (green → blue) ===== */
 html.style2{--primary:217 90% 43%}
-html.style2.dark{--bg:240 2% 8%;--card:240 3% 10%;--muted:240 3% 12%;--border:240 3% 18%;--primary:214 80% 88%;--primary-fg:220 40% 12%}
+html.style2.dark{--bg:240 3% 7%;--card:240 3% 10%;--muted:240 3% 12%;--border:240 3% 18%;--primary:214 80% 88%;--primary-fg:220 40% 12%}
 html.style2 .bg-btn-install,html.style2 .bg-btn-store{background:#0B57D0;color:#fff}
 html.style2.dark .bg-btn-install,html.style2.dark .bg-btn-store{background:#A8C7FA;color:#062e6f}
 html.style2 .dl-ring-prog{stroke:#0B57D0}
@@ -266,7 +266,7 @@ html.style2 .eq-switch.on,html.style2 .eq-band input[type=range],html.style2 .eq
 html.style2 .eq-switch.on{background:#0B57D0}
 html.style2.dark .eq-switch.on{background:#A8C7FA}
 html.style2.dark .eq-band input[type=range],html.style2.dark .eq-vol{accent-color:#A8C7FA}
-html.style2.dark .bot-nav{background:#1E1F20;border-color:#2a2a2c}
+html.style2.dark .bot-nav{background:#141415;border-color:#2a2a2c}
 /* Light theme blue style bottom bar */
 html.style2:not(.dark):not(.black) .bot-nav {
   background: #F0F4F9 !important;
