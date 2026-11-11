@@ -1,4 +1,4 @@
-const CACHE = 'apkdroid-v71';
+const CACHE = 'apkdroid-v72';
 const APP_SHELL = [
   './',
   './index.html',
