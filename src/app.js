@@ -3994,7 +3994,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       setS("apk_theme", theme === "system" ? "system" : th);
       setS("apk_night", n);
       const special = !!accOpen || route === "/settings" || route === "/downloads" || route === "/search-log";
-      const color = special ? "#1F1F1F" : n ? "#000000" : th === "dark" ? "#141415" : "#FFFFFF";
+      const color=special?'#1F1F1F':(n?'#000000':(th==='dark'?'#0A0A0B':'#FFFFFF'));
       const meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute("content", color);
       try {
