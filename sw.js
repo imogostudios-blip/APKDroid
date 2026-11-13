@@ -1,4 +1,4 @@
-const CACHE = 'apkdroid-v72';
+const CACHE = 'apkdroid-v73';
 const APP_SHELL = [
   './',
   './index.html',
@@ -44,6 +44,23 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
+  if (new URL(req.url).pathname.indexOf('/assets/photos/') !== -1) {
+    // photos: network first (new/changed photos show up), cache only as offline fallback
+    event.respondWith((async () => {
+      try {
+        const res = await fetch(req, { cache: 'no-store' });
+        if (res && res.status === 200) {
+          const copy = res.clone();
+          caches.open(CACHE).then((cache) => cache.put(req, copy));
+        }
+        return res;
+      } catch (err) {
+        const cached = await caches.match(req);
+        return cached || new Response('', { status: 504, statusText: 'Offline' });
+      }
+    })());
+    return;
+  }
   event.respondWith((async () => {
     const cached = await caches.match(req, { ignoreSearch: true });
     if (cached) return cached;
