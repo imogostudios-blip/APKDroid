@@ -941,9 +941,9 @@
     if (!app) return null;
     const img = app.artworkUrl100 || app.artworkUrl60;
     if (small) {
-      return /* @__PURE__ */ React.createElement("button", { onClick: () => onClick(app), className: "flex flex-col w-[120px] shrink-0 text-left group" }, /* @__PURE__ */ React.createElement(SmartImg, { src: img, kind: "icon", className: "w-[120px] h-[120px] object-cover app-ico-r shadow-sm border border-[hsl(var(--border))] bg-muted group-hover:shadow-md transition-all" }), /* @__PURE__ */ React.createElement("div", { className: "mt-2 flex flex-col" }, /* @__PURE__ */ React.createElement("h3", { className: "font-medium text-[13px] leading-tight line-clamp-2" }, app.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-[11px] text-muted-foreground truncate mt-0.5" }, app.primaryGenreName || app.artistName)));
+      return /* @__PURE__ */ React.createElement("button", { onClick: () => onClick(app), className: "flex flex-col w-[120px] shrink-0 text-left group" }, /* @__PURE__ */ React.createElement(SmartImg, { src: img, kind: "icon", className: "w-[120px] h-[120px] rounded-[24px] object-cover shadow-sm border border-[hsl(var(--border))] bg-muted group-hover:shadow-md transition-all" }), /* @__PURE__ */ React.createElement("div", { className: "mt-2 flex flex-col" }, /* @__PURE__ */ React.createElement("h3", { className: "font-medium text-[13px] leading-tight line-clamp-2" }, app.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-[11px] text-muted-foreground truncate mt-0.5" }, app.primaryGenreName || app.artistName)));
     }
-    return /* @__PURE__ */ React.createElement("button", { onClick: () => onClick(app), className: "flex items-center gap-3 w-full p-3 hover:bg-[hsl(var(--muted))]/50 rounded-xl text-left transition" }, /* @__PURE__ */ React.createElement(SmartImg, { src: img, kind: "icon", className: "w-14 h-14 app-ico-r bg-muted shadow-sm object-cover border border-[hsl(var(--border))]" }), /* @__PURE__ */ React.createElement("div", { className: "flex-1 min-w-0" }, /* @__PURE__ */ React.createElement("p", { className: "font-medium truncate text-sm" }, app.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-muted-foreground truncate text-xs" }, app.artistName), /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 mt-1" }, /* @__PURE__ */ React.createElement(Stars, { r: app.averageUserRating }), /* @__PURE__ */ React.createElement("span", { className: "text-[10px] text-muted-foreground" }, app.formattedPrice || "Free"))));
+    return /* @__PURE__ */ React.createElement("button", { onClick: () => onClick(app), className: "flex items-center gap-3 w-full p-3 hover:bg-[hsl(var(--muted))]/50 rounded-xl text-left transition" }, /* @__PURE__ */ React.createElement(SmartImg, { src: img, kind: "icon", className: "w-14 h-14 rounded-2xl bg-muted shadow-sm object-cover border border-[hsl(var(--border))]" }), /* @__PURE__ */ React.createElement("div", { className: "flex-1 min-w-0" }, /* @__PURE__ */ React.createElement("p", { className: "font-medium truncate text-sm" }, app.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-muted-foreground truncate text-xs" }, app.artistName), /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 mt-1" }, /* @__PURE__ */ React.createElement(Stars, { r: app.averageUserRating }), /* @__PURE__ */ React.createElement("span", { className: "text-[10px] text-muted-foreground" }, app.formattedPrice || "Free"))));
   };
   const HScroll = ({ title, children, onSeeAll, ltr, rtl, pad, free }) => /* @__PURE__ */ React.createElement("section", { className: "mb-6" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between px-4 mb-3" }, /* @__PURE__ */ React.createElement("h2", { className: "font-semibold text-lg" }, title), onSeeAll && /* @__PURE__ */ React.createElement("button", { onClick: onSeeAll, className: "text-sm text-primary font-medium" }, t("see_all"))), /* @__PURE__ */ React.createElement(
     "div",
@@ -1285,104 +1285,6 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     if (!frames || !frames.length) return null;
     return /* @__PURE__ */ React.createElement("section", { className: "mb-5" }, /* @__PURE__ */ React.createElement("div", { className: "stack-head" }, /* @__PURE__ */ React.createElement("span", { className: "stack-head-title" }, title || t("ads_suggested"))), /* @__PURE__ */ React.createElement("div", { className: "stack-scroller" }, frames.map((group, fi) => /* @__PURE__ */ React.createElement("div", { className: "stack-slide", key: "frame-" + fi + "-" + (group[0] && group[0].trackId) }, /* @__PURE__ */ React.createElement("div", { className: "stack-card" }, group.map((app) => /* @__PURE__ */ React.createElement("button", { type: "button", className: "stack-row", key: app.trackId, onClick: () => open(app), dir: _lang === "ar" ? "rtl" : "ltr" }, /* @__PURE__ */ React.createElement(SmartImg, { className: "stack-row-icon", kind: "icon", src: app.artworkUrl100 || app.artworkUrl60 }), /* @__PURE__ */ React.createElement("div", { className: "stack-row-body" }, /* @__PURE__ */ React.createElement("div", { className: "stack-row-name" }, app.trackName), /* @__PURE__ */ React.createElement("div", { className: "stack-row-sub" }, [app.primaryGenreName, app.artistName].filter(Boolean).slice(0, 2).join(" \u2022 ")), /* @__PURE__ */ React.createElement("div", { className: "stack-row-stats" }, app.averageUserRating ? /* @__PURE__ */ React.createElement("span", null, "\u2605 ", Number(app.averageUserRating).toFixed(1)) : null, app.fileSizeBytes ? /* @__PURE__ */ React.createElement("span", null, homeSize(app.fileSizeBytes)) : null)))))))));
   };
-  // ===== assets/photos: full-width banners placed between the store rows =====
-  // Images are named only apps1.png / games2.jpg ... ; link + title come from assets/photos/photos.xml
-  const PHOTO_DIR = "assets/photos/";
-  const PHOTO_EXT = /\.(png|jpe?g|webp|gif|avif|svg)$/i;
-  const PHOTO_EXTS = ["png", "jpg", "jpeg", "webp", "gif", "avif", "svg"];
-  let _photosPromise = null;
-  const _tryDecode = (s) => {
-    try {
-      return decodeURIComponent(s);
-    } catch (e) {
-      return s;
-    }
-  };
-  const parsePhotosXml = (txt) => {
-    const meta = {};
-    let cur = null;
-    String(txt || "").split(/\r?\n/).forEach((raw) => {
-      const line = raw.trim();
-      let m;
-      if (m = /^<\/(.+?)>$/.exec(line)) {
-        const k = m[1].trim().toLowerCase();
-        if (k === "end") cur = null;
-        else if (k !== "photos") {
-          cur = k.replace(PHOTO_EXT, "");
-          meta[cur] = meta[cur] || { name: "", url: "" };
-        }
-      } else if (cur && (m = /^<(url|name)\s*=\s*(.*)>$/i.exec(line))) {
-        const v = m[2].trim();
-        if (m[1].toLowerCase() === "name") meta[cur].name = v;
-        else {
-          try {
-            const u = new URL(v);
-            if (u.protocol === "http:" || u.protocol === "https:") meta[cur].url = u.href;
-          } catch (e) {
-          }
-        }
-      }
-    });
-    return meta;
-  };
-  const loadPhotos = () => {
-    if (_photosPromise) return _photosPromise;
-    _photosPromise = (async () => {
-      const files = {};
-      let meta = {};
-      await Promise.all([
-        fetch(PHOTO_DIR, { cache: "no-store" }).then((r) => r.ok ? r.text() : "").then((html) => {
-          const re = /href\s*=\s*["']([^"']+)["']/gi;
-          let hm;
-          while (hm = re.exec(html)) {
-            const seg = hm[1].split("#")[0].split("?")[0].split("/").filter(Boolean).pop();
-            if (seg && PHOTO_EXT.test(_tryDecode(seg))) files[_tryDecode(seg).replace(PHOTO_EXT, "").toLowerCase()] = [PHOTO_DIR + seg];
-          }
-        }).catch(() => {
-        }),
-        fetch(PHOTO_DIR + "photos.xml", { cache: "no-store" }).then((r) => r.ok ? r.text() : "").then((txt) => {
-          meta = parsePhotosXml(txt);
-        }).catch(() => {
-        })
-      ]);
-      Object.keys(meta).forEach((k) => {
-        if (!files[k]) files[k] = PHOTO_EXTS.map((e) => PHOTO_DIR + k + "." + e);
-      });
-      const out = { apps: {}, games: {} };
-      let total = 0;
-      Object.keys(files).sort((a, b) => a.localeCompare(b, void 0, { numeric: true })).forEach((k) => {
-        const m = /^(apps|games)(\d+)$/.exec(k);
-        if (!m || !(parseInt(m[2], 10) >= 1)) return;
-        const mm = meta[k] || {};
-        const slot = parseInt(m[2], 10);
-        (out[m[1]][slot] = out[m[1]][slot] || []).push({ file: k, srcs: files[k], name: mm.name || "", url: mm.url || "" });
-        total++;
-      });
-      if (!total) _photosPromise = null;
-      return out;
-    })();
-    return _photosPromise;
-  };
-  const usePhotos = (kind) => {
-    const [m, setM] = useState(null);
-    useEffect(() => {
-      let c = false;
-      loadPhotos().then((r) => {
-        if (!c) setM(r[kind]);
-      });
-      return () => {
-        c = true;
-      };
-    }, [kind]);
-    return m || {};
-  };
-  const PhotoBanner = ({ p }) => {
-    const [si, setSi] = useState(0);
-    if (si >= p.srcs.length) return null;
-    return React.createElement("div", { className: "photo-banner" + (p.name ? " has-name" : "") }, React.createElement("img", { src: p.srcs[si], alt: p.name || "", decoding: "async", onError: () => setSi((n) => n + 1), style: { width: "100%", height: "auto", display: "block", objectFit: "contain" } }), (p.name || p.url) && React.createElement("div", { className: "photo-banner-ov" }, p.name && React.createElement("div", { className: "photo-banner-name" }, p.name), p.url && React.createElement("a", { className: "photo-banner-btn", href: p.url, target: "_blank", rel: "noopener noreferrer" }, _lang === "ar" ? "عرض" : "View")));
-  };
-  const PhotoSlot = ({ items }) => items && items.length ? React.createElement(React.Fragment, null, items.map((p) => React.createElement(PhotoBanner, { key: p.file, p }))) : null;
-  const photoExtraSlots = (map, from) => Object.keys(map).map(Number).filter((n) => n > from).sort((a, b) => a - b).map((n) => React.createElement(PhotoSlot, { key: "px-" + n, items: map[n] }));
   const isGameApp = (a) => {
     if (!a) return true;
     const gid = Number(a.primaryGenreId);
@@ -1565,8 +1467,55 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     () => api.search(freshTerm("photo video editor", seed, 8), 20).catch(() => [])
   ];
   let homePoolCache = [];
+
+  // Photo promo banners
+  let photoDataCache = null;
+  const loadPhotoData = async () => {
+    if (photoDataCache) return photoDataCache;
+    try {
+      const res = await fetch("./assets/textures/photos.py");
+      if (!res.ok) throw new Error("no photos");
+      const text = await res.text();
+      const data = {};
+      const blocks = text.split(/<\/end>/);
+      for (const block of blocks) {
+        const idMatch = block.match(/<\/([a-zA-Z0-9_]+)>/);
+        if (!idMatch) continue;
+        const id = idMatch[1];
+        const name = (block.match(/<name=([^>]+)>/) || [])[1] || "";
+        const readme = (block.match(/<readme=([^>]+)>/) || [])[1] || "";
+        const url = (block.match(/<url=([^>]+)>/) || [])[1] || "";
+        if (id && (name || url)) data[id] = { name: name.trim(), readme: readme.trim(), url: url.trim() };
+      }
+      photoDataCache = data;
+      return data;
+    } catch (e) {
+      console.warn("photos load failed", e);
+      photoDataCache = {};
+      return {};
+    }
+  };
+  const PhotoBanner = ({ photoId, imageSrc }) => {
+    const [info, setInfo] = useState(null);
+    useEffect(() => {
+      let cancel = false;
+      loadPhotoData().then((d) => { if (!cancel) setInfo(d[photoId] || null); });
+      return () => { cancel = true; };
+    }, [photoId]);
+    if (!imageSrc) return null;
+    const onView = () => {
+      if (info && info.url) window.open(info.url, "_blank", "noopener");
+    };
+    return React.createElement("div", { className: "photo-banner", style: { position: "relative", width: "100%", margin: "12px 0", overflow: "hidden" } },
+      React.createElement("img", { src: imageSrc, alt: "", style: { width: "100%", height: "auto", display: "block", borderRadius: 0, objectFit: "cover" } }),
+      React.createElement("div", { style: { position: "absolute", bottom: 8, right: 8, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, maxWidth: "70%" } },
+        info && info.name && React.createElement("div", { style: { color: "#fff", fontSize: 14, fontWeight: 600, textShadow: "0 1px 2px rgba(0,0,0,.6)", textAlign: "right" } }, info.name),
+        info && info.readme && React.createElement("div", { style: { color: "#ccc", fontSize: 11, textShadow: "0 1px 2px rgba(0,0,0,.6)", textAlign: "right" } }, info.readme),
+        React.createElement("button", { type: "button", onClick: onView, style: { background: "#888", color: "#fff", border: "none", borderRadius: 4, padding: "4px 10px", fontSize: 12, marginTop: 4 } }, "عرض")
+      )
+    );
+  };
   const Home = ({ nav, open, openInstall }) => {
-    const photoApps = usePhotos("apps");
     const [pool, setPool] = useState(() => homePoolCache.slice());
     const [shown, setShown] = useState(() => homePoolCache.length ? 10 : 0);
     const [done, setDone] = useState(() => homePoolCache.length > 0);
@@ -1641,11 +1590,10 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const visible = units.slice(0, shown);
     const showMid = shown >= 4;
     const showEnd = done || shown >= 10;
-    const renderUnit0 = (u, i) => u.kind === "stack" ? /* @__PURE__ */ React.createElement(StackedAppsPager, { key: "u-" + i, frames: u.frames, open, title: u.title }) : /* @__PURE__ */ React.createElement(HScroll, { key: "u-" + i, title: u.title, onSeeAll: () => nav("/search"), rtl: true }, u.apps.map((a) => /* @__PURE__ */ React.createElement(AppCard, { key: "row-" + i + "-" + a.trackId, app: a, small: true, onClick: open })));
-    const renderUnit = (u, i) => u.kind === "row" ? React.createElement(React.Fragment, { key: "uf-" + i }, renderUnit0(u, i), React.createElement(PhotoSlot, { items: photoApps[(i - 1) / 2 + 1] })) : renderUnit0(u, i);
+    const renderUnit = (u, i) => u.kind === "stack" ? /* @__PURE__ */ React.createElement(StackedAppsPager, { key: "u-" + i, frames: u.frames, open, title: u.title }) : /* @__PURE__ */ React.createElement(HScroll, { key: "u-" + i, title: u.title, onSeeAll: () => nav("/search"), rtl: true }, u.apps.map((a) => /* @__PURE__ */ React.createElement(AppCard, { key: "row-" + i + "-" + a.trackId, app: a, small: true, onClick: open })));
     const booting = !pool.length && !timedOut;
     const showIntro = intro || booting;
-    return /* @__PURE__ */ React.createElement("div", { className: "page-stage pb-24 sm:pb-8" }, intro && /* @__PURE__ */ React.createElement(NetSpin, { center: true }), !intro && booting && /* @__PURE__ */ React.createElement(NetSpin, { full: true }), /* @__PURE__ */ React.createElement(LoadTimeout, { show: timedOut && !pool.length && !intro, onRetry: () => setReload((n) => n + 1) }), !showIntro && pool.length > 0 && /* @__PURE__ */ React.createElement(PromoCarousel, { apps: topAds, open, openInstall, auto: true }), !showIntro && visible.slice(0, 4).map((u, i) => renderUnit(u, i)), !showIntro && showMid && /* @__PURE__ */ React.createElement(PromoCarousel, { apps: midAds, open, openInstall, auto: true }), !showIntro && visible.slice(4).map((u, i) => renderUnit(u, i + 4)), !showIntro && showEnd && photoExtraSlots(photoApps, 5), !showIntro && showEnd && /* @__PURE__ */ React.createElement(PromoCarousel, { apps: endAds, open, openInstall, auto: true }), !done && /* @__PURE__ */ React.createElement("div", { className: "px-4 py-3 space-y-3" }, /* @__PURE__ */ React.createElement(Skel, { c: "h-16 w-full" }), /* @__PURE__ */ React.createElement(Skel, { c: "h-16 w-full" })));
+    return /* @__PURE__ */ React.createElement("div", { className: "page-stage pb-24 sm:pb-8" }, intro && /* @__PURE__ */ React.createElement(NetSpin, { center: true }), !intro && booting && /* @__PURE__ */ React.createElement(NetSpin, { full: true }), /* @__PURE__ */ React.createElement(LoadTimeout, { show: timedOut && !pool.length && !intro, onRetry: () => setReload((n) => n + 1) }), !showIntro && pool.length > 0 && /* @__PURE__ */ React.createElement(PromoCarousel, { apps: topAds, open, openInstall, auto: true }), !showIntro && visible.slice(0, 4).map((u, i) => renderUnit(u, i)), !showIntro && showMid && /* @__PURE__ */ React.createElement(PromoCarousel, { apps: midAds, open, openInstall, auto: true }), !showIntro && visible.slice(4, 7).map((u, i) => renderUnit(u, i + 4)), !showIntro && /* @__PURE__ */ React.createElement(PhotoBanner, { photoId: "apps_photo1", imageSrc: "./assets/textures/photos/apps_photo1.png" }), !showIntro && visible.slice(7).map((u, i) => renderUnit(u, i + 7)), !showIntro && showEnd && /* @__PURE__ */ React.createElement(PromoCarousel, { apps: endAds, open, openInstall, auto: true }), !done && /* @__PURE__ */ React.createElement("div", { className: "px-4 py-3 space-y-3" }, /* @__PURE__ */ React.createElement(Skel, { c: "h-16 w-full" }), /* @__PURE__ */ React.createElement(Skel, { c: "h-16 w-full" })));
   };
   const GAME_SECTIONS = [
     { k: "g_most_dl", term: "top free games popular", gid: 6014 },
@@ -1663,7 +1611,6 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
   ];
   let gamesRowsCache = null;
   const Games = ({ open }) => {
-    const photoGames = usePhotos("games");
     const [rows, setRows] = useState(() => gamesRowsCache ? gamesRowsCache.map((r) => (r || []).slice()) : GAME_SECTIONS.map(() => []));
     const [ready, setReady] = useState(() => gamesRowsCache && gamesRowsCache.some((r) => r && r.length) ? GAME_SECTIONS.length : 0);
     const [reload, setReload] = useState(0);
@@ -1727,12 +1674,16 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const hasGames = rows.some((r) => r && r.length);
     const booting = !hasGames && !timedOut;
     const showIntro = intro || booting;
-    return /* @__PURE__ */ React.createElement("div", { className: "page-stage pb-20 sm:pb-8 pt-2" }, intro && /* @__PURE__ */ React.createElement(NetSpin, { center: true }), !intro && booting && /* @__PURE__ */ React.createElement(NetSpin, { full: true }), /* @__PURE__ */ React.createElement(LoadTimeout, { show: timedOut && !hasGames && !intro, onRetry: () => setReload((n) => n + 1) }), !showIntro && GAME_SECTIONS.map((sec, i) => {
+    return /* @__PURE__ */ React.createElement("div", { className: "page-stage pb-20 sm:pb-8 pt-2" }, intro && /* @__PURE__ */ React.createElement(NetSpin, { center: true }), !intro && booting && /* @__PURE__ */ React.createElement(NetSpin, { full: true }), /* @__PURE__ */ React.createElement(LoadTimeout, { show: timedOut && !hasGames && !intro, onRetry: () => setReload((n) => n + 1) }), !showIntro && React.createElement(PhotoBanner, { photoId: "games_photo1", imageSrc: "./assets/textures/photos/games_photo1.png" }), !showIntro && GAME_SECTIONS.map((sec, i) => {
       if (i >= ready && i >= ready + 2) return null;
       const list = rows[i] || [];
       const waiting = i >= ready;
-      return /* @__PURE__ */ React.createElement(React.Fragment, { key: sec.k }, /* @__PURE__ */ React.createElement(HScroll, { title: t(sec.k), rtl: true, pad: "px-5 g-shot-row" }, waiting || !list.length ? Array(3).fill(0).map((_, j) => /* @__PURE__ */ React.createElement("div", { key: j, className: "shrink-0 bg-muted animate-pulse", style: { width: "min(88vw,420px)", aspectRatio: "16/9", borderRadius: 16 } })) : list.filter(isGameApp).map((a) => /* @__PURE__ */ React.createElement(GameShotCard, { key: a.trackId + "-" + sec.k, app: a, onClick: open }))), /* @__PURE__ */ React.createElement(PhotoSlot, { items: photoGames[i + 1] }));
-    }), !showIntro && ready >= GAME_SECTIONS.length && photoExtraSlots(photoGames, GAME_SECTIONS.length));
+      const mid = i === 6;
+      return React.createElement(React.Fragment, { key: sec.k },
+        React.createElement(HScroll, { title: t(sec.k), rtl: true, pad: "px-5 g-shot-row" }, waiting || !list.length ? Array(3).fill(0).map((_, j) => React.createElement("div", { key: j, className: "shrink-0 bg-muted animate-pulse", style: { width: "min(88vw,420px)", aspectRatio: "16/9", borderRadius: 16 } })) : list.filter(isGameApp).map((a) => React.createElement(GameShotCard, { key: a.trackId + "-" + sec.k, app: a, onClick: open }))),
+        mid && React.createElement(PhotoBanner, { photoId: "games_photo2", imageSrc: "./assets/textures/photos/games_photo2.png" })
+      );
+    }), !showIntro && React.createElement(PhotoBanner, { photoId: "games_photo3", imageSrc: "./assets/textures/photos/games_photo3.png" });
   };
   const PLAY_GAME_CATS = [
     { ar: "\u0627\u0644\u062D\u0631\u0643\u0629", en: "Action", term: "action games", icon: "heli", color: "#E53935" },
@@ -2927,7 +2878,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const list = tab === "active" ? active : done;
     return /* @__PURE__ */ React.createElement("div", { className: "page-cover play-wrap flex flex-col" }, /* @__PURE__ */ React.createElement("div", { className: "sticky top-0 z-30", style: { background: "transparent" } }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 px-3 pt-3 pb-2" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip", onClick: () => window.history.back(), "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" })), /* @__PURE__ */ React.createElement("h1", { className: "font-bold text-base flex-1 truncate" }, t("dl_manager"))), /* @__PURE__ */ React.createElement("div", { className: "play-seg-row" }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setTab("active"), className: `play-seg ${tab === "active" ? "on" : ""}` }, t("dl_active"), " (", active.length, ")"), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setTab("done"), className: `play-seg ${tab === "done" ? "on" : ""}` }, t("dl_done"), " (", done.length, ")"))), /* @__PURE__ */ React.createElement("div", { className: "flex-1 py-2 pb-24" }, list.length === 0 ? /* @__PURE__ */ React.createElement("div", { className: "play-list" }, /* @__PURE__ */ React.createElement("div", { className: "text-center py-16 text-muted-foreground text-sm" }, tab === "active" ? t("dl_empty_active") : t("dl_empty_done"))) : /* @__PURE__ */ React.createElement("div", { className: "play-list" }, list.map(({ rec, p }) => {
       const pct = Math.round((p.pct || 0) * 100);
-      return /* @__PURE__ */ React.createElement("div", { key: String(rec.trackId) + "-" + rec.startMs, className: "flex items-center gap-3 p-3 rounded-2xl bg-[hsl(var(--card))] border border-[hsl(var(--border))]" }, /* @__PURE__ */ React.createElement("img", { src: rec.artworkUrl100 || "", alt: "", className: "w-14 h-14 app-ico-r object-cover bg-muted shrink-0", onError: (e) => {
+      return /* @__PURE__ */ React.createElement("div", { key: String(rec.trackId) + "-" + rec.startMs, className: "flex items-center gap-3 p-3 rounded-2xl bg-[hsl(var(--card))] border border-[hsl(var(--border))]" }, /* @__PURE__ */ React.createElement("img", { src: rec.artworkUrl100 || "", alt: "", className: "w-14 h-14 rounded-xl object-cover bg-muted shrink-0", onError: (e) => {
         e.target.style.opacity = "0.3";
       } }), /* @__PURE__ */ React.createElement("div", { className: "flex-1 min-w-0" }, /* @__PURE__ */ React.createElement("p", { className: "font-semibold text-sm truncate" }, rec.trackName || rec.trackId), /* @__PURE__ */ React.createElement("p", { className: "text-xs text-muted-foreground mt-0.5" }, p.phase === "spin" || p.phase === "postspin" ? t("dl_spinning") : p.phase === "done" ? t("dl_complete") : `${t("dl_progress")}: ${pct}%`), p.phase === "download" && /* @__PURE__ */ React.createElement("div", { className: "mt-2 h-1.5 rounded-full bg-[hsl(var(--muted))] overflow-hidden" }, /* @__PURE__ */ React.createElement("div", { className: "h-full rounded-full bg-primary", style: { width: pct + "%" } })), (p.phase === "spin" || p.phase === "postspin") && /* @__PURE__ */ React.createElement("div", { className: "mt-2 h-1.5 rounded-full bg-[hsl(var(--muted))] overflow-hidden" }, /* @__PURE__ */ React.createElement("div", { className: "h-full w-1/3 rounded-full bg-[#3b82f6] animate-pulse" }))), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-1 shrink-0" }, p.phase === "done" && rec.installHref && /* @__PURE__ */ React.createElement("a", { href: rec.installHref, target: "_blank", rel: "noopener", className: "text-xs font-semibold text-primary px-2 py-1" }, t("install")), /* @__PURE__ */ React.createElement("button", { type: "button", className: "text-xs text-muted-foreground px-2 py-1", onClick: () => {
         clearDlRec(rec.trackId);
@@ -3066,10 +3017,10 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       return /* @__PURE__ */ React.createElement("div", { className: "lib-wrap" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 px-3 pt-3 pb-2" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip", onClick: () => setOpenArch(null), "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" })), /* @__PURE__ */ React.createElement("h1", { className: "text-xl font-bold flex-1 truncate" }, rec.name || t("archives")), /* @__PURE__ */ React.createElement("button", { type: "button", className: "text-xs font-semibold px-3 py-1.5 rounded-full", style: { background: "hsl(var(--card))", color: "hsl(var(--fg))", border: "1px solid hsl(var(--border))" }, onClick: () => pinArch(rec.id) }, rec.pinned ? t("archive_unpin") : t("archive_pin"))), (rec.items || []).length === 0 ? /* @__PURE__ */ React.createElement("div", { className: "text-center py-16 text-muted-foreground text-sm" }, t("archive_empty")) : (rec.items || []).map((it, idx) => {
         if (it.kind === "song") {
           const s = it.data || {};
-          return /* @__PURE__ */ React.createElement("div", { key: "s" + idx, className: "settings-box", style: { display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }, onClick: () => play && play(s, [s]) }, /* @__PURE__ */ React.createElement("img", { src: s.artworkUrl100 || s.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: "30%", objectFit: "cover" } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, s.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, s.artistName)));
+          return /* @__PURE__ */ React.createElement("div", { key: "s" + idx, className: "settings-box", style: { display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }, onClick: () => play && play(s, [s]) }, /* @__PURE__ */ React.createElement("img", { src: s.artworkUrl100 || s.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: 12, objectFit: "cover" } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, s.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, s.artistName)));
         }
         const a = it.data || {};
-        return /* @__PURE__ */ React.createElement("div", { key: "a" + idx, className: "settings-box", style: { display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }, onClick: () => open && open(a) }, /* @__PURE__ */ React.createElement("img", { src: a.artworkUrl100 || a.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: "30%", objectFit: "cover" } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, a.trackName || a.trackCensoredName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, a.artistName)));
+        return /* @__PURE__ */ React.createElement("div", { key: "a" + idx, className: "settings-box", style: { display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }, onClick: () => open && open(a) }, /* @__PURE__ */ React.createElement("img", { src: a.artworkUrl100 || a.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: 12, objectFit: "cover" } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, a.trackName || a.trackCensoredName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, a.artistName)));
       }));
     }
     const orderedArch = [...archives].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.created || 0) - (a.created || 0));
@@ -3081,10 +3032,10 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       }, style: { background: "transparent", border: "none", color: "inherit", cursor: "pointer", fontSize: 18 }, "aria-label": t("archive_pin") }, ar.pinned ? "\u{1F4CC}" : "\u{1F4CD}"));
     }), apps.map((a) => {
       const k = "a:" + String(a.trackId);
-      return /* @__PURE__ */ React.createElement(Box, { key: k, selected: !!sel[k], onHoldKey: k, onOpen: () => open && open(a) }, /* @__PURE__ */ React.createElement("img", { src: a.artworkUrl100 || a.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: "30%", objectFit: "cover", flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, a.trackName || a.trackCensoredName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, a.artistName)));
+      return /* @__PURE__ */ React.createElement(Box, { key: k, selected: !!sel[k], onHoldKey: k, onOpen: () => open && open(a) }, /* @__PURE__ */ React.createElement("img", { src: a.artworkUrl100 || a.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: 12, objectFit: "cover", flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, a.trackName || a.trackCensoredName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, a.artistName)));
     }), songs.map((s) => {
       const k = "s:" + String(s.trackId);
-      return /* @__PURE__ */ React.createElement(Box, { key: k, selected: !!sel[k], onHoldKey: k, onOpen: () => play && play(s, songs) }, /* @__PURE__ */ React.createElement("img", { src: s.artworkUrl100 || s.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: "30%", objectFit: "cover", flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, s.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, s.artistName)));
+      return /* @__PURE__ */ React.createElement(Box, { key: k, selected: !!sel[k], onHoldKey: k, onOpen: () => play && play(s, songs) }, /* @__PURE__ */ React.createElement("img", { src: s.artworkUrl100 || s.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: 12, objectFit: "cover", flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, s.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, s.artistName)));
     })));
   };
   const SearchLogPage = ({ nav }) => {

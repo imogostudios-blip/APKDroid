@@ -1147,6 +1147,57 @@ const homeSources=seed=>[
 ];
 
 let homePoolCache=[];
+
+// Photo promo banners from assets/textures/photos.py
+let photoDataCache = null;
+const loadPhotoData = async () => {
+  if (photoDataCache) return photoDataCache;
+  try {
+    const res = await fetch('./assets/textures/photos.py');
+    if (!res.ok) throw new Error('no photos');
+    const text = await res.text();
+    const data = {};
+    const blocks = text.split(/<\/end>/);
+    for (const block of blocks) {
+      const idMatch = block.match(/<\/([a-zA-Z0-9_]+)>/);
+      if (!idMatch) continue;
+      const id = idMatch[1];
+      const name = (block.match(/<name=([^>]+)>/) || [])[1] || '';
+      const readme = (block.match(/<readme=([^>]+)>/) || [])[1] || '';
+      const url = (block.match(/<url=([^>]+)>/) || [])[1] || '';
+      if (id && (name || url)) data[id] = { name: name.trim(), readme: readme.trim(), url: url.trim() };
+    }
+    photoDataCache = data;
+    return data;
+  } catch (e) {
+    console.warn('photos load failed', e);
+    photoDataCache = {};
+    return {};
+  }
+};
+
+const PhotoBanner = ({ photoId, imageSrc }) => {
+  const [info, setInfo] = React.useState(null);
+  React.useEffect(() => {
+    let cancel = false;
+    loadPhotoData().then(d => { if (!cancel) setInfo(d[photoId] || null); });
+    return () => { cancel = true; };
+  }, [photoId]);
+  if (!imageSrc) return null;
+  const onView = () => {
+    if (info && info.url) window.open(info.url, '_blank', 'noopener');
+  };
+  return (
+    <div className="photo-banner" style={{ position: 'relative', width: '100%', margin: '12px 0', overflow: 'hidden' }}>
+      <img src={imageSrc} alt="" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 0, objectFit: 'cover' }} />
+      <div style={{ position: 'absolute', bottom: 8, right: 8, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2, maxWidth: '70%' }}>
+        {info && info.name && <div style={{ color: '#fff', fontSize: 14, fontWeight: 600, textShadow: '0 1px 2px rgba(0,0,0,.6)', textAlign: 'right' }}>{info.name}</div>}
+        {info && info.readme && <div style={{ color: '#ccc', fontSize: 11, textShadow: '0 1px 2px rgba(0,0,0,.6)', textAlign: 'right' }}>{info.readme}</div>}
+        <button type="button" onClick={onView} style={{ background: '#888', color: '#fff', border: 'none', borderRadius: 4, padding: '4px 10px', fontSize: 12, marginTop: 4 }}>عرض</button>
+      </div>
+    </div>
+  );
+};
 const Home=({nav,open,openInstall})=>{
   const[pool,setPool]=useState(()=>homePoolCache.slice());
   const[shown,setShown]=useState(()=>homePoolCache.length?10:0);
@@ -1215,7 +1266,9 @@ const Home=({nav,open,openInstall})=>{
       {!showIntro&&pool.length>0&&<PromoCarousel apps={topAds} open={open} openInstall={openInstall} auto></PromoCarousel>}
       {!showIntro&&visible.slice(0,4).map((u,i)=>renderUnit(u,i))}
       {!showIntro&&showMid&&<PromoCarousel apps={midAds} open={open} openInstall={openInstall} auto></PromoCarousel>}
-      {!showIntro&&visible.slice(4).map((u,i)=>renderUnit(u,i+4))}
+      {!showIntro&&visible.slice(4,7).map((u,i)=>renderUnit(u,i+4))}
+      {!showIntro&&<PhotoBanner photoId="apps_photo1" imageSrc="./assets/textures/photos/apps_photo1.png" />}
+      {!showIntro&&visible.slice(7).map((u,i)=>renderUnit(u,i+7))}
       {!showIntro&&showEnd&&<PromoCarousel apps={endAds} open={open} openInstall={openInstall} auto></PromoCarousel>}
       {!done&&(
         <div className="px-4 py-3 space-y-3">
@@ -1291,19 +1344,25 @@ const Games=({open})=>{
       {intro&&<NetSpin center></NetSpin>}
       {!intro&&booting&&<NetSpin full></NetSpin>}
       <LoadTimeout show={timedOut&&!hasGames&&!intro} onRetry={()=>setReload(n=>n+1)}/>
+      {!showIntro&&<PhotoBanner photoId="games_photo1" imageSrc="./assets/textures/photos/games_photo1.png" />}
       {!showIntro&&GAME_SECTIONS.map((sec,i)=>{
         if(i>=ready && i>=ready+2)return null;
         const list=rows[i]||[];
         const waiting=i>=ready;
+        const mid = i === 6;
         return(
-          <HScroll key={sec.k} title={t(sec.k)} rtl pad="px-5 g-shot-row">
-            {waiting||!list.length
-              ?Array(3).fill(0).map((_,j)=><div key={j} className="shrink-0 bg-muted animate-pulse" style={{width:'min(88vw,420px)',aspectRatio:'16/9',borderRadius:16}}></div>)
-              :list.filter(isGameApp).map(a=><GameShotCard key={a.trackId+'-'+sec.k} app={a} onClick={open}></GameShotCard>)
-            }
-          </HScroll>
+          <React.Fragment key={sec.k}>
+            <HScroll title={t(sec.k)} rtl pad="px-5 g-shot-row">
+              {waiting||!list.length
+                ?Array(3).fill(0).map((_,j)=><div key={j} className="shrink-0 bg-muted animate-pulse" style={{width:'min(88vw,420px)',aspectRatio:'16/9',borderRadius:16}}></div>)
+                :list.filter(isGameApp).map(a=><GameShotCard key={a.trackId+'-'+sec.k} app={a} onClick={open}></GameShotCard>)
+              }
+            </HScroll>
+            {mid && <PhotoBanner photoId="games_photo2" imageSrc="./assets/textures/photos/games_photo2.png" />}
+          </React.Fragment>
         );
       })}
+      {!showIntro&&<PhotoBanner photoId="games_photo3" imageSrc="./assets/textures/photos/games_photo3.png" />}
     </div>
   );
 };
