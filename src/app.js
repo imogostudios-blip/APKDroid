@@ -1683,7 +1683,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
         React.createElement(HScroll, { title: t(sec.k), rtl: true, pad: "px-5 g-shot-row" }, waiting || !list.length ? Array(3).fill(0).map((_, j) => React.createElement("div", { key: j, className: "shrink-0 bg-muted animate-pulse", style: { width: "min(88vw,420px)", aspectRatio: "16/9", borderRadius: 16 } })) : list.filter(isGameApp).map((a) => React.createElement(GameShotCard, { key: a.trackId + "-" + sec.k, app: a, onClick: open }))),
         mid && React.createElement(PhotoBanner, { photoId: "games_photo2", imageSrc: "./assets/textures/photos/games_photo2.png" })
       );
-    }), !showIntro && React.createElement(PhotoBanner, { photoId: "games_photo3", imageSrc: "./assets/textures/photos/games_photo3.png" });
+    }), !showIntro && React.createElement(PhotoBanner, { photoId: "games_photo3", imageSrc: "./assets/textures/photos/games_photo3.png" }));
   };
   const PLAY_GAME_CATS = [
     { ar: "\u0627\u0644\u062D\u0631\u0643\u0629", en: "Action", term: "action games", icon: "heli", color: "#E53935" },
