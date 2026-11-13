@@ -1379,7 +1379,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
   const PhotoBanner = ({ p }) => {
     const [si, setSi] = useState(0);
     if (si >= p.srcs.length) return null;
-    return React.createElement("div", { className: "photo-banner" + (p.name ? " has-name" : "") }, React.createElement("img", { src: p.srcs[si], alt: p.name || "", decoding: "async", onError: () => setSi((n) => n + 1) }), (p.name || p.url) && React.createElement("div", { className: "photo-banner-ov" }, p.name && React.createElement("div", { className: "photo-banner-name" }, p.name), p.url && React.createElement("a", { className: "photo-banner-btn", href: p.url, target: "_blank", rel: "noopener noreferrer" }, _lang === "ar" ? "عرض" : "View")));
+    return React.createElement("div", { className: "photo-banner" + (p.name ? " has-name" : "") }, React.createElement("img", { src: p.srcs[si], alt: p.name || "", decoding: "async", onError: () => setSi((n) => n + 1), style: { width: "100%", height: "auto", display: "block", objectFit: "contain" } }), (p.name || p.url) && React.createElement("div", { className: "photo-banner-ov" }, p.name && React.createElement("div", { className: "photo-banner-name" }, p.name), p.url && React.createElement("a", { className: "photo-banner-btn", href: p.url, target: "_blank", rel: "noopener noreferrer" }, _lang === "ar" ? "عرض" : "View")));
   };
   const PhotoSlot = ({ items }) => items && items.length ? React.createElement(React.Fragment, null, items.map((p) => React.createElement(PhotoBanner, { key: p.file, p }))) : null;
   const photoExtraSlots = (map, from) => Object.keys(map).map(Number).filter((n) => n > from).sort((a, b) => a - b).map((n) => React.createElement(PhotoSlot, { key: "px-" + n, items: map[n] }));
