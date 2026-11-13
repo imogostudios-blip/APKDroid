@@ -1504,13 +1504,31 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
   const ARROW_SVG = React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "28", viewBox: "0 -960 960 960", width: "28", fill: "#b0b0b0", style: { display: "block" } },
     React.createElement("path", { d: "m256-240-56-56 384-384H240v-80h480v480h-80v-344L256-240Z" })
   );
-  const PhotoBanner = ({ photoId, imageSrc }) => {
+  const PhotoBanner = ({ photoId, imageSrc, open }) => {
     const [info, setInfo] = useState(DEFAULT_PHOTO_DATA[photoId] || null);
+    const [apps, setApps] = useState([]);
     useEffect(() => {
       let cancel = false;
       loadPhotoData().then((d) => { if (!cancel && d[photoId]) setInfo(d[photoId]); });
       return () => { cancel = true; };
     }, [photoId]);
+    useEffect(() => {
+      if (!open) return;
+      let cancel = false;
+      (async () => {
+        const results = [];
+        for (const p of POPULAR_APPS) {
+          if (cancel) return;
+          try {
+            const list = await api.search(p.term, 5);
+            const app = (list || []).find(a => a && a.trackName && a.artworkUrl100);
+            if (app) results.push(app);
+          } catch (e) {}
+        }
+        if (!cancel) setApps(results);
+      })();
+      return () => { cancel = true; };
+    }, [open]);
     if (!imageSrc) return null;
     const onView = (e) => {
       e.stopPropagation();
@@ -1519,10 +1537,19 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     };
     return React.createElement("div", { className: "photo-banner", style: { position: "relative", width: "100%", margin: "0", overflow: "hidden" } },
       React.createElement("img", { src: imageSrc, alt: "", style: { width: "100%", height: "auto", display: "block", borderRadius: 0, objectFit: "cover" } }),
-      React.createElement("div", { onClick: onView, style: { position: "absolute", top: 10, left: 10, cursor: "pointer", zIndex: 2, background: "transparent", border: "none", padding: 0 } }, ARROW_SVG),
-      React.createElement("div", { style: { position: "absolute", top: 10, right: 12, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, maxWidth: "70%", zIndex: 2 } },
+      React.createElement("div", { onClick: onView, style: { position: "absolute", top: 10, left: 10, cursor: "pointer", zIndex: 3, background: "transparent", border: "none", padding: 0 } }, ARROW_SVG),
+      React.createElement("div", { style: { position: "absolute", top: 10, right: 12, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, maxWidth: "70%", zIndex: 3 } },
         info && info.name && React.createElement("div", { style: { color: "#fff", fontSize: 15, fontWeight: 700, textShadow: "0 1px 3px rgba(0,0,0,.85)", textAlign: "right" } }, info.name),
         info && info.readme && React.createElement("div", { style: { color: "#ccc", fontSize: 12, textShadow: "0 1px 3px rgba(0,0,0,.85)", textAlign: "right" } }, info.readme)
+      ),
+      apps.length > 0 && React.createElement("div", { style: { position: "absolute", left: 0, right: 0, bottom: 8, zIndex: 2, overflow: "hidden" } },
+        React.createElement("div", { className: "popular-scroller", style: { display: "flex", gap: "10px", overflowX: "auto", padding: "4px 0 4px 12px", scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", scrollbarWidth: "none" } },
+          apps.map((a) => React.createElement("button", { key: a.trackId, type: "button", onClick: (e) => { e.stopPropagation(); open && open(a); }, style: { flex: "0 0 62%", maxWidth: "62%", scrollSnapAlign: "start", background: "transparent", border: "none", padding: 0, textAlign: "center", color: "inherit", cursor: "pointer" } },
+            React.createElement("img", { src: a.artworkUrl100 || a.artworkUrl60, alt: "", className: "app-ico-r", style: { width: "72px", height: "72px", objectFit: "cover", display: "block", margin: "0 auto" } }),
+            React.createElement("div", { style: { marginTop: 4, fontSize: 12, fontWeight: 600, color: "#fff", textShadow: "0 1px 2px rgba(0,0,0,.8)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" } }, a.trackName),
+            a.averageUserRating ? React.createElement("div", { style: { marginTop: 2, display: "inline-block", background: "rgba(30,30,34,.85)", color: "#ddd", fontSize: 10, padding: "2px 7px", borderRadius: 999, fontWeight: 600 } }, "★ " + Number(a.averageUserRating).toFixed(1)) : null
+          ))
+        )
       )
     );
   };
@@ -1657,7 +1684,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const renderUnit = (u, i) => u.kind === "stack" ? /* @__PURE__ */ React.createElement(StackedAppsPager, { key: "u-" + i, frames: u.frames, open, title: u.title }) : /* @__PURE__ */ React.createElement(HScroll, { key: "u-" + i, title: u.title, onSeeAll: () => nav("/search"), rtl: true }, u.apps.map((a) => /* @__PURE__ */ React.createElement(AppCard, { key: "row-" + i + "-" + a.trackId, app: a, small: true, onClick: open })));
     const booting = !pool.length && !timedOut;
     const showIntro = intro || booting;
-    return /* @__PURE__ */ React.createElement("div", { className: "page-stage pb-24 sm:pb-8" }, intro && /* @__PURE__ */ React.createElement(NetSpin, { center: true }), !intro && booting && /* @__PURE__ */ React.createElement(NetSpin, { full: true }), /* @__PURE__ */ React.createElement(LoadTimeout, { show: timedOut && !pool.length && !intro, onRetry: () => setReload((n) => n + 1) }), !showIntro && pool.length > 0 && /* @__PURE__ */ React.createElement(PromoCarousel, { apps: topAds, open, openInstall, auto: true }), !showIntro && visible.slice(0, 4).map((u, i) => renderUnit(u, i)), !showIntro && showMid && /* @__PURE__ */ React.createElement(PromoCarousel, { apps: midAds, open, openInstall, auto: true }), !showIntro && visible.slice(4, 7).map((u, i) => renderUnit(u, i + 4)), !showIntro && /* @__PURE__ */ React.createElement(PopularAppsStrip, { open }), !showIntro && /* @__PURE__ */ React.createElement(PhotoBanner, { photoId: "apps_photo1", imageSrc: "./assets/textures/photos/apps_photo1.png" }), !showIntro && visible.slice(7).map((u, i) => renderUnit(u, i + 7)), !showIntro && showEnd && /* @__PURE__ */ React.createElement(PromoCarousel, { apps: endAds, open, openInstall, auto: true }), !done && /* @__PURE__ */ React.createElement("div", { className: "px-4 py-3 space-y-3" }, /* @__PURE__ */ React.createElement(Skel, { c: "h-16 w-full" }), /* @__PURE__ */ React.createElement(Skel, { c: "h-16 w-full" })));
+    return /* @__PURE__ */ React.createElement("div", { className: "page-stage pb-24 sm:pb-8" }, intro && /* @__PURE__ */ React.createElement(NetSpin, { center: true }), !intro && booting && /* @__PURE__ */ React.createElement(NetSpin, { full: true }), /* @__PURE__ */ React.createElement(LoadTimeout, { show: timedOut && !pool.length && !intro, onRetry: () => setReload((n) => n + 1) }), !showIntro && pool.length > 0 && /* @__PURE__ */ React.createElement(PromoCarousel, { apps: topAds, open, openInstall, auto: true }), !showIntro && visible.slice(0, 4).map((u, i) => renderUnit(u, i)), !showIntro && showMid && /* @__PURE__ */ React.createElement(PromoCarousel, { apps: midAds, open, openInstall, auto: true }), !showIntro && visible.slice(4, 7).map((u, i) => renderUnit(u, i + 4)), !showIntro && /* @__PURE__ */ React.createElement(PhotoBanner, { photoId: "apps_photo1", imageSrc: "./assets/textures/photos/apps_photo1.png", open }), !showIntro && visible.slice(7).map((u, i) => renderUnit(u, i + 7)), !showIntro && showEnd && /* @__PURE__ */ React.createElement(PromoCarousel, { apps: endAds, open, openInstall, auto: true }), !done && /* @__PURE__ */ React.createElement("div", { className: "px-4 py-3 space-y-3" }, /* @__PURE__ */ React.createElement(Skel, { c: "h-16 w-full" }), /* @__PURE__ */ React.createElement(Skel, { c: "h-16 w-full" })));
   };
   const GAME_SECTIONS = [
     { k: "g_most_dl", term: "top free games popular", gid: 6014 },
