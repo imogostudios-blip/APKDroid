@@ -1491,6 +1491,7 @@ html:not(.style2) .bg-screenshots {
   scroll-snap-align: start;
   scroll-snap-stop: always;
   max-width: calc((100% - 24px) / 3);
+  min-width: 108px;
 }
 .popular-scroller::-webkit-scrollbar { display: none; }
 .popular-scroller { -ms-overflow-style: none; }
