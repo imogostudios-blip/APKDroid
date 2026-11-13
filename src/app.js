@@ -1468,7 +1468,13 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
   ];
   let homePoolCache = [];
 
-  // Photo promo banners
+  // Photo promo banners (data embedded + optional fetch)
+  const DEFAULT_PHOTO_DATA = {
+    apps_photo1: { name: "عنوان التطبيق", readme: "وصف قصير للتطبيق هنا", url: "https://example.com/app" },
+    games_photo1: { name: "عنوان اللعبة 1", readme: "وصف اللعبة الأولى", url: "https://example.com/game1" },
+    games_photo2: { name: "عنوان اللعبة 2", readme: "وصف اللعبة الثانية", url: "https://example.com/game2" },
+    games_photo3: { name: "عنوان اللعبة 3", readme: "وصف اللعبة الثالثة", url: "https://example.com/game3" }
+  };
   let photoDataCache = null;
   const loadPhotoData = async () => {
     if (photoDataCache) return photoDataCache;
@@ -1487,31 +1493,33 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
         const url = (block.match(/<url=([^>]+)>/) || [])[1] || "";
         if (id && (name || url)) data[id] = { name: name.trim(), readme: readme.trim(), url: url.trim() };
       }
-      photoDataCache = data;
-      return data;
+      photoDataCache = Object.keys(data).length ? data : DEFAULT_PHOTO_DATA;
+      return photoDataCache;
     } catch (e) {
-      console.warn("photos load failed", e);
-      photoDataCache = {};
-      return {};
+      console.warn("photos load failed, using defaults", e);
+      photoDataCache = DEFAULT_PHOTO_DATA;
+      return photoDataCache;
     }
   };
   const PhotoBanner = ({ photoId, imageSrc }) => {
-    const [info, setInfo] = useState(null);
+    const [info, setInfo] = useState(DEFAULT_PHOTO_DATA[photoId] || null);
     useEffect(() => {
       let cancel = false;
-      loadPhotoData().then((d) => { if (!cancel) setInfo(d[photoId] || null); });
+      loadPhotoData().then((d) => { if (!cancel && d[photoId]) setInfo(d[photoId]); });
       return () => { cancel = true; };
     }, [photoId]);
     if (!imageSrc) return null;
-    const onView = () => {
-      if (info && info.url) window.open(info.url, "_blank", "noopener");
+    const onView = (e) => {
+      e.stopPropagation();
+      const url = info && info.url;
+      if (url) window.open(url, "_blank", "noopener");
     };
     return React.createElement("div", { className: "photo-banner", style: { position: "relative", width: "100%", margin: "12px 0", overflow: "hidden" } },
       React.createElement("img", { src: imageSrc, alt: "", style: { width: "100%", height: "auto", display: "block", borderRadius: 0, objectFit: "cover" } }),
-      React.createElement("div", { style: { position: "absolute", bottom: 8, right: 8, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, maxWidth: "70%" } },
-        info && info.name && React.createElement("div", { style: { color: "#fff", fontSize: 14, fontWeight: 600, textShadow: "0 1px 2px rgba(0,0,0,.6)", textAlign: "right" } }, info.name),
-        info && info.readme && React.createElement("div", { style: { color: "#ccc", fontSize: 11, textShadow: "0 1px 2px rgba(0,0,0,.6)", textAlign: "right" } }, info.readme),
-        React.createElement("button", { type: "button", onClick: onView, style: { background: "#888", color: "#fff", border: "none", borderRadius: 4, padding: "4px 10px", fontSize: 12, marginTop: 4 } }, "عرض")
+      React.createElement("div", { style: { position: "absolute", left: 0, right: 0, bottom: 0, padding: "28px 12px 10px", background: "linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,0))", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 } },
+        info && info.name && React.createElement("div", { style: { color: "#fff", fontSize: 15, fontWeight: 700, textShadow: "0 1px 3px rgba(0,0,0,.8)", textAlign: "right", maxWidth: "80%" } }, info.name),
+        info && info.readme && React.createElement("div", { style: { color: "#ddd", fontSize: 12, textShadow: "0 1px 3px rgba(0,0,0,.8)", textAlign: "right", maxWidth: "80%" } }, info.readme),
+        React.createElement("button", { type: "button", onClick: onView, style: { background: "#888", color: "#fff", border: "none", borderRadius: 4, padding: "5px 12px", fontSize: 12, marginTop: 4, cursor: "pointer" } }, "عرض")
       )
     );
   };
@@ -3017,10 +3025,10 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       return /* @__PURE__ */ React.createElement("div", { className: "lib-wrap" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 px-3 pt-3 pb-2" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip", onClick: () => setOpenArch(null), "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" })), /* @__PURE__ */ React.createElement("h1", { className: "text-xl font-bold flex-1 truncate" }, rec.name || t("archives")), /* @__PURE__ */ React.createElement("button", { type: "button", className: "text-xs font-semibold px-3 py-1.5 rounded-full", style: { background: "hsl(var(--card))", color: "hsl(var(--fg))", border: "1px solid hsl(var(--border))" }, onClick: () => pinArch(rec.id) }, rec.pinned ? t("archive_unpin") : t("archive_pin"))), (rec.items || []).length === 0 ? /* @__PURE__ */ React.createElement("div", { className: "text-center py-16 text-muted-foreground text-sm" }, t("archive_empty")) : (rec.items || []).map((it, idx) => {
         if (it.kind === "song") {
           const s = it.data || {};
-          return /* @__PURE__ */ React.createElement("div", { key: "s" + idx, className: "settings-box", style: { display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }, onClick: () => play && play(s, [s]) }, /* @__PURE__ */ React.createElement("img", { src: s.artworkUrl100 || s.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: 12, objectFit: "cover" } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, s.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, s.artistName)));
+          return /* @__PURE__ */ React.createElement("div", { key: "s" + idx, className: "settings-box", style: { display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }, onClick: () => play && play(s, [s]) }, /* @__PURE__ */ React.createElement("img", { src: s.artworkUrl100 || s.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: "30%", objectFit: "cover" } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, s.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, s.artistName)));
         }
         const a = it.data || {};
-        return /* @__PURE__ */ React.createElement("div", { key: "a" + idx, className: "settings-box", style: { display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }, onClick: () => open && open(a) }, /* @__PURE__ */ React.createElement("img", { src: a.artworkUrl100 || a.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: 12, objectFit: "cover" } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, a.trackName || a.trackCensoredName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, a.artistName)));
+        return /* @__PURE__ */ React.createElement("div", { key: "a" + idx, className: "settings-box", style: { display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }, onClick: () => open && open(a) }, /* @__PURE__ */ React.createElement("img", { src: a.artworkUrl100 || a.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: "30%", objectFit: "cover" } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, a.trackName || a.trackCensoredName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, a.artistName)));
       }));
     }
     const orderedArch = [...archives].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.created || 0) - (a.created || 0));
@@ -3032,10 +3040,10 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       }, style: { background: "transparent", border: "none", color: "inherit", cursor: "pointer", fontSize: 18 }, "aria-label": t("archive_pin") }, ar.pinned ? "\u{1F4CC}" : "\u{1F4CD}"));
     }), apps.map((a) => {
       const k = "a:" + String(a.trackId);
-      return /* @__PURE__ */ React.createElement(Box, { key: k, selected: !!sel[k], onHoldKey: k, onOpen: () => open && open(a) }, /* @__PURE__ */ React.createElement("img", { src: a.artworkUrl100 || a.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: 12, objectFit: "cover", flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, a.trackName || a.trackCensoredName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, a.artistName)));
+      return /* @__PURE__ */ React.createElement(Box, { key: k, selected: !!sel[k], onHoldKey: k, onOpen: () => open && open(a) }, /* @__PURE__ */ React.createElement("img", { src: a.artworkUrl100 || a.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: "30%", objectFit: "cover", flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, a.trackName || a.trackCensoredName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, a.artistName)));
     }), songs.map((s) => {
       const k = "s:" + String(s.trackId);
-      return /* @__PURE__ */ React.createElement(Box, { key: k, selected: !!sel[k], onHoldKey: k, onOpen: () => play && play(s, songs) }, /* @__PURE__ */ React.createElement("img", { src: s.artworkUrl100 || s.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: 12, objectFit: "cover", flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, s.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, s.artistName)));
+      return /* @__PURE__ */ React.createElement(Box, { key: k, selected: !!sel[k], onHoldKey: k, onOpen: () => play && play(s, songs) }, /* @__PURE__ */ React.createElement("img", { src: s.artworkUrl100 || s.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: "30%", objectFit: "cover", flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, s.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, s.artistName)));
     })));
   };
   const SearchLogPage = ({ nav }) => {
