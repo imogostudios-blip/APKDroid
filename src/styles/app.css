@@ -1480,3 +1480,17 @@ html:not(.style2) .bg-screenshots {
 /* app icon frames: more rounded (~30% of size) - injected from old project */
 .app-ico-r{border-radius:30%}
 
+
+/* Apps rows: snap so exactly 3 apps are fully visible */
+.apps-row-snap {
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 16px;
+}
+.app-snap-item {
+  flex: 0 0 calc((100% - 24px) / 3);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  max-width: calc((100% - 24px) / 3);
+}
+.popular-scroller::-webkit-scrollbar { display: none; }
+.popular-scroller { -ms-overflow-style: none; }
