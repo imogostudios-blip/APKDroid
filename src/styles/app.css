@@ -1504,4 +1504,4 @@ html:not(.style2) .bg-screenshots {
     linear-gradient(to bottom, rgba(255,255,255,0) 38%, rgba(255,255,255,.14) 50%, rgba(255,255,255,0) 62%)}
 .pb-ico{background:#8e8e8e}
 /* app rows: grey rounded square shows while the icon is loading (same as the stacked rows) */
-.app-snap-item > img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;background:hsl(var(--muted))}
+.app-snap-item > img{display:block;width:108px;height:108px;object-fit:cover;background:hsl(var(--muted))}
