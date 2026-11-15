@@ -1573,3 +1573,24 @@ html:not(.style2) .bg-screenshots {
 @keyframes peekDown{from{transform:translateY(0)}to{transform:translateY(100%)}}
 @keyframes peekFade{from{opacity:0}to{opacity:1}}
 @keyframes peekFadeOut{from{opacity:1}to{opacity:0}}
+
+/* movies / music tabs + music page */
+.media-tabs{display:flex;gap:10px;padding:0 8px 12px}
+.media-tab{flex:1;min-height:42px;border:none;border-radius:999px;background:hsl(var(--muted));color:hsl(var(--fg));font-weight:700;font-size:.9rem;font-family:inherit;cursor:pointer;transition:background .15s}
+.media-tab.on{background:hsl(var(--primary));color:hsl(var(--primary-fg))}
+.music-sec-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 10px 8px}
+.music-sec-head h2{font-size:1rem;font-weight:700;margin:0}
+.music-upload{border:none;border-radius:999px;padding:8px 14px;background:hsl(var(--primary));color:hsl(var(--primary-fg));font-weight:700;font-size:.8rem;font-family:inherit;cursor:pointer}
+.music-upload:disabled{opacity:.6}
+.music-msg{padding:0 12px 8px;font-size:.78rem;color:hsl(var(--muted-fg))}
+.music-empty{padding:6px 12px 10px;font-size:.82rem;color:hsl(var(--muted-fg));line-height:1.6}
+.music-row{display:flex;align-items:center;gap:4px;padding:0 6px}
+.music-row-main{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:8px 6px;border:none;background:transparent;color:inherit;font-family:inherit;text-align:start;cursor:pointer;border-radius:10px}
+.music-row-main:active{background:hsl(var(--muted))}
+.music-row-art{width:48px;height:48px;border-radius:8px;object-fit:cover;flex:none;background:hsl(var(--muted))}
+.music-row-ph{display:flex;align-items:center;justify-content:center;color:hsl(var(--muted-fg))}
+.music-row-txt{flex:1;min-width:0;display:flex;flex-direction:column}
+.music-row-name{font-size:.9rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.music-row-sub{font-size:.75rem;color:hsl(var(--muted-fg));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.music-row-del{flex:none;width:34px;height:34px;border:none;border-radius:50%;background:transparent;color:hsl(var(--muted-fg));font-size:.95rem;cursor:pointer}
+.music-row-del:active{background:hsl(var(--muted))}
