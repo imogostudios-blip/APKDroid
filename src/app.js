@@ -1562,6 +1562,8 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const [w, setW] = useState(0);
     const rootRef = useRef(null);
     const shadeRef = useRef(null);
+    const tIconRef = useRef(null);
+    const [tIconOk, setTIconOk] = useState(true);
     useEffect(() => {
       let cancel = false;
       loadPhotoData().then((d) => { if (!cancel) { setInfo(d[photoId] || DEFAULT_PHOTO_DATA[photoId] || null); setLoaded(true); } });
@@ -1599,8 +1601,15 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const showApps = apps.length > 0;
     const needH = S + PB_LABEL_H + PB_TITLE_H + 10;
     const onAppsScroll = (e) => {
-      const p = Math.max(0, Math.min(1, Math.abs(e.currentTarget.scrollLeft) / (S * 0.7)));
+      const sl = Math.abs(e.currentTarget.scrollLeft);
+      const p = Math.max(0, Math.min(1, sl / (S * 0.7)));
       if (shadeRef.current) shadeRef.current.style.opacity = String(p);
+      // 1:1 picture behind the apps: shrinks and fades while the apps are dragged over it
+      const q = Math.max(0, Math.min(1, sl / (S * 1.2)));
+      if (tIconRef.current) {
+        tIconRef.current.style.opacity = String(1 - q);
+        tIconRef.current.style.transform = "scale(" + (1 - 0.65 * q).toFixed(3) + ")";
+      }
     };
     return React.createElement("div", { ref: rootRef, className: "photo-banner", style: { position: "relative", width: "100%", margin: "0", overflow: "hidden" } },
       React.createElement("img", { src: imageSrc, alt: "", style: { width: "100%", height: "auto", minHeight: appsOff ? 0 : needH, display: "block", borderRadius: 0, objectFit: "cover" } }),
@@ -1609,6 +1618,12 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       React.createElement("div", { style: { position: "absolute", top: 16, right: 16, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, maxWidth: "70%", zIndex: 3 } },
         info && info.name && React.createElement("div", { style: { color: "#fff", fontSize: 18, fontWeight: 600, textShadow: "0 1px 3px rgba(0,0,0,.6)", textAlign: "right" } }, info.name),
         info && info.readme && React.createElement("div", { style: { color: "#c9cbe6", fontSize: 13, textShadow: "0 1px 3px rgba(0,0,0,.6)", textAlign: "right" } }, info.readme)
+      ),
+      showApps && tIconOk && React.createElement("div", { className: "pb-ticon-wrap", style: { position: "absolute", left: 0, right: 0, top: PB_TITLE_H, bottom: 0, zIndex: 1, display: "flex", alignItems: "center", pointerEvents: "none" } },
+        React.createElement("div", { style: { position: "absolute", right: Math.max(0, Math.round((startPad - S) / 2)) + "px", padding: "6px 0" } },
+          React.createElement("img", { ref: tIconRef, src: "./assets/textures/t-icons/" + photoId + ".png", alt: "", onError: () => setTIconOk(false), style: { width: S + "px", height: S + "px", objectFit: "cover", display: "block", borderRadius: "22%", transformOrigin: "center center", willChange: "transform, opacity" } }),
+          React.createElement("div", { style: { height: 53 } })
+        )
       ),
       showApps && React.createElement("div", { className: "pb-apps", style: { position: "absolute", left: 0, right: 0, top: PB_TITLE_H, bottom: 0, zIndex: 2, display: "flex", alignItems: "center", pointerEvents: "none" } },
         React.createElement("div", { className: "popular-scroller", onScroll: onAppsScroll, style: { direction: "rtl", display: "flex", flexDirection: "row", gap: PB_GAP + "px", overflowX: "auto", width: "100%", padding: "6px " + startPad + "px 6px 14px", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", pointerEvents: "auto" } },
