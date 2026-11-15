@@ -1,30 +1,30 @@
 </photos>
 </apps_photo1>
-<name=عنوان التطبيق>
-<readme=وصف قصير للتطبيق هنا>
-<url=https://example.com/app>
+<name=الأفضل و الأكثر شعبية>
+<readme=تحديث الاسبوع>
+<url=https://apkdroidservices.blogspot.com/search?q=التواصل&m=1>
 <play=true>
-<apps=social>
+<apps=سوشال ميديا>
 </end>
 </games_photo1>
-<name=عنوان اللعبة 1>
-<readme=وصف اللعبة الأولى>
-<url=https://example.com/game1>
+<name=البندقية>
+<readme=باتل رويال>
+<url=https://apkdroidservices.blogspot.com/search?q=باتل رويال&m=1>
 <play=true>
-<apps=games>
+<apps=باتل رويال>
 </end>
 </games_photo2>
-<name=عنوان اللعبة 2>
-<readme=وصف اللعبة الثانية>
-<url=https://example.com/game2>
+<name=Minecraft>
+<readme=Mods For Minecraft>
+<url=https://apkdroidservices.blogspot.com/search?q=Craft&m=1>
 <play=true>
-<apps=off>
+<apps=Minecraft>
 </end>
 </games_photo3>
-<name=عنوان اللعبة 3>
-<readme=وصف اللعبة الثالثة>
-<url=https://example.com/game3>
-<play=false>
-<apps=off>
+<name=سيارات>
+<readme=الأكثر شهرة>
+<url=https://apkdroidservices.blogspot.com/search?q=سيارات&m=1>
+<play=true>
+<apps=سيارات>
 </end>
 </body>
