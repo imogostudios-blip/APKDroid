@@ -1606,3 +1606,19 @@ html:not(.style2) .bg-screenshots {
 .movie-save-btn.on{background:hsl(var(--primary));color:hsl(var(--primary-fg))}
 .media-tab-sm{font-size:.76rem;padding:0 6px}
 .lib-wrap .movies-search-bar{margin-top:0}
+
+/* split install button: main + small dropdown piece (API source) */
+.split-install{display:flex;align-items:stretch;gap:3px;width:100%}
+.split-install .bg-btn-install{width:auto}
+.split-install .split-main,html.style2 .split-install .split-main{flex:1;border-start-start-radius:18px!important;border-end-start-radius:18px!important;border-start-end-radius:4px!important;border-end-end-radius:4px!important}
+.split-install .split-more,html.style2 .split-install .split-more{flex:none;width:48px;padding:0!important;border-start-end-radius:18px!important;border-end-end-radius:18px!important;border-start-start-radius:4px!important;border-end-start-radius:4px!important}
+/* bottom sheet of install sources */
+.src-panel{height:auto;max-height:75vh;max-height:75dvh;touch-action:auto}
+.src-item{display:flex;align-items:center;gap:12px;width:100%;padding:12px 12px;margin-bottom:6px;border:1px solid hsl(var(--border));border-radius:16px;background:transparent;color:inherit;font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer}
+.src-item.on{border-color:hsl(var(--primary));background:hsl(var(--primary)/.1)}
+.src-item:active{background:hsl(var(--muted))}
+.src-ico{width:34px;height:34px;border-radius:10px;background:hsl(var(--muted));display:flex;align-items:center;justify-content:center;flex:none}
+/* keywords */
+.kw-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.kw-chip{padding:6px 14px;border-radius:999px;border:1px solid hsl(var(--border));background:transparent;color:inherit;font-family:inherit;font-size:.85rem;cursor:pointer}
+.kw-chip:active{background:hsl(var(--muted))}
