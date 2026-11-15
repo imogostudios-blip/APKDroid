@@ -4,14 +4,14 @@
 <readme=تحديث الاسبوع>
 <url=https://apkdroidservices.blogspot.com/search?q=التواصل&m=1>
 <play=true>
-<apps=سوشال ميديا>
+<apps=social>
 </end>
 </games_photo1>
-<name=البندقية>
-<readme=باتل رويال>
-<url=https://apkdroidservices.blogspot.com/search?q=باتل رويال&m=1>
+<name=الأفضل>
+<readme=الأكتر شهرة>
+<url=https://apkdroidservices.blogspot.com/search?q=game&m=1>
 <play=true>
-<apps=PUBG>
+<apps=games>
 </end>
 </games_photo2>
 <name=Minecraft>
@@ -21,10 +21,10 @@
 <apps=Minecraft>
 </end>
 </games_photo3>
-<name=سيارات>
+<name=افضل تطبيقات الموسيقا و البوكاست>
 <readme=الأكثر شهرة>
-<url=https://apkdroidservices.blogspot.com/search?q=سيارات&m=1>
+<url=https://apkdroidservices.blogspot.com/search?q=music&m=1>
 <play=true>
-<apps=سباق>
+<apps=music>
 </end>
 </body>
