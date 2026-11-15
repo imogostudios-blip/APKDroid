@@ -3082,7 +3082,11 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       } }, t("req_cancel"))));
     }))));
   };
-  const Favs = ({ favs, songFavs, open, toggle, toggleSongFav, play }) => {
+  const Favs = ({ favs, songFavs, open, toggle, toggleSongFav, play, nav, photo, onOpenAccount }) => {
+    const ar2 = _lang === "ar";
+    const [tab, setTab] = useState("movies");
+    const [lq, setLq] = useState("");
+    const [movieFavs, setMovieFavs] = useState(() => loadMovieFavs());
     const [sel, setSel] = useState({});
     const [mode, setMode] = useState(false);
     const [archives, setArchives] = useState(() => getS("apk_archives", []) || []);
@@ -3095,9 +3099,19 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       setArchives(list);
       setS("apk_archives", list);
     };
-    const allKeys = [...archives.map((ar) => "r:" + String(ar.id)), ...apps.map((a) => "a:" + String(a.trackId)), ...songs.map((s) => "s:" + String(s.trackId))];
+    const lql = lq.trim().toLowerCase();
+    const hit = (x) => !lql || ((x.trackName || x.name || "") + " " + (x.artistName || "")).toLowerCase().includes(lql);
+    const shownApps = apps.filter(hit);
+    const shownSongs = songs.filter(hit);
+    const shownMovies = movieFavs.filter(hit);
+    const shownArch = lql ? [] : archives;
+    const allKeys = tab === "apps" ? [...shownArch.map((ar) => "r:" + String(ar.id)), ...shownApps.map((a) => "a:" + String(a.trackId))] : tab === "music" ? shownSongs.map((s) => "s:" + String(s.trackId)) : shownMovies.map((m) => "m:" + m.kind + ":" + String(m.id));
     const selectedKeys = allKeys.filter((k) => sel[k]);
     const allSelected = allKeys.length > 0 && selectedKeys.length === allKeys.length;
+    useEffect(() => {
+      // deselecting everything one by one leaves selection mode automatically
+      if (mode && selectedKeys.length === 0) setMode(false);
+    }, [mode, selectedKeys.length]);
     const toggleSel = (k) => setSel((p) => ({ ...p, [k]: !p[k] }));
     const enterSel = (k) => {
       heldRef.current = true;
@@ -3141,6 +3155,12 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
           if (song) toggleSongFav(song);
         }
       });
+      const dropM = selectedKeys.filter((k) => k[0] === "m").map((k) => k.slice(2));
+      if (dropM.length) {
+        const nextM = movieFavs.filter((m) => dropM.indexOf(m.kind + ":" + String(m.id)) < 0);
+        setMovieFavs(nextM);
+        setS("apk_movie_favs", nextM);
+      }
       setSel({});
       setMode(false);
     };
@@ -3181,7 +3201,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       saveArch(archives.filter((a) => a.id !== id));
       if (openArch && openArch.id === id) setOpenArch(null);
     };
-    const empty = apps.length === 0 && songs.length === 0 && archives.length === 0;
+    const empty = tab === "apps" ? shownApps.length === 0 && shownArch.length === 0 : tab === "music" ? shownSongs.length === 0 : shownMovies.length === 0;
     const Box = ({ selected, onOpen, onHoldKey, children }) => {
       const tap = () => {
         if (heldRef.current) {
@@ -3220,18 +3240,21 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       }));
     }
     const orderedArch = [...archives].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (b.created || 0) - (a.created || 0));
-    return /* @__PURE__ */ React.createElement("div", { className: "lib-wrap pb-20" }, /* @__PURE__ */ React.createElement("div", { className: "px-4 pt-4 pb-2 flex items-center gap-2" }, /* @__PURE__ */ React.createElement("h1", { className: "text-xl font-bold flex-1" }, t("library"))), mode && /* @__PURE__ */ React.createElement("div", { className: "play-seg-row" }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: selectAll, className: `play-seg ${allSelected ? "on" : ""}` }, allSelected ? t("req_cancel") : t("select_all")), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: removeSelected, disabled: !selectedKeys.length, className: `play-seg ${selectedKeys.length ? "on" : ""}` }, t("delete_sel")), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: archiveSelected, disabled: !selectedKeys.length, className: `play-seg ${selectedKeys.length ? "on" : ""}` }, t("archive"))), empty ? /* @__PURE__ */ React.createElement("div", { className: "text-center py-16 text-muted-foreground" }, /* @__PURE__ */ React.createElement(Icon, { name: "heart", className: "w-12 h-12 mx-auto mb-3 opacity-30" }), /* @__PURE__ */ React.createElement("p", null, t("no_favs")), /* @__PURE__ */ React.createElement("p", { className: "text-sm mt-1" }, t("no_favs_hint"))) : /* @__PURE__ */ React.createElement(React.Fragment, null, orderedArch.map((ar) => {
+    return /* @__PURE__ */ React.createElement("div", { className: "lib-wrap pb-20" }, /* @__PURE__ */ React.createElement("div", { className: "movies-search-bar", style: { display: "flex", alignItems: "center", gap: "10px", direction: "ltr" } }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "movies-avatar", onClick: onOpenAccount, "aria-label": "\u0627\u0644\u062D\u0633\u0627\u0628" }, photo ? /* @__PURE__ */ React.createElement("img", { src: photo, alt: "" }) : /* @__PURE__ */ React.createElement("span", null, "GO")), /* @__PURE__ */ React.createElement("input", { type: "search", className: "movies-search-input", placeholder: ar2 ? "\u0627\u0628\u062D\u062B \u0641\u064A \u0645\u0643\u062A\u0628\u062A\u0643..." : "Search your library...", value: lq, onChange: (e) => setLq(e.target.value), style: { flex: 1 } })), /* @__PURE__ */ React.createElement("div", { className: "media-tabs", dir: ar2 ? "rtl" : "ltr" }, [["movies", ar2 ? "\u0627\u0644\u0623\u0641\u0644\u0627\u0645 \u0627\u0644\u0645\u062D\u0641\u0648\u0638\u0629" : "Saved movies"], ["music", ar2 ? "\u0627\u0644\u0645\u0648\u0633\u064A\u0642\u0627 \u0627\u0644\u0645\u062D\u0641\u0648\u0638\u0629" : "Saved music"], ["apps", ar2 ? "\u0627\u0644\u062A\u0637\u0628\u064A\u0642\u0627\u062A \u0627\u0644\u0645\u062D\u0641\u0648\u0638\u0629" : "Saved apps"]].map((x) => /* @__PURE__ */ React.createElement("button", { key: x[0], type: "button", className: "media-tab media-tab-sm" + (tab === x[0] ? " on" : ""), onClick: () => { setTab(x[0]); setSel({}); setMode(false); } }, x[1]))), mode && /* @__PURE__ */ React.createElement("div", { className: "play-seg-row" }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: selectAll, className: `play-seg ${allSelected ? "on" : ""}` }, allSelected ? t("req_cancel") : t("select_all")), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: removeSelected, disabled: !selectedKeys.length, className: `play-seg ${selectedKeys.length ? "on" : ""}` }, t("delete_sel")), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: archiveSelected, disabled: !selectedKeys.length, className: `play-seg ${selectedKeys.length ? "on" : ""}` }, t("archive"))), empty ? /* @__PURE__ */ React.createElement("div", { className: "text-center py-16 text-muted-foreground" }, /* @__PURE__ */ React.createElement(Icon, { name: "heart", className: "w-12 h-12 mx-auto mb-3 opacity-30" }), /* @__PURE__ */ React.createElement("p", null, t("no_favs")), /* @__PURE__ */ React.createElement("p", { className: "text-sm mt-1" }, t("no_favs_hint"))) : /* @__PURE__ */ React.createElement(React.Fragment, null, (tab === "apps" ? orderedArch.filter(() => !lql) : []).map((ar) => {
       const k = "r:" + String(ar.id);
       return /* @__PURE__ */ React.createElement(Box, { key: k, selected: !!sel[k], onHoldKey: k, onOpen: () => setOpenArch(ar) }, /* @__PURE__ */ React.createElement(Icon, { name: "folder", className: "w-6 h-6" }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, ar.name, ar.pinned ? " \u2022" : ""), /* @__PURE__ */ React.createElement("p", { className: "text-xs", style: { opacity: 0.7 } }, (ar.items || []).length, " \u2022 ", t("archives"))), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: (e) => {
         e.stopPropagation();
         pinArch(ar.id);
       }, style: { background: "transparent", border: "none", color: "inherit", cursor: "pointer", fontSize: 18 }, "aria-label": t("archive_pin") }, ar.pinned ? "\u{1F4CC}" : "\u{1F4CD}"));
-    }), apps.map((a) => {
+    }), (tab === "apps" ? shownApps : []).map((a) => {
       const k = "a:" + String(a.trackId);
       return /* @__PURE__ */ React.createElement(Box, { key: k, selected: !!sel[k], onHoldKey: k, onOpen: () => open && open(a) }, /* @__PURE__ */ React.createElement("img", { src: a.artworkUrl100 || a.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: "30%", objectFit: "cover", flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, a.trackName || a.trackCensoredName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, a.artistName)));
-    }), songs.map((s) => {
+    }), (tab === "movies" ? shownMovies : []).map((m) => {
+      const k = "m:" + m.kind + ":" + String(m.id);
+      return /* @__PURE__ */ React.createElement(Box, { key: k, selected: !!sel[k], onHoldKey: k, onOpen: () => nav && nav(m.kind === "local" ? "/lvideo/" + encodeURIComponent(m.id) : "/movie/" + encodeURIComponent(m.id)) }, m.thumb ? /* @__PURE__ */ React.createElement("img", { src: m.thumb, alt: "", style: { width: 72, height: 48, borderRadius: 8, objectFit: "cover", flexShrink: 0 } }) : /* @__PURE__ */ React.createElement("span", { style: { width: 72, height: 48, borderRadius: 8, background: "hsl(var(--muted))", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 } }, "\u25B6"), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, m.name || m.id), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, m.kind === "local" ? ar2 ? "\u0645\u0646 \u062C\u0647\u0627\u0632\u0643" : "From your device" : ar2 ? "\u0641\u064A\u062F\u064A\u0648" : "Video")));
+    }), (tab === "music" ? shownSongs : []).map((s) => {
       const k = "s:" + String(s.trackId);
-      return /* @__PURE__ */ React.createElement(Box, { key: k, selected: !!sel[k], onHoldKey: k, onOpen: () => play && play(s, songs) }, /* @__PURE__ */ React.createElement("img", { src: s.artworkUrl100 || s.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: "30%", objectFit: "cover", flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, s.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, s.artistName)));
+      return /* @__PURE__ */ React.createElement(Box, { key: k, selected: !!sel[k], onHoldKey: k, onOpen: () => play && play(s, shownSongs) }, /* @__PURE__ */ React.createElement("img", { src: s.artworkUrl100 || s.artworkUrl60 || "", alt: "", style: { width: 48, height: 48, borderRadius: "30%", objectFit: "cover", flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, s.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-xs truncate", style: { opacity: 0.7 } }, s.artistName)));
     })));
   };
   const SearchLogPage = ({ nav }) => {
@@ -3628,6 +3651,8 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const sec = Math.floor(s % 60);
     return m + ":" + String(sec).padStart(2, "0");
   };
+  const DISC_PATH = "M12,3a9,9 0,0 0,-9 9v7a2,2 0,0 0,2 2h2a2,2 0,0 0,2 -2v-4a2,2 0,0 0,-2 -2H5v-1a7,7 0,1 1,14 0v1h-2a2,2 0,0 0,-2 2v4a2,2 0,0 0,2 2h2a2,2 0,0 0,2 -2v-7a9,9 0,0 0,-9 -9Z";
+  const discSvg = (size) => React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", width: size, height: size, "aria-hidden": "true" }, React.createElement("path", { d: DISC_PATH, fill: "#FBBC04" }));
   const MiniPlayer = ({ track, playing, progress, duration, onToggle, onClose, onPrev, onNext, onSeek, onOpen, isFav, onFav }) => {
     if (!track) return null;
     const pct = duration > 0 ? progress / duration * 100 : 0;
@@ -3635,7 +3660,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       const r = e.currentTarget.getBoundingClientRect();
       const ratio = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
       onSeek && onSeek(ratio * duration);
-    } }, /* @__PURE__ */ React.createElement("div", { className: "mp-progress-fill", style: { width: pct + "%" } })), /* @__PURE__ */ React.createElement("div", { className: "px-3 py-2 flex items-center gap-2", onClick: onOpen, style: { cursor: "pointer" } }, /* @__PURE__ */ React.createElement("img", { src: track.artworkUrl60 || track.artworkUrl100, className: "w-10 h-10 rounded-full object-cover", alt: "" }), /* @__PURE__ */ React.createElement("div", { className: "flex-1 min-w-0" }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, track.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-xs text-muted-foreground truncate" }, track.artistName)), /* @__PURE__ */ React.createElement("button", { onClick: (e) => {
+    } }, /* @__PURE__ */ React.createElement("div", { className: "mp-progress-fill", style: { width: pct + "%" } })), /* @__PURE__ */ React.createElement("div", { className: "px-3 py-2 flex items-center gap-2", onClick: onOpen, style: { cursor: "pointer" } }, /* @__PURE__ */ React.createElement("div", { className: "mini-disc" + (playing ? " spin" : "") }, discSvg(22)), /* @__PURE__ */ React.createElement("div", { className: "flex-1 min-w-0" }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium truncate" }, track.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-xs text-muted-foreground truncate" }, track.artistName)), /* @__PURE__ */ React.createElement("button", { onClick: (e) => {
       e.stopPropagation();
       onFav && onFav(track);
     }, className: `p-1.5 ${isFav ? "text-red-500" : "text-muted-foreground"}` }, /* @__PURE__ */ React.createElement(Icon, { name: "heart", className: `w-5 h-5 ${isFav ? "fill-current" : ""}` })), /* @__PURE__ */ React.createElement("button", { onClick: (e) => {
@@ -3666,7 +3691,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       a.click();
       a.remove();
     };
-    return /* @__PURE__ */ React.createElement("div", { className: "pb-28 sm:pb-12 px-4 pt-4 max-w-md mx-auto flex flex-col items-center" }, /* @__PURE__ */ React.createElement("button", { className: "bg-detail-back-btn self-start", onClick: () => window.history.back() }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-4 h-4" }), " ", t("back")), /* @__PURE__ */ React.createElement("p", { className: "text-xs text-muted-foreground uppercase tracking-wider mb-6" }, t("now_playing")), /* @__PURE__ */ React.createElement("div", { className: "relative mb-8" }, /* @__PURE__ */ React.createElement("img", { src: track.artworkUrl100 || track.artworkUrl60, className: `mp-disc spin ${playing ? "" : "paused"}`, alt: "" }), /* @__PURE__ */ React.createElement("div", { className: "mp-disc-center" })), /* @__PURE__ */ React.createElement("h1", { className: "text-xl font-bold text-center truncate w-full px-2" }, track.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-sm text-muted-foreground text-center mt-1 mb-6" }, track.artistName), /* @__PURE__ */ React.createElement("div", { className: "w-full px-2" }, /* @__PURE__ */ React.createElement("div", { className: "mp-progress", style: { height: 4 }, onClick: (e) => {
+    return /* @__PURE__ */ React.createElement("div", { className: "pb-28 sm:pb-12 px-4 pt-4 max-w-md mx-auto flex flex-col items-center" }, /* @__PURE__ */ React.createElement("button", { className: "bg-detail-back-btn self-start", onClick: () => window.history.back() }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-4 h-4" }), " ", t("back")), /* @__PURE__ */ React.createElement("p", { className: "text-xs text-muted-foreground uppercase tracking-wider mb-6" }, t("now_playing")), /* @__PURE__ */ React.createElement("div", { className: "relative mb-8" }, /* @__PURE__ */ React.createElement("div", { className: `mp-disc mp-disc-icon spin ${playing ? "" : "paused"}` }, discSvg("52%"))), /* @__PURE__ */ React.createElement("h1", { className: "text-xl font-bold text-center truncate w-full px-2" }, track.trackName), /* @__PURE__ */ React.createElement("p", { className: "text-sm text-muted-foreground text-center mt-1 mb-6" }, track.artistName), /* @__PURE__ */ React.createElement("div", { className: "w-full px-2" }, /* @__PURE__ */ React.createElement("div", { className: "mp-progress", style: { height: 4 }, onClick: (e) => {
       const r = e.currentTarget.getBoundingClientRect();
       const ratio = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
       onSeek && onSeek(ratio * duration);
@@ -4016,27 +4041,124 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     return { ytId, videoUrl, thumb, cleanHtml };
   };
 
-  // ===== Local music (IndexedDB) + music page =====
-  const MUSIC_DB = "apk_music_db";
-  const musicOpen = () => new Promise((res, rej) => {
-    const r = indexedDB.open(MUSIC_DB, 1);
-    r.onupgradeneeded = () => { if (!r.result.objectStoreNames.contains("tracks")) r.result.createObjectStore("tracks", { keyPath: "id" }); };
-    r.onsuccess = () => res(r.result);
-    r.onerror = () => rej(r.error);
-  });
-  const musicTx = async (mode, fn) => {
-    const db = await musicOpen();
-    return new Promise((res, rej) => {
-      const tx = db.transaction("tracks", mode);
-      const out = fn(tx.objectStore("tracks"));
-      tx.oncomplete = () => { db.close(); res(out && out.result); };
-      tx.onerror = () => { db.close(); rej(tx.error); };
-      tx.onabort = () => { db.close(); rej(tx.error || new Error("aborted")); };
+  // ===== Local music + music page =====
+  // ===== Local media (IndexedDB) =====
+  const mkBlobDb = (dbName) => {
+    const open = () => new Promise((res, rej) => {
+      const r = indexedDB.open(dbName, 1);
+      r.onupgradeneeded = () => { if (!r.result.objectStoreNames.contains("tracks")) r.result.createObjectStore("tracks", { keyPath: "id" }); };
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
     });
+    const tx = async (mode, fn) => {
+      const db = await open();
+      return new Promise((res, rej) => {
+        const t2 = db.transaction("tracks", mode);
+        const out = fn(t2.objectStore("tracks"));
+        t2.oncomplete = () => { db.close(); res(out && out.result); };
+        t2.onerror = () => { db.close(); rej(t2.error); };
+        t2.onabort = () => { db.close(); rej(t2.error || new Error("aborted")); };
+      });
+    };
+    return { all: () => tx("readonly", (st) => st.getAll()), put: (rec) => tx("readwrite", (st) => st.put(rec)), del: (id) => tx("readwrite", (st) => st.delete(id)) };
   };
-  const musicAll = () => musicTx("readonly", (st) => st.getAll());
-  const musicPut = (rec) => musicTx("readwrite", (st) => st.put(rec));
-  const musicDel = (id) => musicTx("readwrite", (st) => st.delete(id));
+  const musicDb = mkBlobDb("apk_music_db");
+  const videoDb = mkBlobDb("apk_video_db");
+  const musicAll = () => musicDb.all();
+  const musicPut = (rec) => musicDb.put(rec);
+  const musicDel = (id) => musicDb.del(id);
+  // saved movies (library)
+  const loadMovieFavs = () => { const l = getS("apk_movie_favs", []); return Array.isArray(l) ? l : []; };
+  const isMovieFav = (id, kind) => loadMovieFavs().some((x) => String(x.id) === String(id) && x.kind === kind);
+  const toggleMovieFav = (m) => {
+    const l = loadMovieFavs();
+    const i = l.findIndex((x) => String(x.id) === String(m.id) && x.kind === m.kind);
+    if (i >= 0) l.splice(i, 1); else l.push(m);
+    setS("apk_movie_favs", l);
+    return i < 0;
+  };
+  const MyVideos = ({ nav, q }) => {
+    const ar = _lang === "ar";
+    const [list, setList] = useState([]);
+    const [busy, setBusy] = useState(false);
+    const fileRef = useRef(null);
+    const urlsRef = useRef({});
+    const load = async () => {
+      try {
+        const all = await videoDb.all();
+        all.sort((a, b) => (b.added || 0) - (a.added || 0));
+        all.forEach((r) => { if (!urlsRef.current[r.id]) urlsRef.current[r.id] = URL.createObjectURL(r.blob); });
+        setList(all);
+      } catch (e) { setList([]); }
+    };
+    useEffect(() => { load(); return () => { Object.values(urlsRef.current).forEach((u) => { try { URL.revokeObjectURL(u); } catch (e) {} }); }; }, []);
+    const onFiles = async (e) => {
+      const files = Array.from(e.target.files || []);
+      e.target.value = "";
+      if (!files.length) return;
+      setBusy(true);
+      for (let i = 0; i < files.length; i++) {
+        const f = files[i];
+        if (!(f.type || "").startsWith("video/") && !/\.(mp4|m4v|mov|webm|mkv|3gp|avi|ogv)$/i.test(f.name)) continue;
+        const rec = { id: Date.now() + "-" + i + "-" + Math.random().toString(36).slice(2, 7), name: f.name.replace(/\.[^.]+$/, ""), type: f.type, size: f.size, added: Date.now() + i, blob: f };
+        try { await videoDb.put(rec); } catch (err) {}
+      }
+      await load();
+      setBusy(false);
+    };
+    const del = async (r) => {
+      if (!window.confirm(t("delete_one_confirm"))) return;
+      try { await videoDb.del(r.id); } catch (e) {}
+      if (urlsRef.current[r.id]) { try { URL.revokeObjectURL(urlsRef.current[r.id]); } catch (e) {} delete urlsRef.current[r.id]; }
+      const l = loadMovieFavs().filter((x) => !(x.kind === "local" && String(x.id) === String(r.id)));
+      setS("apk_movie_favs", l);
+      load();
+    };
+    const shown = q ? list.filter((r) => (r.name || "").toLowerCase().includes(q)) : list;
+    return React.createElement("div", { className: "my-videos", dir: ar ? "rtl" : "ltr" },
+      React.createElement("div", { className: "music-sec-head" },
+        React.createElement("h2", null, ar ? "فيديوهاتي" : "My videos"),
+        React.createElement("button", { type: "button", className: "music-upload", disabled: busy, onClick: () => fileRef.current && fileRef.current.click() }, busy ? (ar ? "جاري الحفظ..." : "Saving...") : (ar ? "＋ رفع من الجهاز" : "+ Upload from device")),
+        React.createElement("input", { ref: fileRef, type: "file", accept: "video/*", multiple: true, style: { display: "none" }, onChange: onFiles })
+      ),
+      shown.length === 0 ? React.createElement("p", { className: "music-empty" }, ar ? "لا توجد فيديوهات مرفوعة. ارفع فيديوهات من جهازك وستبقى محفوظة هنا." : "No uploaded videos yet.") :
+        React.createElement("div", { className: "movies-grid", style: { marginBottom: 14 } }, shown.map((r) => React.createElement("div", { key: r.id, style: { position: "relative" } },
+          React.createElement("button", { type: "button", className: "movie-card", style: { width: "100%" }, onClick: () => nav("/lvideo/" + encodeURIComponent(r.id)) },
+            React.createElement("div", { className: "movie-thumb-wrap" }, React.createElement("video", { src: urlsRef.current[r.id] + "#t=0.5", preload: "metadata", muted: true, playsInline: true, style: { width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none" } })),
+            React.createElement("div", { className: "movie-name" }, r.name)),
+          React.createElement("button", { type: "button", className: "lv-del", onClick: () => del(r), "aria-label": ar ? "حذف" : "Delete" }, "✕")))),
+      React.createElement("div", { className: "music-sec-head" }, React.createElement("h2", null, ar ? "الأفلام" : "Movies"))
+    );
+  };
+  const LocalVideoPage = ({ id, nav }) => {
+    const ar = _lang === "ar";
+    const [rec, setRec] = useState(null);
+    const [url, setUrl] = useState("");
+    const [missing, setMissing] = useState(false);
+    const [fav, setFav] = useState(() => isMovieFav(id, "local"));
+    useEffect(() => {
+      let off = false, u = "";
+      videoDb.all().then((all) => {
+        const r = all.find((x) => String(x.id) === String(id));
+        if (off) return;
+        if (!r) { setMissing(true); return; }
+        u = URL.createObjectURL(r.blob);
+        setRec(r); setUrl(u);
+      }).catch(() => { if (!off) setMissing(true); });
+      return () => { off = true; if (u) { try { URL.revokeObjectURL(u); } catch (e) {} } };
+    }, [id]);
+    return React.createElement("div", { className: "movie-player-page", dir: ar ? "rtl" : "ltr" },
+      React.createElement("div", { className: "movie-player-bar", style: { display: "flex", alignItems: "center", justifyContent: "space-between" } },
+        React.createElement("button", { type: "button", className: "nav-chip", onClick: () => nav("/movies"), "aria-label": "رجوع" }, React.createElement(Icon, { name: "arrowRight", className: "w-5 h-5" })),
+        rec && React.createElement("button", { type: "button", className: "movie-save-btn" + (fav ? " on" : ""), onClick: () => setFav(toggleMovieFav({ id: String(id), kind: "local", name: rec.name })) }, fav ? (ar ? "✓ محفوظ" : "✓ Saved") : (ar ? "حفظ" : "Save"))
+      ),
+      missing ? React.createElement("div", { style: { padding: 40, textAlign: "center" } }, ar ? "الفيديو غير موجود" : "Video not found") : !rec ? React.createElement("div", { style: { padding: 40, textAlign: "center" } }, "...") :
+        React.createElement(React.Fragment, null,
+          React.createElement("h1", { className: "movie-title" }, rec.name),
+          React.createElement("div", { className: "yt-wrap" }, React.createElement("video", { src: url, controls: true, autoPlay: true, playsInline: true, style: { width: "100%", height: "100%" }, className: "yt-iframe" }))
+        )
+    );
+  };
   const MediaTabs = ({ active, nav }) => React.createElement("div", { className: "media-tabs", dir: _lang === "ar" ? "rtl" : "ltr" },
     React.createElement("button", { type: "button", className: "media-tab" + (active === "videos" ? " on" : ""), onClick: () => active !== "videos" && nav("/movies") }, _lang === "ar" ? "فيديوهات" : "Videos"),
     React.createElement("button", { type: "button", className: "media-tab" + (active === "music" ? " on" : ""), onClick: () => active !== "music" && nav("/songs") }, _lang === "ar" ? "موسيقا" : "Music")
@@ -4170,6 +4292,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
         })
       ),
       React.createElement(MediaTabs, { active: "videos", nav }),
+      React.createElement(MyVideos, { nav, q: ql }),
       loading ? React.createElement("div", { style: { padding: "20px", textAlign: "center" } }, "جاري التحميل...") :
       React.createElement("div", { className: "movies-grid" },
         filtered.map((m, idx) => {
@@ -4213,11 +4336,13 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const embed = movie && movie.ytId ? `https://www.youtube.com/embed/${movie.ytId}?rel=0` : null;
     const directVideo = movie && movie.videoUrl && !movie.ytId ? movie.videoUrl : null;
     const downloadUrl = movie && (movie.videoUrl || (movie.ytId ? `https://www.youtube.com/watch?v=${movie.ytId}` : null));
+    const [mFav, setMFav] = useState(() => isMovieFav(id, "web"));
     return React.createElement("div", { className: "movie-player-page" },
-      React.createElement("div", { className: "movie-player-bar" },
+      React.createElement("div", { className: "movie-player-bar", style: { display: "flex", alignItems: "center", justifyContent: "space-between" } },
         React.createElement("button", { type: "button", className: "nav-chip", onClick: () => nav("/movies"), "aria-label": "رجوع" },
           React.createElement(Icon, { name: "arrowRight", className: "w-5 h-5" })
-        )
+        ),
+        movie && React.createElement("button", { type: "button", className: "movie-save-btn" + (mFav ? " on" : ""), onClick: () => setMFav(toggleMovieFav({ id: String(id), kind: "web", name: movie.name || "", thumb: movie.thumb || "" })) }, mFav ? "\u2713 محفوظ" : "حفظ")
       ),
       loading ? React.createElement("div", { style: { padding: "40px", textAlign: "center" } }, "جاري التحميل...") :
       React.createElement(React.Fragment, null,
@@ -4424,6 +4549,9 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const [bands, setBands] = useState(() => getS("apk_eq_bands", EQ_FREQS.map(() => 0)));
     const [volume, setVolumeS] = useState(() => getS("apk_volume", 1));
     const audio = useRef(null);
+    const allAudioRef = useRef([]);
+    const eqRef = useRef({ on: false, bands: [], vol: 1 });
+    eqRef.current = { on: eqOn, bands, vol: volume };
     const ctxRef = useRef(null);
     const filtersRef = useRef(null);
     const gainRef = useRef(null);
@@ -4577,7 +4705,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
           });
           filtersRef.current = filters;
           const gain = ctxRef.current.createGain();
-          gain.gain.value = volume;
+          gain.gain.value = eqRef.current.vol;
           gainRef.current = gain;
           for (let i = 1; i < filters.length; i++) filters[i - 1].connect(filters[i]);
           filters[filters.length - 1].connect(gain);
@@ -4593,9 +4721,9 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
         src.connect(filtersRef.current[0]);
         wiredRef.current = true;
         if (filtersRef.current) filtersRef.current.forEach((f, i) => {
-          f.gain.value = eqOn ? bands[i] : 0;
+          f.gain.value = eqRef.current.on ? eqRef.current.bands[i] || 0 : 0;
         });
-        if (gainRef.current) gainRef.current.gain.value = volume;
+        if (gainRef.current) gainRef.current.gain.value = eqRef.current.vol;
         return true;
       } catch (err) {
         console.warn("Audio graph", err);
@@ -4677,50 +4805,61 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const isSongFav = track && songFavs.some((f) => String(f.trackId) === String(track.trackId));
     const open = (app) => nav(`/app/${app.trackId}`);
     const openInstall = (app) => nav(`/app/${app.trackId}?install=1`);
+    const killAudio = (except) => {
+      (allAudioRef.current || []).forEach((x) => {
+        if (x === except) return;
+        x.__dead = true;
+        try { x.pause(); x.removeAttribute("src"); x.load(); } catch (e) {}
+      });
+      allAudioRef.current = except ? [except] : [];
+    };
     const playAt = (list, idx) => {
       const song = list[idx];
       if (!song || !song.previewUrl) return;
-      if (audio.current) {
-        try {
-          audio.current.pause();
-        } catch (e) {
-        }
-        audio.current = null;
-      }
-      const a = new Audio(song.previewUrl);
+      killAudio();
+      audio.current = null;
+      const a = new Audio();
       a.preload = "auto";
       a.volume = typeof volume === "number" ? volume : 1;
       a.crossOrigin = "anonymous";
+      a.src = song.previewUrl;
+      allAudioRef.current.push(a);
       audio.current = a;
       wiredRef.current = false;
       sourceRef.current = null;
       const start = () => {
+        if (a.__dead || audio.current !== a) { try { a.pause(); } catch (e) {} return; }
         setTrack(song);
         setQueue(list);
         setQIdx(idx);
         setPlaying(true);
         setProgress(0);
         setDuration(song.duration || 0);
-        if (eqOn) {
+        // equalizer graph is always wired when the source allows it (CORS ok / local blob), gains follow the EQ switch
+        if (a.crossOrigin === "anonymous" || /^(blob|data):/.test(song.previewUrl)) {
           try {
             ensureAudioGraph(a);
           } catch (e) {
           }
         }
       };
-      const tryPlay = () => a.play().then(start).catch(() => {
+      const fail = () => {
+        if (a.__dead || audio.current !== a) return;
+        setTrack(song);
+        setQueue(list);
+        setQIdx(idx);
+        setPlaying(false);
+      };
+      a.play().then(start).catch((err) => {
+        if (a.__dead || audio.current !== a) return;
+        if (err && err.name === "AbortError") return;
         try {
           a.crossOrigin = null;
+          a.load();
         } catch (e) {
         }
-        a.play().then(start).catch(() => {
-          setTrack(song);
-          setQueue(list);
-          setQIdx(idx);
-          setPlaying(false);
-        });
+        a.play().then(start).catch(fail);
       });
-      tryPlay();
     };
     const play = (song) => {
       playAt([song], 0);
@@ -4764,10 +4903,10 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       }
     };
     const closeP = () => {
-      if (audio.current) {
-        audio.current.pause();
-        audio.current = null;
-      }
+      killAudio();
+      audio.current = null;
+      queueRef.current = [];
+      setQueue([]);
       setTrack(null);
       setPlaying(false);
       setProgress(0);
@@ -4788,8 +4927,9 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       const _id = _p[0].split("/")[2] || "";
       const _qi = new URLSearchParams(_p[1] || "").get("install") === "1";
       page = /* @__PURE__ */ React.createElement(Detail, { id: _id, nav, favs, toggle, selStore, expMode, setDetailApp, autoInstall: _qi, onToggleTheme: toggleTheme, isDark: isDarkNow, style2 });
-    } else if (route === "/favorites") page = /* @__PURE__ */ React.createElement(Favs, { favs, songFavs, open, toggle, toggleSongFav, play: playFromList });
+    } else if (route === "/favorites") page = /* @__PURE__ */ React.createElement(Favs, { favs, songFavs, open, toggle, toggleSongFav, play: playFromList, nav, photo: profile && profile.photo, onOpenAccount: () => setAccOpen(true) });
     else if (route === "/downloads") page = /* @__PURE__ */ React.createElement(DownloadsManager, { open });
+    else if (route.startsWith("/lvideo/")) page = /* @__PURE__ */ React.createElement(LocalVideoPage, { id: decodeURIComponent(route.slice("/lvideo/".length)), nav });
     else if (route === "/songs") page = /* @__PURE__ */ React.createElement(MusicPage, { nav, play: playFromList, photo: profile && profile.photo, onOpenAccount: () => setAccOpen(true) });
     else if (route === "/movies") page = /* @__PURE__ */ React.createElement(MoviesPage, { nav, photo: profile && profile.photo, onOpenAccount: () => setAccOpen(true) });
     else if (route.startsWith("/movie/")) {
@@ -4813,7 +4953,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     }, [route]);
     if (!onboardDone) return /* @__PURE__ */ React.createElement(OnboardFlow, { onFinish: finishOnboard, setLang, setTheme, setExpMode, setStyle2 });
     if (isBlockedCountry(country2)) return /* @__PURE__ */ React.createElement(CountryBlock, { country: country2, setCountry, lang });
-    return /* @__PURE__ */ React.createElement("div", { className: "app-shell", key: lang }, /* @__PURE__ */ React.createElement(AccountHub, { open: accOpen, onClose: () => setAccOpen(false), nav, theme, setTheme, profile, setProfile, lang, night, setNight, style2 }), /* @__PURE__ */ React.createElement(AccPick, { open: themePick, title: t("choose_theme"), onClose: () => setThemePick(false) }, [{ id: "light", label: t("light") }, { id: "dark", label: t("dark") }, { id: "system", label: t("adapt_system") }].map((it) => /* @__PURE__ */ React.createElement("button", { key: it.id, type: "button", className: `acc-pick-item ${themeCur === it.id ? "on" : ""}`, onClick: () => applyThemeMode(it.id) }, /* @__PURE__ */ React.createElement("span", null, it.label), themeCur === it.id && /* @__PURE__ */ React.createElement("span", { style: { marginInlineStart: "auto" } }, "\u2713")))), /* @__PURE__ */ React.createElement("main", { id: "app-scroll", className: "app-main max-w-screen-2xl mx-auto w-full" }, !(isDownloads || route === "/settings" || route === "/search-log" || accOpen || isDetail || route.startsWith("/search") || route === "/you" || route === "/music" || route.startsWith("/you-") || route === "/movies" || route.startsWith("/movie/")) && /* @__PURE__ */ React.createElement(TopNav, { nav, isDetail, onOpenAccount: () => setAccOpen(true), route, photo: profile && profile.photo }), /* @__PURE__ */ React.createElement("div", { className: "app-scroll-fill" }, page)), !hideMini && /* @__PURE__ */ React.createElement(MiniPlayer, { track, playing, progress, duration, onToggle: togglePlay, onClose: closeP, onPrev: playPrev, onNext: playNext, onSeek: seekTo, onOpen: () => nav("/now-playing"), isFav: isSongFav, onFav: toggleSongFav }), !(isDownloads || route === "/settings" || route === "/search-log" || accOpen || route.startsWith("/you-project") || route === "/you-publish" || route === "/you-projects") && /* @__PURE__ */ React.createElement(BottomNav, { route, nav }), offSheet && /* @__PURE__ */ React.createElement(FullOfflinePage, { onRetry: () => { probeOnline().then((ok) => setOffSheet(!ok)); }, onSendNotice: sendNetNotice, onOpenAccount: () => setAccOpen(true), onEnterOffline: () => { offHold.current = true; setOffSheet(false); } }));
+    return /* @__PURE__ */ React.createElement("div", { className: "app-shell", key: lang }, /* @__PURE__ */ React.createElement(AccountHub, { open: accOpen, onClose: () => setAccOpen(false), nav, theme, setTheme, profile, setProfile, lang, night, setNight, style2 }), /* @__PURE__ */ React.createElement(AccPick, { open: themePick, title: t("choose_theme"), onClose: () => setThemePick(false) }, [{ id: "light", label: t("light") }, { id: "dark", label: t("dark") }, { id: "system", label: t("adapt_system") }].map((it) => /* @__PURE__ */ React.createElement("button", { key: it.id, type: "button", className: `acc-pick-item ${themeCur === it.id ? "on" : ""}`, onClick: () => applyThemeMode(it.id) }, /* @__PURE__ */ React.createElement("span", null, it.label), themeCur === it.id && /* @__PURE__ */ React.createElement("span", { style: { marginInlineStart: "auto" } }, "\u2713")))), /* @__PURE__ */ React.createElement("main", { id: "app-scroll", className: "app-main max-w-screen-2xl mx-auto w-full" }, !(isDownloads || route === "/settings" || route === "/search-log" || accOpen || isDetail || route.startsWith("/search") || route === "/you" || route === "/music" || route.startsWith("/you-") || route === "/movies" || route === "/songs" || route === "/favorites" || route.startsWith("/lvideo/") || route.startsWith("/movie/")) && /* @__PURE__ */ React.createElement(TopNav, { nav, isDetail, onOpenAccount: () => setAccOpen(true), route, photo: profile && profile.photo }), /* @__PURE__ */ React.createElement("div", { className: "app-scroll-fill" }, page)), !hideMini && /* @__PURE__ */ React.createElement(MiniPlayer, { track, playing, progress, duration, onToggle: togglePlay, onClose: closeP, onPrev: playPrev, onNext: playNext, onSeek: seekTo, onOpen: () => nav("/now-playing"), isFav: isSongFav, onFav: toggleSongFav }), !(isDownloads || route === "/settings" || route === "/search-log" || accOpen || route.startsWith("/you-project") || route === "/you-publish" || route === "/you-projects") && /* @__PURE__ */ React.createElement(BottomNav, { route, nav }), offSheet && /* @__PURE__ */ React.createElement(FullOfflinePage, { onRetry: () => { probeOnline().then((ok) => setOffSheet(!ok)); }, onSendNotice: sendNetNotice, onOpenAccount: () => setAccOpen(true), onEnterOffline: () => { offHold.current = true; setOffSheet(false); } }));
   }
   class ErrorBoundary extends React.Component {
     constructor(p) {
