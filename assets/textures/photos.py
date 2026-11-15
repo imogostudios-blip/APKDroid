@@ -11,7 +11,7 @@
 <readme=باتل رويال>
 <url=https://apkdroidservices.blogspot.com/search?q=باتل رويال&m=1>
 <play=true>
-<apps=باتل رويال>
+<apps=Call of Duty>
 </end>
 </games_photo2>
 <name=Minecraft>
@@ -25,6 +25,6 @@
 <readme=الأكثر شهرة>
 <url=https://apkdroidservices.blogspot.com/search?q=سيارات&m=1>
 <play=true>
-<apps=سيارات>
+<apps=Car>
 </end>
 </body>
