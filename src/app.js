@@ -1469,108 +1469,149 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
   let homePoolCache = [];
 
   // Photo promo banners (data embedded + optional fetch)
+  // Tags per photo in assets/textures/photos.py: <name> <readme> <url> <play=true/false> <apps=tool|social|...|off>
   const DEFAULT_PHOTO_DATA = {
-    apps_photo1: { name: "عنوان التطبيق", readme: "وصف قصير للتطبيق هنا", url: "https://example.com/app", play: true, apps: "social" },
-    games_photo1: { name: "عنوان اللعبة 1", readme: "وصف اللعبة الأولى", url: "https://example.com/game1", play: true, apps: "games" },
-    games_photo2: { name: "عنوان اللعبة 2", readme: "وصف اللعبة الثانية", url: "https://example.com/game2", play: true, apps: "off" },
-    games_photo3: { name: "عنوان اللعبة 3", readme: "وصف اللعبة الثالثة", url: "https://example.com/game3", play: false, apps: "off" }
+    apps_photo1: { name: "عنوان التطبيق", readme: "وصف قصير للتطبيق هنا", url: "https://example.com/app", play: true, apps: "" },
+    games_photo1: { name: "عنوان اللعبة 1", readme: "وصف اللعبة الأولى", url: "https://example.com/game1", play: true, apps: "" },
+    games_photo2: { name: "عنوان اللعبة 2", readme: "وصف اللعبة الثانية", url: "https://example.com/game2", play: true, apps: "" },
+    games_photo3: { name: "عنوان اللعبة 3", readme: "وصف اللعبة الثالثة", url: "https://example.com/game3", play: true, apps: "" }
   };
   let photoDataCache = null;
   const loadPhotoData = async () => {
     if (photoDataCache) return photoDataCache;
     try {
-      const res = await fetch("./assets/textures/photos.py");
+      const res = await fetch("./assets/textures/photos.py", { cache: "no-cache" });
       if (!res.ok) throw new Error("no photos");
       const text = await res.text();
       const data = {};
       const blocks = text.split(/<\/end>/);
       for (const block of blocks) {
-        const idMatch = block.match(/<\/([a-zA-Z0-9_]+)>/);
-        if (!idMatch) continue;
-        const id = idMatch[1];
+        const ids = (block.match(/<\/([a-zA-Z0-9_]+)>/g) || []).map((s) => s.slice(2, -1)).filter((s) => s !== "end" && s !== "photos");
+        const id = ids[ids.length - 1];
+        if (!id) continue;
         const name = (block.match(/<name=([^>]+)>/) || [])[1] || "";
         const readme = (block.match(/<readme=([^>]+)>/) || [])[1] || "";
         const url = (block.match(/<url=([^>]+)>/) || [])[1] || "";
-        const playRaw = (block.match(/<play=([^>]+)>/) || [])[1] || "true";
-        const appsRaw = (block.match(/<apps=([^>]+)>/) || [])[1] || "off";
-        const play = String(playRaw).trim().toLowerCase() !== "false";
-        const apps = String(appsRaw).trim().toLowerCase();
-        if (id) data[id] = { name: name.trim(), readme: readme.trim(), url: url.trim(), play, apps };
+        const playRaw = (block.match(/<(?:play|paly)=([^>]+)>/i) || [])[1];
+        const apps = ((block.match(/<apps=([^>]+)>/i) || [])[1] || "").trim();
+        const play = playRaw == null ? true : !/^(false|0|no|off)$/i.test(playRaw.trim());
+        data[id] = { name: name.trim(), readme: readme.trim(), url: url.trim(), play, apps };
       }
       photoDataCache = Object.keys(data).length ? data : DEFAULT_PHOTO_DATA;
-      return photoDataCache;
     } catch (e) {
       console.warn("photos load failed, using defaults", e);
       photoDataCache = DEFAULT_PHOTO_DATA;
-      return photoDataCache;
     }
+    return photoDataCache;
   };
   const ARROW_SVG = React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "28", viewBox: "0 -960 960 960", width: "28", fill: "#b0b0b0", style: { display: "block" } },
     React.createElement("path", { d: "m256-240-56-56 384-384H240v-80h480v480h-80v-344L256-240Z" })
   );
-  const APP_CATEGORIES = {
-    social: ["WhatsApp", "Facebook", "Instagram", "Telegram", "TikTok", "Viber", "Discord"],
-    tools: ["Chrome", "Firefox", "Opera", "VPN", "Google", "Google Maps"],
-    tool: ["Chrome", "Firefox", "Opera", "VPN", "Google", "Google Maps"],
-    games: ["PUBG", "Minecraft", "Roblox", "Among Us", "Clash of Clans", "Candy Crush"],
-    music: ["Spotify", "YouTube Music", "SoundCloud", "Shazam"],
-    shopping: ["Amazon", "Temu", "AliExpress", "eBay"],
-    default: ["WhatsApp", "YouTube", "Instagram", "Chrome", "Spotify", "Telegram"]
+  // <apps=KEY> -> what to show over the banner. "off" = nothing, "" / "popular" = popular list.
+  const PHOTO_APP_CATS = {
+    tool: { term: "tools utilities", gid: 6002 }, utility: { term: "tools utilities", gid: 6002 },
+    social: { term: "social messaging", gid: 6005 },
+    photo: { term: "photo video editor", gid: 6008 }, video: { term: "video player editor", gid: 6008 },
+    music: { term: "music", gid: 6011 },
+    shopping: { term: "shopping", gid: 6024 },
+    entertainment: { term: "entertainment", gid: 6016 },
+    productivity: { term: "productivity", gid: 6007 },
+    education: { term: "education learn", gid: 6017 },
+    health: { term: "health fitness", gid: 6013 },
+    finance: { term: "finance bank", gid: 6015 },
+    news: { term: "news", gid: 6009 },
+    travel: { term: "travel", gid: 6003 },
+    sports: { term: "sports", gid: 6004 }, sport: { term: "sports", gid: 6004 },
+    weather: { term: "weather", gid: 6001 },
+    lifestyle: { term: "lifestyle", gid: 6012 },
+    game: { term: "top free games", gid: 6014, games: true }, games: { term: "top free games", gid: 6014, games: true }
   };
+  const PHOTO_APP_ALIAS = { tools: "tool", "أدوات": "tool", "ادوات": "tool", "اجتماعي": "social", "موسيقى": "music", "تسوق": "shopping", "ترفيه": "entertainment", "ألعاب": "games", "العاب": "games", "تصوير": "photo" };
+  const photoAppsCache = {};
+  const hasArt = (a) => a && a.trackName && (a.artworkUrl512 || a.artworkUrl100 || a.artworkUrl60);
+  const loadBannerApps = (key) => {
+    let k = String(key || "").trim().toLowerCase();
+    if (PHOTO_APP_ALIAS[k]) k = PHOTO_APP_ALIAS[k];
+    if (!k) k = "popular";
+    if (photoAppsCache[k]) return photoAppsCache[k];
+    const p = (async () => {
+      if (k === "popular") {
+        const lists = await Promise.all(POPULAR_APPS.map((x) => api.search(x.term, 5).catch(() => [])));
+        return lists.map((l) => (l || []).find(hasArt)).filter(Boolean);
+      }
+      const cat = PHOTO_APP_CATS[k];
+      let list = [];
+      try {
+        list = cat ? await api.cat(cat.term, cat.gid, 30) : await api.search(k, 30);
+      } catch (e) {
+        try { list = await api.search(cat ? cat.term : k, 30); } catch (e2) { list = []; }
+      }
+      const seen = {};
+      return (list || []).filter((a) => hasArt(a) && !seen[a.trackId] && (seen[a.trackId] = 1) && (cat && cat.games ? true : !isGameApp(a))).slice(0, 14);
+    })();
+    photoAppsCache[k] = p;
+    p.then((r) => { if (!r || !r.length) delete photoAppsCache[k]; }, () => { delete photoAppsCache[k]; });
+    return p;
+  };
+  const PB_PAD = 14, PB_GAP = 12;
   const PhotoBanner = ({ photoId, imageSrc, open }) => {
-    const [info, setInfo] = useState(DEFAULT_PHOTO_DATA[photoId] || { play: true, apps: "off" });
-    const [appsList, setAppsList] = useState([]);
-    const [dimmed, setDimmed] = useState(false);
-    const scrollRef = React.useRef(null);
+    const [info, setInfo] = useState(() => photoDataCache ? (photoDataCache[photoId] || DEFAULT_PHOTO_DATA[photoId] || null) : null);
+    const [loaded, setLoaded] = useState(() => !!photoDataCache);
+    const [apps, setApps] = useState([]);
+    const [dim, setDim] = useState({ w: 0, h: 0 });
+    const rootRef = useRef(null);
+    const shadeRef = useRef(null);
     useEffect(() => {
       let cancel = false;
-      loadPhotoData().then((d) => { if (!cancel && d[photoId]) setInfo(d[photoId]); });
+      loadPhotoData().then((d) => { if (!cancel) { setInfo(d[photoId] || DEFAULT_PHOTO_DATA[photoId] || null); setLoaded(true); } });
       return () => { cancel = true; };
     }, [photoId]);
+    const play = !info || info.play !== false;
+    const appsKey = info && info.apps ? info.apps : "";
+    const appsOff = /^(off|none|no|false)$/i.test(appsKey.trim());
     useEffect(() => {
-      if (!open || !info || info.apps === "off" || info.play === false) { setAppsList([]); return; }
+      if (!loaded || !play || appsOff) { setApps([]); return; }
       let cancel = false;
-      const terms = APP_CATEGORIES[info.apps] || APP_CATEGORIES.default;
-      (async () => {
-        const results = [];
-        for (const term of terms) {
-          if (cancel) return;
-          try {
-            const list = await api.search(term, 5);
-            const app = (list || []).find(a => a && a.trackName && a.artworkUrl100);
-            if (app) results.push(app);
-          } catch (e) {}
-        }
-        if (!cancel) setAppsList(results);
-      })();
+      loadBannerApps(appsKey).then((r) => { if (!cancel) setApps(r || []); }).catch(() => {});
       return () => { cancel = true; };
-    }, [open, info && info.apps, info && info.play]);
-    if (!imageSrc || (info && info.play === false)) return null;
+    }, [loaded, play, appsOff, appsKey]);
+    useEffect(() => {
+      const el = rootRef.current;
+      if (!el) return;
+      const measure = () => setDim((d) => (d.w === el.clientWidth && d.h === el.clientHeight ? d : { w: el.clientWidth, h: el.clientHeight }));
+      measure();
+      let ro = null;
+      if (window.ResizeObserver) { ro = new ResizeObserver(measure); ro.observe(el); }
+      window.addEventListener("resize", measure);
+      return () => { if (ro) ro.disconnect(); window.removeEventListener("resize", measure); };
+    }, [loaded, play]);
+    if (!imageSrc || !loaded || !play) return null;
     const onView = (e) => {
       e.stopPropagation();
       const url = info && info.url;
       if (url) window.open(url, "_blank", "noopener");
     };
-    const onScroll = () => {
-      const el = scrollRef.current;
-      if (!el) return;
-      setDimmed(el.scrollLeft > 8);
+    const w = dim.w || 360, h = dim.h || 200;
+    const slot = (w - PB_PAD - PB_GAP) / 1.25;
+    const S = Math.round(Math.max(48, Math.min(slot, h * 0.56 - 40)));
+    const onAppsScroll = (e) => {
+      const p = Math.max(0, Math.min(1, e.currentTarget.scrollLeft / (S * 0.7)));
+      if (shadeRef.current) shadeRef.current.style.opacity = String(p);
     };
-    const showApps = info && info.apps !== "off" && appsList.length > 0;
-    return React.createElement("div", { className: "photo-banner", style: { position: "relative", width: "100%", margin: "0", overflow: "hidden" } },
-      React.createElement("img", { src: imageSrc, alt: "", style: { width: "100%", height: "auto", display: "block", borderRadius: 0, objectFit: "cover", filter: dimmed ? "brightness(0.55) saturate(0.7)" : "none", transition: "filter .25s ease" } }),
-      dimmed && React.createElement("div", { style: { position: "absolute", inset: 0, background: "rgba(80,80,90,.35)", pointerEvents: "none", zIndex: 1 } }),
-      React.createElement("div", { onClick: onView, style: { position: "absolute", top: 10, left: 10, cursor: "pointer", zIndex: 4, background: "transparent", border: "none", padding: 0 } }, ARROW_SVG),
-      React.createElement("div", { style: { position: "absolute", top: 10, right: 12, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, maxWidth: "70%", zIndex: 4 } },
+    return React.createElement("div", { ref: rootRef, className: "photo-banner", style: { position: "relative", width: "100%", margin: "0", overflow: "hidden" } },
+      React.createElement("img", { src: imageSrc, alt: "", onLoad: () => { const el = rootRef.current; if (el) setDim({ w: el.clientWidth, h: el.clientHeight }); }, style: { width: "100%", height: "auto", display: "block", borderRadius: 0, objectFit: "cover" } }),
+      React.createElement("div", { ref: shadeRef, className: "pb-shade", "aria-hidden": "true" }),
+      React.createElement("div", { onClick: onView, style: { position: "absolute", top: 10, left: 10, cursor: "pointer", zIndex: 3, background: "transparent", border: "none", padding: 0 } }, ARROW_SVG),
+      React.createElement("div", { style: { position: "absolute", top: 10, right: 12, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, maxWidth: "70%", zIndex: 3 } },
         info && info.name && React.createElement("div", { style: { color: "#fff", fontSize: 15, fontWeight: 700, textShadow: "0 1px 3px rgba(0,0,0,.85)", textAlign: "right" } }, info.name),
         info && info.readme && React.createElement("div", { style: { color: "#ccc", fontSize: 12, textShadow: "0 1px 3px rgba(0,0,0,.85)", textAlign: "right" } }, info.readme)
       ),
-      showApps && React.createElement("div", { style: { position: "absolute", left: 0, right: 0, top: "50%", transform: "translateY(-50%)", zIndex: 3, overflow: "hidden" } },
-        React.createElement("div", { ref: scrollRef, onScroll, className: "popular-scroller", style: { display: "flex", gap: "10px", overflowX: "auto", padding: "8px 0 8px 12px", scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", direction: "ltr" } },
-          appsList.map((a) => React.createElement("button", { key: a.trackId, type: "button", onClick: (e) => { e.stopPropagation(); open && open(a); }, style: { flex: "0 0 auto", width: "min(72vw, 280px)", scrollSnapAlign: "start", background: "transparent", border: "none", padding: 0, textAlign: "center", color: "inherit", cursor: "pointer" } },
-            React.createElement("img", { src: a.artworkUrl100 || a.artworkUrl60, alt: "", className: "app-ico-r", style: { width: "100%", aspectRatio: "1", objectFit: "cover", display: "block" } }),
-            React.createElement("div", { style: { marginTop: 6, fontSize: 14, fontWeight: 600, color: "#fff", textShadow: "0 1px 3px rgba(0,0,0,.9)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" } }, a.trackName),
-            a.averageUserRating ? React.createElement("div", { style: { marginTop: 4, display: "inline-block", background: "rgba(30,30,34,.9)", color: "#ddd", fontSize: 12, padding: "3px 10px", borderRadius: 999, fontWeight: 600 } }, "★ " + Number(a.averageUserRating).toFixed(1)) : null
+      apps.length > 0 && React.createElement("div", { className: "pb-apps", style: { position: "absolute", left: 0, right: 0, top: 0, bottom: 0, zIndex: 2, display: "flex", alignItems: "center", pointerEvents: "none" } },
+        React.createElement("div", { className: "popular-scroller", onScroll: onAppsScroll, style: { direction: "ltr", display: "flex", gap: PB_GAP + "px", overflowX: "auto", width: "100%", padding: "6px " + PB_PAD + "px", scrollPaddingLeft: PB_PAD + "px", scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", pointerEvents: "auto" } },
+          apps.map((a) => React.createElement("button", { key: a.trackId, type: "button", onClick: (e) => { e.stopPropagation(); open && open(a); }, style: { flex: "0 0 " + S + "px", width: S + "px", scrollSnapAlign: "start", background: "transparent", border: "none", padding: 0, textAlign: "left", direction: "ltr", color: "inherit", cursor: "pointer" } },
+            React.createElement("img", { src: a.artworkUrl512 || a.artworkUrl100 || a.artworkUrl60, alt: "", className: "app-ico-r pb-ico", style: { width: S + "px", height: S + "px", objectFit: "cover", display: "block" } }),
+            React.createElement("div", { style: { marginTop: 6, fontSize: 13, fontWeight: 600, color: "#fff", textShadow: "0 1px 3px rgba(0,0,0,.9)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: S + "px" } }, a.trackName),
+            a.averageUserRating ? React.createElement("div", { style: { marginTop: 3, display: "inline-block", background: "rgba(30,30,34,.9)", color: "#ddd", fontSize: 11, padding: "2px 8px", borderRadius: 999, fontWeight: 600 } }, "★ " + Number(a.averageUserRating).toFixed(1)) : null
           ))
         )
       )
@@ -1788,16 +1829,16 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const hasGames = rows.some((r) => r && r.length);
     const booting = !hasGames && !timedOut;
     const showIntro = intro || booting;
-    return /* @__PURE__ */ React.createElement("div", { className: "page-stage pb-20 sm:pb-8 pt-2" }, intro && /* @__PURE__ */ React.createElement(NetSpin, { center: true }), !intro && booting && /* @__PURE__ */ React.createElement(NetSpin, { full: true }), /* @__PURE__ */ React.createElement(LoadTimeout, { show: timedOut && !hasGames && !intro, onRetry: () => setReload((n) => n + 1) }), !showIntro && React.createElement(PhotoBanner, { photoId: "games_photo1", imageSrc: "./assets/textures/photos/games_photo1.png" }), !showIntro && GAME_SECTIONS.map((sec, i) => {
+    return /* @__PURE__ */ React.createElement("div", { className: "page-stage pb-20 sm:pb-8 pt-2" }, intro && /* @__PURE__ */ React.createElement(NetSpin, { center: true }), !intro && booting && /* @__PURE__ */ React.createElement(NetSpin, { full: true }), /* @__PURE__ */ React.createElement(LoadTimeout, { show: timedOut && !hasGames && !intro, onRetry: () => setReload((n) => n + 1) }), !showIntro && React.createElement(PhotoBanner, { photoId: "games_photo1", imageSrc: "./assets/textures/photos/games_photo1.png", open }), !showIntro && GAME_SECTIONS.map((sec, i) => {
       if (i >= ready && i >= ready + 2) return null;
       const list = rows[i] || [];
       const waiting = i >= ready;
       const mid = i === 6;
       return React.createElement(React.Fragment, { key: sec.k },
         React.createElement(HScroll, { title: t(sec.k), rtl: true, pad: "px-5 g-shot-row" }, waiting || !list.length ? Array(3).fill(0).map((_, j) => React.createElement("div", { key: j, className: "shrink-0 bg-muted animate-pulse", style: { width: "min(88vw,420px)", aspectRatio: "16/9", borderRadius: 16 } })) : list.filter(isGameApp).map((a) => React.createElement(GameShotCard, { key: a.trackId + "-" + sec.k, app: a, onClick: open }))),
-        mid && React.createElement(PhotoBanner, { photoId: "games_photo2", imageSrc: "./assets/textures/photos/games_photo2.png" })
+        mid && React.createElement(PhotoBanner, { photoId: "games_photo2", imageSrc: "./assets/textures/photos/games_photo2.png", open })
       );
-    }), !showIntro && React.createElement(PhotoBanner, { photoId: "games_photo3", imageSrc: "./assets/textures/photos/games_photo3.png" }));
+    }), !showIntro && React.createElement(PhotoBanner, { photoId: "games_photo3", imageSrc: "./assets/textures/photos/games_photo3.png", open }));
   };
   const PLAY_GAME_CATS = [
     { ar: "\u0627\u0644\u062D\u0631\u0643\u0629", en: "Action", term: "action games", icon: "heli", color: "#E53935" },
