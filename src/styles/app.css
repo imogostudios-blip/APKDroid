@@ -1487,11 +1487,17 @@ html:not(.style2) .bg-screenshots {
   scroll-padding-inline: 16px;
 }
 .app-snap-item {
-  flex: 0 0 calc((100% - 24px) / 3);
+  flex: 0 0 auto;
+  width: 128px;
+  max-width: none;
+  min-width: 0;
+  margin-inline: -6px;
+  padding: 6px 6px 8px;
+  position: relative;
+  isolation: isolate;
   scroll-snap-align: start;
+  scroll-margin-inline-start: -6px;
   scroll-snap-stop: always;
-  max-width: calc((100% - 24px) / 3);
-  min-width: 108px;
 }
 .popular-scroller::-webkit-scrollbar { display: none; }
 .popular-scroller { -ms-overflow-style: none; }
@@ -1504,4 +1510,16 @@ html:not(.style2) .bg-screenshots {
     linear-gradient(to bottom, rgba(255,255,255,0) 38%, rgba(255,255,255,.14) 50%, rgba(255,255,255,0) 62%)}
 .pb-ico{background:#8e8e8e}
 /* app rows: grey rounded square shows while the icon is loading (same as the stacked rows) */
-.app-snap-item > img{display:block;width:108px;height:108px;object-fit:cover;background:hsl(var(--muted))}
+.app-snap-item > img{display:block;width:116px;height:116px;object-fit:cover;background:hsl(var(--muted))}
+
+/* press / hover layer: flat grey rectangle behind the whole app (icon + texts), fades in fast */
+.app-snap-item::before,.stack-row::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:color-mix(in srgb, currentColor 11%, transparent);opacity:0;transition:opacity .12s ease-out}
+.app-snap-item::before{border-radius:0}
+.stack-row{position:relative;isolation:isolate;width:calc(100% + 16px);margin-inline:-8px;padding:8px 10px}
+.stack-row::before{border-radius:4px}
+.app-snap-item:active::before,.stack-row:active::before,.app-snap-item:focus-visible::before,.stack-row:focus-visible::before{opacity:1}
+@media (hover:hover){.app-snap-item:hover::before,.stack-row:hover::before{opacity:1}}
+.app-snap-item,.stack-row{-webkit-tap-highlight-color:transparent;outline:none}
+.rate-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;background:color-mix(in srgb, currentColor 12%, transparent)}
+.rate-pill-star{color:#a8c7fa;font-size:10px}
