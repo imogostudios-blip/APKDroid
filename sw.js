@@ -1,4 +1,4 @@
-const CACHE = 'apkdroid-v81';
+const CACHE = 'apkdroid-v75';
 const APP_SHELL = [
   './',
   './index.html',
@@ -44,7 +44,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
-  if (req.url.indexOf('/assets/textures/photos') !== -1) {
+  if ((req.url.indexOf('/assets/textures/photos') !== -1 || req.url.indexOf('/assets/textures/t-icons') !== -1)) {
     event.respondWith((async () => {
       try {
         const res = await fetch(req, { cache: 'no-cache' });
