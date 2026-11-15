@@ -1594,3 +1594,15 @@ html:not(.style2) .bg-screenshots {
 .music-row-sub{font-size:.75rem;color:hsl(var(--muted-fg));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
 .music-row-del{flex:none;width:34px;height:34px;border:none;border-radius:50%;background:transparent;color:hsl(var(--muted-fg));font-size:.95rem;cursor:pointer}
 .music-row-del:active{background:hsl(var(--muted))}
+
+/* disc icon in players */
+.mp-disc-icon{display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 40% 35%,#2e2e33,#141416)}
+.mp-disc-icon svg{display:block}
+.mini-disc{width:40px;height:40px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 40% 35%,#2e2e33,#141416);border:2px solid #2a2a2e}
+.mini-disc.spin{animation:mp-spin 8s linear infinite}
+/* local videos + save button */
+.lv-del{position:absolute;top:6px;inset-inline-end:6px;width:28px;height:28px;border:none;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:.8rem;cursor:pointer;z-index:2}
+.movie-save-btn{border:none;border-radius:999px;padding:8px 16px;background:hsl(var(--muted));color:hsl(var(--fg));font-weight:700;font-size:.85rem;font-family:inherit;cursor:pointer}
+.movie-save-btn.on{background:hsl(var(--primary));color:hsl(var(--primary-fg))}
+.media-tab-sm{font-size:.76rem;padding:0 6px}
+.lib-wrap .movies-search-bar{margin-top:0}
