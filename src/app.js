@@ -1119,7 +1119,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       { k: "nav_games", p: "/games", i: "game" }
     ];
     return /* @__PURE__ */ React.createElement("nav", { className: "app-footer bot-nav w-full bg-[hsl(var(--card))] border-t border-[hsl(var(--border))] pb-safe sm:hidden" }, /* @__PURE__ */ React.createElement("div", { className: "flex justify-around items-center h-16 px-2" }, items.map((it) => {
-      const a = it.root ? route === "/" : route.startsWith(it.p);
+      const a = it.root ? route === "/" : route.startsWith(it.p) || it.p === "/movies" && route === "/songs";
       return /* @__PURE__ */ React.createElement(
         "button",
         {
@@ -1555,15 +1555,74 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
   };
   const PB_ICON = 108, PB_GAP = 12, PB_PEEK = 0.25, PB_TITLE_H = 62, PB_LABEL_H = 54;
   const pbRatingAr = (r) => { try { return Number(r).toLocaleString("ar-EG", { minimumFractionDigits: 1, maximumFractionDigits: 1 }); } catch (e) { return Number(r).toFixed(1); } };
-  const PhotoBanner = ({ photoId, imageSrc, open }) => {
-    const [info, setInfo] = useState(() => photoDataCache ? (photoDataCache[photoId] || DEFAULT_PHOTO_DATA[photoId] || null) : null);
-    const [loaded, setLoaded] = useState(() => !!photoDataCache);
-    const [apps, setApps] = useState([]);
+  // Reusable banner: picture + title on top + horizontally scrolling apps strip (first app near the left, a quarter of the next on the edge,
+  // empty space on the right holding a picture that shrinks and fades while the apps are dragged over it).
+  const BannerView = ({ imageSrc, name, readme, url, arrow, apps, appsOff, open, tIconSrc, round, ratio, titleH, scrim }) => {
     const [w, setW] = useState(0);
     const rootRef = useRef(null);
     const shadeRef = useRef(null);
     const tIconRef = useRef(null);
     const [tIconOk, setTIconOk] = useState(true);
+    useEffect(() => {
+      const el = rootRef.current;
+      if (!el) return;
+      const measure = () => setW(el.clientWidth);
+      measure();
+      let ro = null;
+      if (window.ResizeObserver) { ro = new ResizeObserver(measure); ro.observe(el); }
+      window.addEventListener("resize", measure);
+      return () => { if (ro) ro.disconnect(); window.removeEventListener("resize", measure); };
+    }, []);
+    const TH = titleH != null ? titleH : PB_TITLE_H;
+    const onView = (e) => {
+      e.stopPropagation();
+      if (url) window.open(url, "_blank", "noopener");
+    };
+    const S = PB_ICON;
+    const width = w || 360;
+    const startPad = Math.max(0, Math.round(width - S - PB_GAP - S * PB_PEEK));
+    const showApps = apps && apps.length > 0;
+    const needH = S + PB_LABEL_H + TH + 10;
+    const onAppsScroll = (e) => {
+      const sl = Math.abs(e.currentTarget.scrollLeft);
+      const p = Math.max(0, Math.min(1, sl / (S * 0.7)));
+      if (shadeRef.current) shadeRef.current.style.opacity = String(p);
+      const q = Math.max(0, Math.min(1, sl / (S * 1.2)));
+      if (tIconRef.current) {
+        tIconRef.current.style.opacity = String(1 - q);
+        tIconRef.current.style.transform = "scale(" + (1 - 0.65 * q).toFixed(3) + ")";
+      }
+    };
+    return React.createElement("div", { ref: rootRef, className: "photo-banner", style: { position: "relative", width: "100%", margin: "0", overflow: "hidden", aspectRatio: ratio || undefined, background: "#111" } },
+      React.createElement("img", { src: imageSrc, alt: "", style: ratio ? { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block", borderRadius: 0 } : { width: "100%", height: "auto", minHeight: appsOff ? 0 : needH, display: "block", borderRadius: 0, objectFit: "cover" } }),
+      scrim && React.createElement("div", { "aria-hidden": "true", style: { position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none", background: "linear-gradient(to bottom, rgba(0,0,0,.6) 0%, rgba(0,0,0,.18) 40%, rgba(0,0,0,.4) 100%)" } }),
+      React.createElement("div", { ref: shadeRef, className: "pb-shade", "aria-hidden": "true" }),
+      arrow && React.createElement("div", { onClick: onView, style: { position: "absolute", top: 18, left: 18, cursor: "pointer", zIndex: 3 } }, ARROW_SVG),
+      React.createElement("div", { style: { position: "absolute", top: 14, right: 16, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, maxWidth: "70%", zIndex: 3 } },
+        name && React.createElement("div", { style: { color: "#fff", fontSize: 18, fontWeight: 600, textShadow: "0 1px 3px rgba(0,0,0,.6)", textAlign: "right" } }, name),
+        readme && React.createElement("div", { style: { color: "#c9cbe6", fontSize: 13, textShadow: "0 1px 3px rgba(0,0,0,.6)", textAlign: "right" } }, readme)
+      ),
+      showApps && tIconSrc && tIconOk && React.createElement("div", { className: "pb-ticon-wrap", style: { position: "absolute", left: 0, right: 0, top: TH, bottom: 0, zIndex: 2, display: "flex", alignItems: "center", pointerEvents: "none" } },
+        React.createElement("div", { style: { position: "absolute", right: Math.max(0, Math.round((startPad - S) / 2)) + "px", padding: "6px 0" } },
+          React.createElement("img", { ref: tIconRef, src: tIconSrc, alt: "", onError: () => setTIconOk(false), style: { width: S + "px", height: S + "px", objectFit: "cover", display: "block", borderRadius: round ? "50%" : 0, transformOrigin: "center center", willChange: "transform, opacity", boxShadow: round ? "0 2px 10px rgba(0,0,0,.45)" : "none" } }),
+          React.createElement("div", { style: { height: 53 } })
+        )
+      ),
+      showApps && React.createElement("div", { className: "pb-apps", style: { position: "absolute", left: 0, right: 0, top: TH, bottom: 0, zIndex: 3, display: "flex", alignItems: "center", pointerEvents: "none" } },
+        React.createElement("div", { className: "popular-scroller", onScroll: onAppsScroll, style: { direction: "rtl", display: "flex", flexDirection: "row", gap: PB_GAP + "px", overflowX: "auto", width: "100%", padding: "6px " + startPad + "px 6px 14px", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", pointerEvents: "auto" } },
+          apps.map((a) => React.createElement("button", { key: a.trackId, type: "button", "data-app-id": a.trackId, onClick: (e) => { e.stopPropagation(); open && open(a); }, style: { flex: "0 0 " + S + "px", width: S + "px", background: "transparent", border: "none", padding: 0, textAlign: "right", direction: "rtl", color: "inherit", cursor: "pointer" } },
+            React.createElement("img", { src: a.artworkUrl512 || a.artworkUrl100 || a.artworkUrl60, alt: "", className: "app-ico-r pb-ico", style: { width: S + "px", height: S + "px", objectFit: "cover", display: "block" } }),
+            React.createElement("div", { style: { marginTop: 8, fontSize: 13, color: "#e3e4f2", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: S + "px", textAlign: "right", direction: "auto", textShadow: scrim ? "0 1px 3px rgba(0,0,0,.8)" : "none" } }, a.trackName),
+            a.averageUserRating ? React.createElement("div", { style: { marginTop: 6, display: "flex", justifyContent: "flex-start", direction: "rtl" } }, React.createElement("span", { style: { background: "rgba(24,24,30,.92)", color: "#dcdcea", fontSize: 12, padding: "3px 9px", borderRadius: 999, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 } }, React.createElement("span", { style: { color: "#a8c7fa" } }, "★"), pbRatingAr(a.averageUserRating))) : null
+          ))
+        )
+      )
+    );
+  };
+  const PhotoBanner = ({ photoId, imageSrc, open }) => {
+    const [info, setInfo] = useState(() => photoDataCache ? (photoDataCache[photoId] || DEFAULT_PHOTO_DATA[photoId] || null) : null);
+    const [loaded, setLoaded] = useState(() => !!photoDataCache);
+    const [apps, setApps] = useState([]);
     useEffect(() => {
       let cancel = false;
       loadPhotoData().then((d) => { if (!cancel) { setInfo(d[photoId] || DEFAULT_PHOTO_DATA[photoId] || null); setLoaded(true); } });
@@ -1578,62 +1637,25 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       loadBannerApps(appsKey).then((r) => { if (!cancel) setApps(r || []); }).catch(() => {});
       return () => { cancel = true; };
     }, [loaded, play, appsOff, appsKey]);
-    useEffect(() => {
-      const el = rootRef.current;
-      if (!el) return;
-      const measure = () => setW(el.clientWidth);
-      measure();
-      let ro = null;
-      if (window.ResizeObserver) { ro = new ResizeObserver(measure); ro.observe(el); }
-      window.addEventListener("resize", measure);
-      return () => { if (ro) ro.disconnect(); window.removeEventListener("resize", measure); };
-    }, [loaded, play]);
     if (!imageSrc || !loaded || !play) return null;
-    const onView = (e) => {
-      e.stopPropagation();
-      const url = info && info.url;
-      if (url) window.open(url, "_blank", "noopener");
-    };
-    const S = PB_ICON;
-    const width = w || 360;
-    // first app sits near the left, a quarter of the next one peeks at the left screen edge, the rest of the row is empty
-    const startPad = Math.max(0, Math.round(width - S - PB_GAP - S * PB_PEEK));
-    const showApps = apps.length > 0;
-    const needH = S + PB_LABEL_H + PB_TITLE_H + 10;
-    const onAppsScroll = (e) => {
-      const sl = Math.abs(e.currentTarget.scrollLeft);
-      const p = Math.max(0, Math.min(1, sl / (S * 0.7)));
-      if (shadeRef.current) shadeRef.current.style.opacity = String(p);
-      // 1:1 picture behind the apps: shrinks and fades while the apps are dragged over it
-      const q = Math.max(0, Math.min(1, sl / (S * 1.2)));
-      if (tIconRef.current) {
-        tIconRef.current.style.opacity = String(1 - q);
-        tIconRef.current.style.transform = "scale(" + (1 - 0.65 * q).toFixed(3) + ")";
-      }
-    };
-    return React.createElement("div", { ref: rootRef, className: "photo-banner", style: { position: "relative", width: "100%", margin: "0", overflow: "hidden" } },
-      React.createElement("img", { src: imageSrc, alt: "", style: { width: "100%", height: "auto", minHeight: appsOff ? 0 : needH, display: "block", borderRadius: 0, objectFit: "cover" } }),
-      React.createElement("div", { ref: shadeRef, className: "pb-shade", "aria-hidden": "true" }),
-      React.createElement("div", { onClick: onView, style: { position: "absolute", top: 18, left: 18, cursor: "pointer", zIndex: 3 } }, ARROW_SVG),
-      React.createElement("div", { style: { position: "absolute", top: 16, right: 16, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, maxWidth: "70%", zIndex: 3 } },
-        info && info.name && React.createElement("div", { style: { color: "#fff", fontSize: 18, fontWeight: 600, textShadow: "0 1px 3px rgba(0,0,0,.6)", textAlign: "right" } }, info.name),
-        info && info.readme && React.createElement("div", { style: { color: "#c9cbe6", fontSize: 13, textShadow: "0 1px 3px rgba(0,0,0,.6)", textAlign: "right" } }, info.readme)
-      ),
-      showApps && tIconOk && React.createElement("div", { className: "pb-ticon-wrap", style: { position: "absolute", left: 0, right: 0, top: PB_TITLE_H, bottom: 0, zIndex: 1, display: "flex", alignItems: "center", pointerEvents: "none" } },
-        React.createElement("div", { style: { position: "absolute", right: Math.max(0, Math.round((startPad - S) / 2)) + "px", padding: "6px 0" } },
-          React.createElement("img", { ref: tIconRef, src: "./assets/textures/t-icons/" + photoId + ".png", alt: "", onError: () => setTIconOk(false), style: { width: S + "px", height: S + "px", objectFit: "cover", display: "block", borderRadius: 0, transformOrigin: "center center", willChange: "transform, opacity" } }),
-          React.createElement("div", { style: { height: 53 } })
-        )
-      ),
-      showApps && React.createElement("div", { className: "pb-apps", style: { position: "absolute", left: 0, right: 0, top: PB_TITLE_H, bottom: 0, zIndex: 2, display: "flex", alignItems: "center", pointerEvents: "none" } },
-        React.createElement("div", { className: "popular-scroller", onScroll: onAppsScroll, style: { direction: "rtl", display: "flex", flexDirection: "row", gap: PB_GAP + "px", overflowX: "auto", width: "100%", padding: "6px " + startPad + "px 6px 14px", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", pointerEvents: "auto" } },
-          apps.map((a) => React.createElement("button", { key: a.trackId, type: "button", "data-app-id": a.trackId, onClick: (e) => { e.stopPropagation(); open && open(a); }, style: { flex: "0 0 " + S + "px", width: S + "px", background: "transparent", border: "none", padding: 0, textAlign: "right", direction: "rtl", color: "inherit", cursor: "pointer" } },
-            React.createElement("img", { src: a.artworkUrl512 || a.artworkUrl100 || a.artworkUrl60, alt: "", className: "app-ico-r pb-ico", style: { width: S + "px", height: S + "px", objectFit: "cover", display: "block" } }),
-            React.createElement("div", { style: { marginTop: 8, fontSize: 13, color: "#e3e4f2", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: S + "px", textAlign: "right", direction: "auto" } }, a.trackName),
-            a.averageUserRating ? React.createElement("div", { style: { marginTop: 6, display: "flex", justifyContent: "flex-start", direction: "rtl" } }, React.createElement("span", { style: { background: "rgba(24,24,30,.92)", color: "#dcdcea", fontSize: 12, padding: "3px 9px", borderRadius: 999, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 } }, React.createElement("span", { style: { color: "#a8c7fa" } }, "★"), pbRatingAr(a.averageUserRating))) : null
-          ))
-        )
-      )
+    return React.createElement(BannerView, { imageSrc, name: info && info.name, readme: info && info.readme, url: info && info.url, arrow: true, apps: appsOff ? [] : apps, appsOff, open, tIconSrc: "./assets/textures/t-icons/" + photoId + ".png" });
+  };
+  // "From the same developer" banner at the bottom of the app details page (2nd screenshot, 16:9, edge to edge)
+  const fetchDevApps = (artistId) => fetchC(`https://itunes.apple.com/lookup?id=${encodeURIComponent(artistId)}&entity=software&limit=30&country=${country()}`).then((d) => (d && d.results || []).filter((x) => x && x.trackId && x.trackName));
+  const DevBanner = ({ app, nav }) => {
+    const [apps, setApps] = useState([]);
+    useEffect(() => {
+      let off = false;
+      setApps([]);
+      if (!app || !app.artistId) return;
+      fetchDevApps(app.artistId).then((l) => { if (!off) setApps(l.filter((x) => String(x.trackId) !== String(app.trackId) && hasArt(x)).slice(0, 14)); }).catch(() => {});
+      return () => { off = true; };
+    }, [app && app.trackId, app && app.artistId]);
+    const shots = app && app.screenshotUrls || [];
+    const img = shots[1] || shots[0] || (app && app.ipadScreenshotUrls && (app.ipadScreenshotUrls[1] || app.ipadScreenshotUrls[0])) || "";
+    if (!app || !img || !apps.length) return null;
+    return React.createElement("div", { style: { width: "100vw", marginInline: "calc(50% - 50vw)", marginTop: 24, marginBottom: 8 } },
+      React.createElement(BannerView, { imageSrc: img, name: _lang === "ar" ? "من نفس المطور" : "From the same developer", apps, open: (a) => nav("/app/" + a.trackId), tIconSrc: app.artworkUrl512 || app.artworkUrl100 || app.artworkUrl60, round: true, ratio: "16 / 9", titleH: 44, scrim: true })
     );
   };
 
@@ -3024,7 +3046,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       const st = Array.from({ length: 5 }, (_, i2) => i2 < rr ? "\u2605" : "\u2606").join("");
       const initial = (r.author || "A").trim().charAt(0).toUpperCase();
       return /* @__PURE__ */ React.createElement("div", { className: "bg-review-card", key: r.id || i }, /* @__PURE__ */ React.createElement("div", { className: "bg-review-head" }, /* @__PURE__ */ React.createElement("div", { className: "bg-review-avatar" }, initial), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "bg-review-user-name" }, r.author), r.updated && /* @__PURE__ */ React.createElement("div", { className: "bg-review-date" }, fmtDate(r.updated))), /* @__PURE__ */ React.createElement("div", { className: "bg-review-stars" }, st)), r.title && /* @__PURE__ */ React.createElement("div", { className: "bg-review-title" }, r.title), /* @__PURE__ */ React.createElement("div", { className: "bg-review-content" }, r.content));
-    })), reviews && reviews.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "bg-reviews-more-wrap" }, /* @__PURE__ */ React.createElement("button", { className: "rounded-full px-6 py-2 text-sm font-medium border border-[hsl(var(--border))] hover:bg-[hsl(var(--muted))]", disabled: revAllLd, onClick: () => revAll ? setRevAll(false) : loadAllReviews() }, revAllLd ? t("loading") : revAll ? t("hide_reviews") : t("show_more")))), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-section" }, /* @__PURE__ */ React.createElement("h3", null, t("info")), /* @__PURE__ */ React.createElement("div", { className: "bg-info-list" }, /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("version"), ":"), " ", app.version || "\u2014"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("last_update"), ":"), " ", fmtDate(app.currentVersionReleaseDate)), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("size"), ":"), " ", fmtSize(app.fileSizeBytes)), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("age_rating"), ":"), " ", app.contentAdvisoryRating || "\u2014"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("developer"), ":"), " ", app.sellerName || app.artistName), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("category"), ":"), " ", app.primaryGenreName || (app.genres || []).join(", "))))), sim.length > 0 && /* @__PURE__ */ React.createElement(HScroll, { title: t("you_might_like") }, sim.map((a) => /* @__PURE__ */ React.createElement(AppCard, { key: a.trackId, app: a, small: true, onClick: (x) => nav(`/app/${x.trackId}`) }))), /* @__PURE__ */ infoOpen && /* @__PURE__ */ React.createElement(AppInfoSheet, { app, onClose: () => setInfoOpen(false) }), lbIdx != null && shots[lbIdx] && /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox", onClick: closeLb, onTouchStart: onLbTouchStart, onTouchEnd: onLbTouchEnd }, /* @__PURE__ */ React.createElement("button", { className: "bg-lightbox-close", onClick: (e) => {
+    })), reviews && reviews.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "bg-reviews-more-wrap" }, /* @__PURE__ */ React.createElement("button", { className: "rounded-full px-6 py-2 text-sm font-medium border border-[hsl(var(--border))] hover:bg-[hsl(var(--muted))]", disabled: revAllLd, onClick: () => revAll ? setRevAll(false) : loadAllReviews() }, revAllLd ? t("loading") : revAll ? t("hide_reviews") : t("show_more")))), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-section" }, /* @__PURE__ */ React.createElement("h3", null, t("info")), /* @__PURE__ */ React.createElement("div", { className: "bg-info-list" }, /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("version"), ":"), " ", app.version || "\u2014"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("last_update"), ":"), " ", fmtDate(app.currentVersionReleaseDate)), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("size"), ":"), " ", fmtSize(app.fileSizeBytes)), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("age_rating"), ":"), " ", app.contentAdvisoryRating || "\u2014"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("developer"), ":"), " ", app.sellerName || app.artistName), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("category"), ":"), " ", app.primaryGenreName || (app.genres || []).join(", "))))), sim.length > 0 && /* @__PURE__ */ React.createElement(HScroll, { title: t("you_might_like") }, sim.map((a) => /* @__PURE__ */ React.createElement(AppCard, { key: a.trackId, app: a, small: true, onClick: (x) => nav(`/app/${x.trackId}`) }))), app && /* @__PURE__ */ React.createElement(DevBanner, { app, nav }), /* @__PURE__ */ infoOpen && /* @__PURE__ */ React.createElement(AppInfoSheet, { app, onClose: () => setInfoOpen(false) }), lbIdx != null && shots[lbIdx] && /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox", onClick: closeLb, onTouchStart: onLbTouchStart, onTouchEnd: onLbTouchEnd }, /* @__PURE__ */ React.createElement("button", { className: "bg-lightbox-close", onClick: (e) => {
       e.stopPropagation();
       closeLb();
     }, "aria-label": "Close" }, "\xD7"), shots.length > 1 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("button", { className: "bg-lightbox-nav prev", onClick: (e) => {
@@ -3994,6 +4016,115 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     return { ytId, videoUrl, thumb, cleanHtml };
   };
 
+  // ===== Local music (IndexedDB) + music page =====
+  const MUSIC_DB = "apk_music_db";
+  const musicOpen = () => new Promise((res, rej) => {
+    const r = indexedDB.open(MUSIC_DB, 1);
+    r.onupgradeneeded = () => { if (!r.result.objectStoreNames.contains("tracks")) r.result.createObjectStore("tracks", { keyPath: "id" }); };
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+  const musicTx = async (mode, fn) => {
+    const db = await musicOpen();
+    return new Promise((res, rej) => {
+      const tx = db.transaction("tracks", mode);
+      const out = fn(tx.objectStore("tracks"));
+      tx.oncomplete = () => { db.close(); res(out && out.result); };
+      tx.onerror = () => { db.close(); rej(tx.error); };
+      tx.onabort = () => { db.close(); rej(tx.error || new Error("aborted")); };
+    });
+  };
+  const musicAll = () => musicTx("readonly", (st) => st.getAll());
+  const musicPut = (rec) => musicTx("readwrite", (st) => st.put(rec));
+  const musicDel = (id) => musicTx("readwrite", (st) => st.delete(id));
+  const MediaTabs = ({ active, nav }) => React.createElement("div", { className: "media-tabs", dir: _lang === "ar" ? "rtl" : "ltr" },
+    React.createElement("button", { type: "button", className: "media-tab" + (active === "videos" ? " on" : ""), onClick: () => active !== "videos" && nav("/movies") }, _lang === "ar" ? "فيديوهات" : "Videos"),
+    React.createElement("button", { type: "button", className: "media-tab" + (active === "music" ? " on" : ""), onClick: () => active !== "music" && nav("/songs") }, _lang === "ar" ? "موسيقا" : "Music")
+  );
+  const MusicPage = ({ nav, play, photo, onOpenAccount }) => {
+    const ar = _lang === "ar";
+    const [q, setQ] = useState("");
+    const [songs, setSongs] = useState([]);
+    const [ld, setLd] = useState(true);
+    const [mine, setMine] = useState([]);
+    const [busy, setBusy] = useState(false);
+    const [msg, setMsg] = useState("");
+    const fileRef = useRef(null);
+    const urlsRef = useRef({});
+    const toSong = (r) => {
+      if (!urlsRef.current[r.id]) urlsRef.current[r.id] = URL.createObjectURL(r.blob);
+      return { trackId: "local-" + r.id, localId: r.id, trackName: r.name, artistName: r.artist || (ar ? "من جهازك" : "From your device"), artworkUrl100: "", artworkUrl60: "", previewUrl: urlsRef.current[r.id], duration: 0, local: true };
+    };
+    const loadMine = async () => {
+      try {
+        const all = await musicAll();
+        all.sort((a, b) => (b.added || 0) - (a.added || 0));
+        setMine(all.map(toSong));
+      } catch (e) { setMine([]); }
+    };
+    useEffect(() => { loadMine(); }, []);
+    useEffect(() => {
+      let off = false;
+      const term = q.trim();
+      const timer = setTimeout(() => {
+        setLd(true);
+        if (term) pushSearchHist(term, "music");
+        api.songs(term).then((l) => { if (!off) setSongs(l); }).catch(() => { if (!off) setSongs([]); }).finally(() => { if (!off) setLd(false); });
+      }, term ? 350 : 0);
+      return () => { off = true; clearTimeout(timer); };
+    }, [q]);
+    const onFiles = async (e) => {
+      const files = Array.from(e.target.files || []);
+      e.target.value = "";
+      if (!files.length) return;
+      setBusy(true);
+      setMsg("");
+      let ok = 0, bad = 0;
+      for (let i = 0; i < files.length; i++) {
+        const f = files[i];
+        if (!(f.type || "").startsWith("audio/") && !/\.(mp3|m4a|aac|wav|ogg|opus|flac|weba|webm)$/i.test(f.name)) { bad++; continue; }
+        const base = f.name.replace(/\.[^.]+$/, "");
+        const parts = base.split(" - ");
+        const rec = { id: Date.now() + "-" + i + "-" + Math.random().toString(36).slice(2, 7), name: (parts.length > 1 ? parts.slice(1).join(" - ") : base).trim() || base, artist: parts.length > 1 ? parts[0].trim() : "", type: f.type, size: f.size, added: Date.now() + i, blob: f };
+        try { await musicPut(rec); ok++; } catch (err) { bad++; }
+      }
+      await loadMine();
+      setBusy(false);
+      setMsg(bad ? (ar ? "تم حفظ " + ok + " وتعذر " + bad : "Saved " + ok + ", failed " + bad) : (ar ? "تم حفظ " + ok + " من الأغاني" : "Saved " + ok + " track(s)"));
+    };
+    const del = async (s) => {
+      try { await musicDel(s.localId); } catch (e) {}
+      if (urlsRef.current[s.localId]) { try { URL.revokeObjectURL(urlsRef.current[s.localId]); } catch (e) {} delete urlsRef.current[s.localId]; }
+      loadMine();
+    };
+    const term = q.trim().toLowerCase();
+    const mineShown = term ? mine.filter((s) => (s.trackName + " " + s.artistName).toLowerCase().includes(term)) : mine;
+    const Row = (s, list, canDel) => React.createElement("div", { key: s.trackId, className: "music-row" },
+      React.createElement("button", { type: "button", className: "music-row-main", onClick: () => play(s, list) },
+        s.artworkUrl100 ? React.createElement("img", { src: s.artworkUrl100, alt: "", className: "music-row-art" }) : React.createElement("span", { className: "music-row-art music-row-ph", style: { fontSize: 22 } }, "\u266A"),
+        React.createElement("span", { className: "music-row-txt" }, React.createElement("span", { className: "music-row-name" }, s.trackName), React.createElement("span", { className: "music-row-sub" }, s.artistName)),
+        s.previewUrl && React.createElement(Icon, { name: "play", className: "w-5 h-5 text-primary shrink-0" })
+      ),
+      canDel && React.createElement("button", { type: "button", className: "music-row-del", onClick: () => del(s), "aria-label": ar ? "حذف" : "Delete" }, "✕")
+    );
+    return React.createElement("div", { className: "movies-page music-page", dir: ar ? "rtl" : "ltr" },
+      React.createElement("div", { className: "movies-search-bar", style: { display: "flex", alignItems: "center", gap: "10px", direction: "ltr" } },
+        React.createElement("button", { type: "button", className: "movies-avatar", onClick: onOpenAccount, "aria-label": "الحساب" }, photo ? React.createElement("img", { src: photo, alt: "" }) : React.createElement("span", null, "GO")),
+        React.createElement("input", { type: "search", className: "movies-search-input", placeholder: t("search_songs"), value: q, onChange: (e) => setQ(e.target.value), style: { flex: 1 } })
+      ),
+      React.createElement(MediaTabs, { active: "music", nav }),
+      React.createElement("div", { className: "music-sec-head" },
+        React.createElement("h2", null, ar ? "موسيقاي" : "My music"),
+        React.createElement("button", { type: "button", className: "music-upload", disabled: busy, onClick: () => fileRef.current && fileRef.current.click() }, busy ? (ar ? "جاري الحفظ..." : "Saving...") : (ar ? "＋ رفع من الجهاز" : "+ Upload from device")),
+        React.createElement("input", { ref: fileRef, type: "file", accept: "audio/*", multiple: true, style: { display: "none" }, onChange: onFiles })
+      ),
+      msg && React.createElement("div", { className: "music-msg" }, msg),
+      mineShown.length === 0 ? React.createElement("p", { className: "music-empty" }, ar ? "لا توجد أغاني مرفوعة. ارفع ملفات صوتية من جهازك وستبقى محفوظة هنا." : "No uploaded music yet. Upload audio files from your device and they stay saved here.") : mineShown.map((s) => Row(s, mineShown, true)),
+      React.createElement("div", { className: "music-sec-head", style: { marginTop: 18 } }, React.createElement("h2", null, q.trim() ? t("results") : t("top_songs"))),
+      ld ? React.createElement("div", { style: { padding: "0 8px" } }, Array(5).fill(0).map((_, i) => React.createElement(Skel, { key: i, c: "h-14" }))) : songs.map((s) => Row(s, songs, false))
+    );
+  };
+
   const MoviesPage = ({ nav, searchQ, setSearchQ, photo, onOpenAccount }) => {
     const [movies, setMovies] = useState([]);
     const [q, setQ] = useState(searchQ || "");
@@ -4038,6 +4169,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
           style: { flex: 1 }
         })
       ),
+      React.createElement(MediaTabs, { active: "videos", nav }),
       loading ? React.createElement("div", { style: { padding: "20px", textAlign: "center" } }, "جاري التحميل...") :
       React.createElement("div", { className: "movies-grid" },
         filtered.map((m, idx) => {
@@ -4658,6 +4790,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       page = /* @__PURE__ */ React.createElement(Detail, { id: _id, nav, favs, toggle, selStore, expMode, setDetailApp, autoInstall: _qi, onToggleTheme: toggleTheme, isDark: isDarkNow, style2 });
     } else if (route === "/favorites") page = /* @__PURE__ */ React.createElement(Favs, { favs, songFavs, open, toggle, toggleSongFav, play: playFromList });
     else if (route === "/downloads") page = /* @__PURE__ */ React.createElement(DownloadsManager, { open });
+    else if (route === "/songs") page = /* @__PURE__ */ React.createElement(MusicPage, { nav, play: playFromList, photo: profile && profile.photo, onOpenAccount: () => setAccOpen(true) });
     else if (route === "/movies") page = /* @__PURE__ */ React.createElement(MoviesPage, { nav, photo: profile && profile.photo, onOpenAccount: () => setAccOpen(true) });
     else if (route.startsWith("/movie/")) {
       const mid = decodeURIComponent(route.slice("/movie/".length));
