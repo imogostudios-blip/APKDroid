@@ -1,4 +1,4 @@
-const CACHE = 'apkdroid-v72';
+const CACHE = 'apkdroid-v73';
 const APP_SHELL = [
   './',
   './index.html',
@@ -44,6 +44,19 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
+  if (req.url.indexOf('/assets/textures/photos') !== -1) {
+    event.respondWith((async () => {
+      try {
+        const res = await fetch(req, { cache: 'no-cache' });
+        if (res && res.status === 200) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); }
+        return res;
+      } catch (err) {
+        const c = await caches.match(req, { ignoreSearch: true });
+        return c || new Response('', { status: 504, statusText: 'Offline' });
+      }
+    })());
+    return;
+  }
   event.respondWith((async () => {
     const cached = await caches.match(req, { ignoreSearch: true });
     if (cached) return cached;
