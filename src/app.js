@@ -1553,12 +1553,13 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     p.then((r) => { if (!r || !r.length) delete photoAppsCache[k]; }, () => { delete photoAppsCache[k]; });
     return p;
   };
-  const PB_PAD = 14, PB_GAP = 12;
+  const PB_ICON = 108, PB_GAP = 12, PB_PEEK = 0.25, PB_TITLE_H = 62, PB_LABEL_H = 54;
+  const pbRatingAr = (r) => { try { return Number(r).toLocaleString("ar-EG", { minimumFractionDigits: 1, maximumFractionDigits: 1 }); } catch (e) { return Number(r).toFixed(1); } };
   const PhotoBanner = ({ photoId, imageSrc, open }) => {
     const [info, setInfo] = useState(() => photoDataCache ? (photoDataCache[photoId] || DEFAULT_PHOTO_DATA[photoId] || null) : null);
     const [loaded, setLoaded] = useState(() => !!photoDataCache);
     const [apps, setApps] = useState([]);
-    const [dim, setDim] = useState({ w: 0, h: 0 });
+    const [w, setW] = useState(0);
     const rootRef = useRef(null);
     const shadeRef = useRef(null);
     useEffect(() => {
@@ -1578,7 +1579,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     useEffect(() => {
       const el = rootRef.current;
       if (!el) return;
-      const measure = () => setDim((d) => (d.w === el.clientWidth && d.h === el.clientHeight ? d : { w: el.clientWidth, h: el.clientHeight }));
+      const measure = () => setW(el.clientWidth);
       measure();
       let ro = null;
       if (window.ResizeObserver) { ro = new ResizeObserver(measure); ro.observe(el); }
@@ -1591,27 +1592,30 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       const url = info && info.url;
       if (url) window.open(url, "_blank", "noopener");
     };
-    const w = dim.w || 360, h = dim.h || 200;
-    const slot = (w - PB_PAD - PB_GAP) / 1.25;
-    const S = Math.round(Math.max(48, Math.min(slot, h * 0.56 - 40)));
+    const S = PB_ICON;
+    const width = w || 360;
+    // first app sits near the left, a quarter of the next one peeks at the left screen edge, the rest of the row is empty
+    const startPad = Math.max(0, Math.round(width - S - PB_GAP - S * PB_PEEK));
+    const showApps = apps.length > 0;
+    const needH = S + PB_LABEL_H + PB_TITLE_H + 10;
     const onAppsScroll = (e) => {
-      const p = Math.max(0, Math.min(1, e.currentTarget.scrollLeft / (S * 0.7)));
+      const p = Math.max(0, Math.min(1, Math.abs(e.currentTarget.scrollLeft) / (S * 0.7)));
       if (shadeRef.current) shadeRef.current.style.opacity = String(p);
     };
     return React.createElement("div", { ref: rootRef, className: "photo-banner", style: { position: "relative", width: "100%", margin: "0", overflow: "hidden" } },
-      React.createElement("img", { src: imageSrc, alt: "", onLoad: () => { const el = rootRef.current; if (el) setDim({ w: el.clientWidth, h: el.clientHeight }); }, style: { width: "100%", height: "auto", display: "block", borderRadius: 0, objectFit: "cover" } }),
+      React.createElement("img", { src: imageSrc, alt: "", style: { width: "100%", height: "auto", minHeight: appsOff ? 0 : needH, display: "block", borderRadius: 0, objectFit: "cover" } }),
       React.createElement("div", { ref: shadeRef, className: "pb-shade", "aria-hidden": "true" }),
-      React.createElement("div", { onClick: onView, style: { position: "absolute", top: 10, left: 10, cursor: "pointer", zIndex: 3, background: "transparent", border: "none", padding: 0 } }, ARROW_SVG),
-      React.createElement("div", { style: { position: "absolute", top: 10, right: 12, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, maxWidth: "70%", zIndex: 3 } },
-        info && info.name && React.createElement("div", { style: { color: "#fff", fontSize: 15, fontWeight: 700, textShadow: "0 1px 3px rgba(0,0,0,.85)", textAlign: "right" } }, info.name),
-        info && info.readme && React.createElement("div", { style: { color: "#ccc", fontSize: 12, textShadow: "0 1px 3px rgba(0,0,0,.85)", textAlign: "right" } }, info.readme)
+      React.createElement("div", { onClick: onView, style: { position: "absolute", top: 18, left: 18, cursor: "pointer", zIndex: 3 } }, ARROW_SVG),
+      React.createElement("div", { style: { position: "absolute", top: 16, right: 16, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, maxWidth: "70%", zIndex: 3 } },
+        info && info.name && React.createElement("div", { style: { color: "#fff", fontSize: 18, fontWeight: 600, textShadow: "0 1px 3px rgba(0,0,0,.6)", textAlign: "right" } }, info.name),
+        info && info.readme && React.createElement("div", { style: { color: "#c9cbe6", fontSize: 13, textShadow: "0 1px 3px rgba(0,0,0,.6)", textAlign: "right" } }, info.readme)
       ),
-      apps.length > 0 && React.createElement("div", { className: "pb-apps", style: { position: "absolute", left: 0, right: 0, top: 0, bottom: 0, zIndex: 2, display: "flex", alignItems: "center", pointerEvents: "none" } },
-        React.createElement("div", { className: "popular-scroller", onScroll: onAppsScroll, style: { direction: "ltr", display: "flex", gap: PB_GAP + "px", overflowX: "auto", width: "100%", padding: "6px " + PB_PAD + "px", scrollPaddingLeft: PB_PAD + "px", scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", pointerEvents: "auto" } },
-          apps.map((a) => React.createElement("button", { key: a.trackId, type: "button", onClick: (e) => { e.stopPropagation(); open && open(a); }, style: { flex: "0 0 " + S + "px", width: S + "px", scrollSnapAlign: "start", background: "transparent", border: "none", padding: 0, textAlign: "left", direction: "ltr", color: "inherit", cursor: "pointer" } },
+      showApps && React.createElement("div", { className: "pb-apps", style: { position: "absolute", left: 0, right: 0, top: PB_TITLE_H, bottom: 0, zIndex: 2, display: "flex", alignItems: "center", pointerEvents: "none" } },
+        React.createElement("div", { className: "popular-scroller", onScroll: onAppsScroll, style: { direction: "rtl", display: "flex", flexDirection: "row", gap: PB_GAP + "px", overflowX: "auto", width: "100%", padding: "6px " + startPad + "px 6px 14px", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", pointerEvents: "auto" } },
+          apps.map((a) => React.createElement("button", { key: a.trackId, type: "button", onClick: (e) => { e.stopPropagation(); open && open(a); }, style: { flex: "0 0 " + S + "px", width: S + "px", background: "transparent", border: "none", padding: 0, textAlign: "right", direction: "rtl", color: "inherit", cursor: "pointer" } },
             React.createElement("img", { src: a.artworkUrl512 || a.artworkUrl100 || a.artworkUrl60, alt: "", className: "app-ico-r pb-ico", style: { width: S + "px", height: S + "px", objectFit: "cover", display: "block" } }),
-            React.createElement("div", { style: { marginTop: 6, fontSize: 13, fontWeight: 600, color: "#fff", textShadow: "0 1px 3px rgba(0,0,0,.9)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: S + "px" } }, a.trackName),
-            a.averageUserRating ? React.createElement("div", { style: { marginTop: 3, display: "inline-block", background: "rgba(30,30,34,.9)", color: "#ddd", fontSize: 11, padding: "2px 8px", borderRadius: 999, fontWeight: 600 } }, "★ " + Number(a.averageUserRating).toFixed(1)) : null
+            React.createElement("div", { style: { marginTop: 8, fontSize: 13, color: "#e3e4f2", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: S + "px", textAlign: "right", direction: "auto" } }, a.trackName),
+            a.averageUserRating ? React.createElement("div", { style: { marginTop: 6, display: "flex", justifyContent: "flex-start", direction: "rtl" } }, React.createElement("span", { style: { background: "rgba(24,24,30,.92)", color: "#dcdcea", fontSize: 12, padding: "3px 9px", borderRadius: 999, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 } }, React.createElement("span", { style: { color: "#a8c7fa" } }, "★"), pbRatingAr(a.averageUserRating))) : null
           ))
         )
       )
