@@ -1622,3 +1622,77 @@ html:not(.style2) .bg-screenshots {
 .kw-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .kw-chip{padding:6px 14px;border-radius:999px;border:1px solid hsl(var(--border));background:transparent;color:inherit;font-family:inherit;font-size:.85rem;cursor:pointer}
 .kw-chip:active{background:hsl(var(--muted))}
+
+/* ===== Landscape side navigation (computer layout) ===== */
+@media (orientation: landscape) {
+  .app-shell {
+    flex-direction: row;
+  }
+  .app-main {
+    margin-right: 64px;
+    padding-right: 0;
+  }
+  .bot-nav.side-nav {
+    border-top: none !important;
+    border-left: 1px solid hsl(var(--border));
+    border-radius: 0;
+  }
+  .bot-nav.side-nav.open {
+    border-radius: 24px 0 0 24px;
+    box-shadow: -4px 0 24px rgba(0,0,0,.15);
+  }
+  .side-nav-item {
+    transition: background .15s;
+  }
+  .side-nav-item.active {
+    border-radius: 0 20px 20px 0;
+  }
+}
+
+/* Full screen screenshot gallery */
+.bg-lightbox-scroller {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.bg-lightbox-scroller::-webkit-scrollbar { display: none; }
+.bg-lightbox-slide {
+  flex: 0 0 100%;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
+  background: #000;
+}
+.bg-lightbox-img-full {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 0 !important;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Confirm button adaptive and thinner, 30% rounded */
+.bg-btn-confirm {
+  background: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-fg)) !important;
+  min-height: 40px !important;
+  padding: 8px 20px !important;
+  border-radius: 30% !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,.1) !important;
+}
+html.style2 .bg-btn-confirm {
+  background: #0B57D0 !important;
+  color: #fff !important;
+}
+html.style2.dark .bg-btn-confirm {
+  background: #A8C7FA !important;
+  color: #062e6f !important;
+}
