@@ -1142,13 +1142,13 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     if (isLandscape) {
       return React.createElement("nav", {
         className: `app-footer bot-nav side-nav ${menuOpen ? "open" : ""}`,
-        style: { position: "fixed", right: 0, top: 0, height: "100%", zIndex: 50, transition: "width 0.3s ease", width: menuOpen ? "75%" : "64px", background: "hsl(var(--card))", borderLeft: "1px solid hsl(var(--border))", display: "flex", flexDirection: "column", alignItems: "stretch" }
+        style: { position: "fixed", right: 0, top: 0, height: "100%", zIndex: 50, transition: "width 0.3s ease", width: menuOpen ? "50%" : "64px", background: "hsl(var(--card))", borderLeft: "1px solid hsl(var(--border))", display: "flex", flexDirection: "column", alignItems: "stretch", overflowY: "auto", overflowX: "hidden" }
       },
         React.createElement("button", {
           type: "button",
           className: "side-menu-btn",
           onClick: () => setMenuOpen(o => !o),
-          style: { height: "64px", display: "flex", alignItems: "center", justifyContent: "flex-start", paddingLeft: "12px", background: "none", border: "none", color: "inherit", cursor: "pointer" }
+          style: { height: "64px", minHeight: "64px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "flex-start", paddingLeft: "12px", background: "none", border: "none", color: "inherit", cursor: "pointer" }
         }, React.createElement("svg", { viewBox: "0 0 24 24", width: "24", height: "24", fill: "currentColor" }, React.createElement("path", { d: "M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" }))),
         items.map((it) => {
           const a = it.root ? route === "/" : route.startsWith(it.p) || it.p === "/movies" && route === "/songs";
@@ -1156,7 +1156,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
             key: it.k,
             onClick: () => { nav(it.p); if (menuOpen) setMenuOpen(false); },
             className: `side-nav-item ${a ? "active" : ""}`,
-            style: { display: "flex", alignItems: "center", height: "56px", padding: "0 12px", background: a ? "hsl(var(--primary) / 0.1)" : "transparent", border: "none", color: a ? "hsl(var(--primary))" : "hsl(var(--muted-fg))", cursor: "pointer", width: "100%", justifyContent: "flex-start", gap: "12px" }
+            style: { display: "flex", alignItems: "center", height: "56px", minHeight: "56px", flexShrink: 0, padding: "0 12px", background: a ? "hsl(var(--primary) / 0.1)" : "transparent", border: "none", color: a ? "hsl(var(--primary))" : "hsl(var(--muted-fg))", cursor: "pointer", width: "100%", justifyContent: "flex-start", gap: "12px" }
           },
             React.createElement("div", { style: { width: "40px", display: "flex", justifyContent: "center" } }, React.createElement(NavIcon, { kind: it.i, on: !!a, className: "w-6 h-6" })),
             menuOpen && React.createElement("span", { className: "side-nav-label", style: { fontSize: "15px", fontWeight: 600, whiteSpace: "nowrap" } }, t(it.k))
@@ -2580,6 +2580,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const toastT = useRef(null);
     const touchX = useRef(null);
     const fileInputRef = useRef(null);
+    const lbScroller = useRef(null);
     const dlCancelRef = useRef(false);
     const dlTimerRef = useRef(null);
     const shouldLaunchRef = useRef(false);
@@ -2890,6 +2891,16 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const closeLb = () => setLbIdx(null);
     const lbPrev = () => setLbIdx((i) => i == null ? null : i <= 0 ? shots.length - 1 : i - 1);
     const lbNext = () => setLbIdx((i) => i == null ? null : i >= shots.length - 1 ? 0 : i + 1);
+    useEffect(() => {
+      if (lbIdx == null || !lbScroller.current) return;
+      const el = lbScroller.current;
+      const go = () => {
+        el.scrollLeft = lbIdx * el.clientWidth;
+      };
+      go();
+      const t = setTimeout(go, 50);
+      return () => clearTimeout(t);
+    }, [lbIdx]);
     const onLbTouchStart = (e) => {
       touchX.current = e.touches[0].clientX;
     };
@@ -3125,7 +3136,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     })), reviews && reviews.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "bg-reviews-more-wrap" }, /* @__PURE__ */ React.createElement("button", { className: "rounded-full px-6 py-2 text-sm font-medium border border-[hsl(var(--border))] hover:bg-[hsl(var(--muted))]", disabled: revAllLd, onClick: () => revAll ? setRevAll(false) : loadAllReviews() }, revAllLd ? t("loading") : revAll ? t("hide_reviews") : t("show_more")))), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-section" }, /* @__PURE__ */ React.createElement("h3", null, _lang === "ar" ? "\u0643\u0644\u0645\u0627\u062A \u0628\u062D\u062B \u0645\u0641\u062A\u0627\u062D\u064A\u0629" : "Search keywords"), /* @__PURE__ */ React.createElement("div", { className: "kw-wrap" }, (_lang === "ar" ? DETAIL_KEYWORDS : DETAIL_KEYWORDS_EN).map((w) => /* @__PURE__ */ React.createElement("button", { key: w, type: "button", className: "kw-chip", onClick: () => nav("/search?q=" + encodeURIComponent(w)) }, w)))), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-section" }, /* @__PURE__ */ React.createElement("h3", null, t("info")), /* @__PURE__ */ React.createElement("div", { className: "bg-info-list" }, /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("version"), ":"), " ", app.version || "\u2014"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("last_update"), ":"), " ", fmtDate(app.currentVersionReleaseDate)), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("size"), ":"), " ", fmtSize(app.fileSizeBytes)), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("age_rating"), ":"), " ", app.contentAdvisoryRating || "\u2014"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("developer"), ":"), " ", app.sellerName || app.artistName), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("category"), ":"), " ", app.primaryGenreName || (app.genres || []).join(", "))))), stackApps.length > 0 && /* @__PURE__ */ React.createElement("div", { style: { marginTop: 18 } }, /* @__PURE__ */ React.createElement(StackedAppsPager, { frames: [0, 3, 6, 9, 12].map((i) => stackApps.slice(i, i + 3)).filter((g) => g.length), open: (x) => nav(`/app/${x.trackId}`), title: _lang === "ar" ? "\u062A\u0637\u0628\u064A\u0642\u0627\u062A \u0645\u0634\u0627\u0628\u0647\u0629" : "Similar apps" })), sim.length > 0 && /* @__PURE__ */ React.createElement(HScroll, { title: t("you_might_like") }, sim.map((a) => /* @__PURE__ */ React.createElement(AppCard, { key: a.trackId, app: a, small: true, onClick: (x) => nav(`/app/${x.trackId}`) }))), app && /* @__PURE__ */ React.createElement(DevBanner, { app, nav }), /* @__PURE__ */ infoOpen && /* @__PURE__ */ React.createElement(AppInfoSheet, { app, onClose: () => setInfoOpen(false) }), srcOpen && /* @__PURE__ */ React.createElement(SourceSheet, { selStore, onPick: (sid) => { const n = normalizeStore(sid); if (setSelStore) setSelStore(n); setS("apk_store", n); }, onClose: () => setSrcOpen(false) }), lbIdx != null && shots.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox", onClick: closeLb }, /* @__PURE__ */ React.createElement("button", { className: "bg-lightbox-close", onClick: (e) => {
       e.stopPropagation();
       closeLb();
-    }, "aria-label": "Close" }, "\xD7"), /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox-scroller", ref: (el) => { if (el && lbIdx != null) { el.scrollLeft = lbIdx * el.clientWidth; } }, onClick: (e) => e.stopPropagation() }, shots.map((s, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "bg-lightbox-slide" }, /* @__PURE__ */ React.createElement("img", { className: "bg-lightbox-img-full", src: s, alt: "", draggable: false })))), /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox-counter" }, (lbIdx != null ? lbIdx + 1 : 1), " / ", shots.length)), toastMsg && /* @__PURE__ */ React.createElement("div", { className: "bg-toast show" }, toastMsg));
+    }, "aria-label": "Close" }, "\xD7"), /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox-scroller", ref: lbScroller, onClick: (e) => e.stopPropagation() }, shots.map((s, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "bg-lightbox-slide" }, /* @__PURE__ */ React.createElement("img", { className: "bg-lightbox-img-full", src: s, alt: "", draggable: false })))), /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox-counter" }, (lbIdx != null ? lbIdx + 1 : 1), " / ", shots.length)), toastMsg && /* @__PURE__ */ React.createElement("div", { className: "bg-toast show" }, toastMsg));
   };
   const DownloadsManager = ({ open }) => {
     const [tab, setTab] = useState("active");
