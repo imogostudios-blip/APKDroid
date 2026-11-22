@@ -1010,11 +1010,70 @@
     const icon = icons[k] || icons.chip_all;
     return React.createElement("svg", { viewBox: icon.view, width: "20", height: "20", fill: "#A8C7FA", "aria-hidden": "true" }, icon.d.map((d, i) => React.createElement("path", { d, key: i })));
   };
+const DownloadBtn = ({ nav }) => {
+  const [state, setState] = useState("idle"); // idle | installing | done
+  useEffect(() => {
+    const check = () => {
+      try {
+        const all = listAllDownloads();
+        const active = all.some((r) => {
+          const p = computeDlProgress(r);
+          return p.active && p.phase !== "done";
+        });
+        const done = all.some((r) => {
+          const p = computeDlProgress(r);
+          return p.phase === "done";
+        });
+        if (active) setState("installing");
+        else if (done) setState("done");
+        else setState("idle");
+      } catch (e) { setState("idle"); }
+    };
+    check();
+    const t = setInterval(check, 800);
+    return () => clearInterval(t);
+  }, []);
+  const icon = state === "installing" ? (
+    React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24" },
+      React.createElement("defs", null,
+        React.createElement("mask", { id: "dlmask", maskUnits: "userSpaceOnUse", x: "0", y: "0", width: "24", height: "24" },
+          React.createElement("circle", { cx: "12", cy: "12", r: "11", fill: "#fff" }),
+          React.createElement("g", null,
+            React.createElement("animateTransform", { attributeName: "transform", type: "translate", dur: "2.4s", repeatCount: "indefinite", calcMode: "spline", keyTimes: "0;0.3;0.55;0.551;0.85;1", values: "0 0;0 0;0 10;0 -10;0 0;0 0", keySplines: "0 0 1 1;.4 0 1 1;0 0 1 1;0 0 .2 1;0 0 1 1" }),
+            React.createElement("animate", { attributeName: "opacity", dur: "2.4s", repeatCount: "indefinite", calcMode: "spline", keyTimes: "0;0.3;0.55;0.551;0.85;1", values: "1;1;0;0;1;1", keySplines: "0 0 1 1;.4 0 1 1;0 0 1 1;0 0 .2 1;0 0 1 1" }),
+            React.createElement("path", { fill: "#000", d: "M12,6a1,1 0,0 1,1 1v7.586l2.293,-2.293a1,1 0,1 1,1.414 1.414L12,18.414l-4.707,-4.707a1,1 0,1 1,1.414 -1.414L11,14.586L11,7a1,1 0,0 1,1 -1Z" })
+          )
+        )
+      ),
+      React.createElement("rect", { width: "24", height: "24", fill: "currentColor", mask: "url(#dlmask)" })
+    )
+  ) : state === "done" ? (
+    React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24" },
+      React.createElement("path", { fill: "#00A173", d: "M21.9,12L23.3,9.7C23.5,9.5 23.5,9.2 23.5,8.9C23.4,8.7 23.2,8.4 23,8.3L20.6,7.1L20.7,4.4C20.7,4.1 20.6,3.8 20.4,3.6C20.2,3.4 19.9,3.3 19.6,3.3L16.9,3.4L15.7,1C15.6,0.8 15.3,0.6 15.1,0.5C14.8,0.5 14.5,0.5 14.3,0.7L12,2.1L9.7,0.7C9.5,0.5 9.2,0.5 8.9,0.5C8.7,0.6 8.4,0.8 8.3,1L7.1,3.4L4.4,3.3C4.1,3.3 3.8,3.4 3.6,3.6C3.4,3.8 3.3,4.1 3.3,4.4L3.4,7.1L1,8.3C0.8,8.4 0.6,8.7 0.5,8.9C0.5,9.2 0.5,9.5 0.7,9.7L2.1,12L0.7,14.3C0.5,14.5 0.5,14.8 0.5,15.1C0.6,15.3 0.8,15.6 1,15.7L3.4,16.9L3.3,19.6C3.3,19.9 3.4,20.2 3.6,20.4C3.8,20.6 4.1,20.7 4.4,20.7L7.1,20.6L8.3,23C8.4,23.2 8.7,23.4 8.9,23.5C9.2,23.5 9.5,23.5 9.7,23.3L12,21.9L14.3,23.3C14.4,23.4 14.6,23.5 14.8,23.5C14.9,23.5 15,23.5 15.1,23.5C15.3,23.4 15.6,23.2 15.7,23L16.9,20.6L19.6,20.7C19.9,20.7 20.2,20.6 20.4,20.4C20.6,20.2 20.7,19.9 20.7,19.6L20.6,16.9L23,15.7C23.2,15.6 23.4,15.3 23.5,15.1C23.5,14.8 23.5,14.5 23.3,14.3L21.9,12ZM17.2,9.7L11.2,15.7C11,15.9 10.8,16 10.5,16C10.2,16 10,15.9 9.8,15.7L6.8,12.7C6.4,12.3 6.4,11.7 6.8,11.3C7.2,10.9 7.8,10.9 8.2,11.3L10.5,13.6L15.8,8.3C16.2,7.9 16.8,7.9 17.2,8.3C17.6,8.7 17.6,9.3 17.2,9.7Z" })
+    )
+  ) : (
+    React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "currentColor" },
+      React.createElement("path", { d: "M12,1C5.925,1 1,5.925 1,12s4.925,11 11,11 11,-4.925 11,-11S18.075,1 12,1ZM12,6a1,1 0,0 1,1 1v7.586l2.293,-2.293a1,1 0,1 1,1.414 1.414L12,18.414l-4.707,-4.707a1,1 0,1 1,1.414 -1.414L11,14.586L11,7a1,1 0,0 1,1 -1Z" })
+    )
+  );
+  return React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: () => nav("/downloads"), "aria-label": "Downloads", style: { width: 36, height: 36 } }, icon);
+};
+
 const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     const showChips = !isDetail && (route === "/" || route === "" || route === "/games" || (route || "").startsWith("/category/"));
     const chips = route === "/games" || (route || "").startsWith("/category/") && GAME_SECTIONS.some((g) => route.indexOf(encodeURIComponent(g.term)) >= 0 || route.indexOf(g.term) >= 0) ? [{ k: "chip_all", path: "/games", term: "" }].concat(GAME_SECTIONS.map((g) => ({ k: g.k, path: "/category/" + encodeURIComponent(g.term), term: g.term }))) : [{ k: "chip_all", path: "/", term: "" }].concat(SEARCH_CATEGORIES.map((c) => ({ k: c.k, path: "/category/" + encodeURIComponent(c.term), term: c.term })));
     const activePath = route || "/";
-    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: `hdr-top-row flex items-center px-4 max-w-screen-2xl mx-auto w-full ${isDetail ? "sticky top-0 z-40 bg-[hsl(var(--bg))]" : ""}`, style: { direction: "ltr" } }, isDetail ? /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: () => window.history.back(), "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" })) : /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: onOpenAccount, "aria-label": t("account") }, photo ? /* @__PURE__ */ React.createElement("img", { src: photo, alt: "", className: "nav-avatar" }) : /* @__PURE__ */ React.createElement(PersonMark, { className: "w-8 h-8" })), /* @__PURE__ */ React.createElement("div", { className: "flex-1" }), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => nav("/"), className: "shrink-0 group", "aria-label": "APKDroid Store" }, /* @__PURE__ */ React.createElement("div", { className: "group-hover:scale-105 transition-transform" }, /* @__PURE__ */ React.createElement(StoreLogo, { size: 64 })))), showChips && /* @__PURE__ */ React.createElement("div", { className: "hdr-chips" }, chips.map((ch) => {
+    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: `hdr-top-row flex items-center px-4 max-w-screen-2xl mx-auto w-full ${isDetail ? "sticky top-0 z-40 bg-[hsl(var(--bg))]" : ""}`, style: { direction: "ltr" } }, isDetail ? /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: () => window.history.back(), "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" })) : /* @__PURE__ */ React.createElement(React.Fragment, null,
+  /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: onOpenAccount, "aria-label": t("account") }, photo ? /* @__PURE__ */ React.createElement("img", { src: photo, alt: "", className: "nav-avatar", style: { width: 36, height: 36 } }) : /* @__PURE__ */ React.createElement(PersonMark, { className: "w-7 h-7" })),
+  (route === "/" || route === "" || route === "/games" || (route || "").startsWith("/category/")) && /* @__PURE__ */ React.createElement(React.Fragment, null,
+    /* @__PURE__ */ React.createElement(DownloadBtn, { nav }),
+    /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip shrink-0", onClick: () => nav("/music"), "aria-label": "Music", style: { width: 36, height: 36 } },
+      /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "currentColor" },
+        /* @__PURE__ */ React.createElement("path", { d: "M16 9h-3v5.5a2.5 2.5 0 11-1-2V7h4v2zm-4-7a10 10 0 100 20 10 10 0 000-20z" })
+      )
+    )
+  )
+), /* @__PURE__ */ React.createElement("div", { className: "flex-1" }), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => nav("/"), className: "shrink-0 group", "aria-label": "APKDroid Store" }, /* @__PURE__ */ React.createElement("div", { className: "group-hover:scale-105 transition-transform" }, /* @__PURE__ */ React.createElement(StoreLogo, { size: 64 })))), showChips && /* @__PURE__ */ React.createElement("div", { className: "hdr-chips" }, chips.map((ch) => {
       const on = ch.path === "/" || ch.path === "/games" ? activePath === ch.path : activePath === ch.path || ch.term && activePath.indexOf(encodeURIComponent(ch.term)) >= 0;
       return /* @__PURE__ */ React.createElement("button", { key: ch.k + ch.path, type: "button", className: `hdr-chip ${on ? "on" : ""}`, onClick: () => nav(ch.path) }, chipGlyph(ch.k), /* @__PURE__ */ React.createElement("span", null, t(ch.k)));
     })));
@@ -1142,14 +1201,19 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     if (isLandscape) {
       return React.createElement("nav", {
         className: `app-footer bot-nav side-nav ${menuOpen ? "open" : ""}`,
-        style: { position: "fixed", right: 0, top: 0, height: "100%", zIndex: 50, transition: "width 0.3s ease", width: menuOpen ? "50%" : "64px", background: "hsl(var(--card))", borderLeft: "1px solid hsl(var(--border))", display: "flex", flexDirection: "column", alignItems: "stretch", overflowY: "auto", overflowX: "hidden" }
+        style: { position: "fixed", right: 0, top: 0, height: "100%", zIndex: 50, transition: "width 0.3s ease", width: menuOpen ? "25%" : "64px", background: "hsl(var(--card))", borderLeft: "1px solid hsl(var(--border))", display: "flex", flexDirection: "column", alignItems: "stretch", overflowY: "auto", overflowX: "hidden" }
       },
         React.createElement("button", {
           type: "button",
           className: "side-menu-btn",
           onClick: () => setMenuOpen(o => !o),
-          style: { height: "64px", minHeight: "64px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "flex-start", paddingLeft: "12px", background: "none", border: "none", color: "inherit", cursor: "pointer" }
-        }, React.createElement("svg", { viewBox: "0 0 24 24", width: "24", height: "24", fill: "currentColor" }, React.createElement("path", { d: "M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" }))),
+          style: { height: "64px", minHeight: "64px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "flex-start", paddingLeft: "12px", background: "none", border: "none", color: "inherit", cursor: "pointer", gap: "12px" }
+        }, 
+          React.createElement("div", { style: { width: "40px", display: "flex", justifyContent: "center" } }, 
+            React.createElement("svg", { viewBox: "0 0 24 24", width: "24", height: "24", fill: "currentColor" }, React.createElement("path", { d: "M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" }))
+          ),
+          menuOpen && React.createElement("span", { style: { fontSize: "15px", fontWeight: 600, whiteSpace: "nowrap" } }, "القائمة")
+        ),
         items.map((it) => {
           const a = it.root ? route === "/" : route.startsWith(it.p) || it.p === "/movies" && route === "/songs";
           return React.createElement("button", {
@@ -1656,7 +1720,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       ),
       showApps && React.createElement("div", { className: "pb-apps", style: { position: "absolute", left: 0, right: 0, top: TH, bottom: 0, zIndex: 3, display: "flex", alignItems: "center", pointerEvents: "none" } },
         React.createElement("div", { className: "popular-scroller", onScroll: onAppsScroll, style: { direction: "rtl", display: "flex", flexDirection: "row", gap: PB_GAP + "px", overflowX: "auto", width: "100%", padding: "6px " + startPad + "px 6px 14px", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", pointerEvents: "auto" } },
-          apps.map((a) => React.createElement("button", { key: a.trackId, type: "button", "data-app-id": a.trackId, onClick: (e) => { e.stopPropagation(); open && open(a); }, style: { flex: "0 0 " + S + "px", width: S + "px", background: "transparent", border: "none", padding: 0, textAlign: "right", direction: "rtl", color: "inherit", cursor: "pointer" } },
+          apps.map((a) => React.createElement("button", { key: a.trackId, type: "button", "data-app-id": a.trackId, className: "pb-app-item", onClick: (e) => { e.stopPropagation(); open && open(a); }, style: { flex: "0 0 " + S + "px", width: S + "px", background: "transparent", border: "none", padding: 0, textAlign: "right", direction: "rtl", color: "inherit", cursor: "pointer", position: "relative" } },
             React.createElement("img", { src: a.artworkUrl512 || a.artworkUrl100 || a.artworkUrl60, alt: "", className: "app-ico-r pb-ico", style: { width: S + "px", height: S + "px", objectFit: "cover", display: "block" } }),
             React.createElement("div", { style: { marginTop: 8, fontSize: 13, color: "#e3e4f2", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: S + "px", textAlign: "right", direction: "auto", textShadow: scrim ? "0 1px 3px rgba(0,0,0,.8)" : "none" } }, a.trackName),
             a.averageUserRating ? React.createElement("div", { style: { marginTop: 6, display: "flex", justifyContent: "flex-start", direction: "rtl" } }, React.createElement("span", { style: { background: "rgba(24,24,30,.92)", color: "#dcdcea", fontSize: 12, padding: "3px 9px", borderRadius: 999, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 4 } }, React.createElement("span", { style: { color: "#a8c7fa" } }, "★"), pbRatingAr(a.averageUserRating))) : null
