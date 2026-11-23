@@ -1745,8 +1745,8 @@ html:not(.style2) .bot-nav button:not(.nav-ico-on) svg {
   color: #C4C7C5;
 }
 
-.acc-pano{margin-bottom:12px;overflow-x:auto;border-radius:28px;background:#0E0E0E}
-.acc-pano img{display:block;max-width:none;width:auto;height:auto;margin:0 auto}
+.acc-pano{margin-bottom:12px;overflow:hidden;border-radius:28px;background:#0E0E0E}
+.acc-pano img{display:block;width:100%;max-width:100%;height:auto;margin:0 auto}
 .acc-info{position:fixed;inset:0;z-index:600;background:#000000;color:#fff;display:flex;flex-direction:column}
 .acc-info-top{display:flex;padding:8px 12px 4px;flex-shrink:0}
 .acc-info-body{flex:1;overflow-y:auto;padding:16px 22px 40px;font-size:1rem;line-height:1.7}
