@@ -1092,22 +1092,29 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     const [view, setView] = useState("main");
     const [themeOpen, setThemeOpen] = useState(false);
     const [pagesOpen, setPagesOpen] = useState(false);
+    const [infoOpen, setInfoOpen] = useState(false);
+    const [devOpen, setDevOpen] = useState(false);
+    const [newsOpen, setNewsOpen] = useState(false);
+    const [panoOk, setPanoOk] = useState(true);
+    const devTimer = useRef(null);
     const [name, setName] = useState(profile && profile.name || "");
-    const [whatsNewOpen, setWhatsNewOpen] = useState(false);
-    const [whatsNewText, setWhatsNewText] = useState("");
-    const [devModal, setDevModal] = useState(false);
     const fileRef = useRef(null);
-    const longPressTimer = useRef(null);
     useEffect(() => {
       if (open) {
         setView("main");
         setThemeOpen(false);
         setPagesOpen(false);
+        setInfoOpen(false);
+        setDevOpen(false);
+        setNewsOpen(false);
         setName(profile && profile.name || "");
-        setWhatsNewOpen(false);
-        setDevModal(false);
       }
     }, [open]);
+    const devStart = () => {
+      clearTimeout(devTimer.current);
+      devTimer.current = setTimeout(() => setDevOpen(true), 550);
+    };
+    const devCancel = () => clearTimeout(devTimer.current);
     const photo = profile && profile.photo;
     const displayName = profile && profile.name || t("guest_name");
     const saveProfile = () => {
@@ -1131,61 +1138,11 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       onClose && onClose();
       nav(p);
     };
-    const openWhatsNew = () => {
-      setWhatsNewOpen(true);
-      if (!whatsNewText) {
-        fetch("./assets/info/keep.txt").then(r => r.text()).then(t => setWhatsNewText(t || "لا يوجد محتوى")).catch(() => setWhatsNewText("تعذر تحميل المحتوى"));
-      }
-    };
-    const startLongPress = () => {
-      longPressTimer.current = setTimeout(() => setDevModal(true), 600);
-    };
-    const endLongPress = () => {
-      if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; }
-    };
     const ar = lang === "ar";
     return /* @__PURE__ */ React.createElement("div", { className: `acc-overlay ${open ? "open" : ""}`, dir: ar ? "rtl" : "ltr" }, /* @__PURE__ */ React.createElement("div", { className: "acc-top" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-x", onClick: () => {
-      if (view === "edit" || view === "version") setView("main");
+      if (view === "edit") setView("main");
       else onClose && onClose();
-    }, "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "x", className: "w-5 h-5" }))), view === "edit" ? /* @__PURE__ */ React.createElement("div", { className: "acc-edit" }, /* @__PURE__ */ React.createElement("h2", { className: "text-lg font-bold text-center mb-2" }, t("edit_profile")), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => fileRef.current && fileRef.current.click(), style: { background: "none", border: "none", display: "block", margin: "0 auto", cursor: "pointer", color: "#eee" } }, photo ? /* @__PURE__ */ React.createElement("img", { src: photo, alt: "", className: "acc-edit-avatar" }) : /* @__PURE__ */ React.createElement("div", { className: "acc-edit-ph" }, /* @__PURE__ */ React.createElement(PersonMark, { className: "w-10 h-10" })), /* @__PURE__ */ React.createElement("div", { style: { fontSize: ".82rem", color: "#9aa", marginTop: 4 } }, t("change_photo"))), /* @__PURE__ */ React.createElement("input", { ref: fileRef, type: "file", accept: "image/*", hidden: true, onChange: onPhoto }), /* @__PURE__ */ React.createElement("label", { className: "text-sm text-muted-foreground", style: { display: "block", margin: "14px 0 6px" } }, t("profile_name")), /* @__PURE__ */ React.createElement("input", { type: "text", value: name, onChange: (e) => setName(e.target.value), placeholder: t("profile_name") }), /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-save", onClick: saveProfile }, t("save_profile"))) : view === "version" ? /* @__PURE__ */ React.createElement("div", { style: { background: "#000000", color: "#ffffff", minHeight: "100%", padding: "40px 24px", fontFamily: "inherit", lineHeight: 1.7, fontSize: "1.05rem" } },
-          /* @__PURE__ */ React.createElement("div", null, "الإصدار: 1.26.86"),
-          /* @__PURE__ */ React.createElement("div", null, "تاريخ اول إصدار: 10/1/2023"),
-          /* @__PURE__ */ React.createElement("div", null, "من إنتاج: imogo studios"),
-          /* @__PURE__ */ React.createElement("div", null, "المطور: ", /* @__PURE__ */ React.createElement("span", { style: { cursor: "pointer", textDecoration: "underline" }, onTouchStart: startLongPress, onTouchEnd: endLongPress, onTouchCancel: endLongPress, onMouseDown: startLongPress, onMouseUp: endLongPress, onMouseLeave: endLongPress, onContextMenu: (e) => { e.preventDefault(); setDevModal(true); } }, "AHMAD_GO")),
-          /* @__PURE__ */ React.createElement("div", null, "معرف المطور: 2538"),
-          /* @__PURE__ */ React.createElement("div", null, "المعرف كامل: AHMAD GO2538"),
-          /* @__PURE__ */ React.createElement("div", null, "اسم الحزمة: apkdroid.store"),
-          /* @__PURE__ */ React.createElement("div", null, "معرف التطبيق: apk-droid-store_imogo-studios_pk_3586_sdk"),
-          /* @__PURE__ */ React.createElement("div", null, "المحرك: chromeum"),
-          /* @__PURE__ */ React.createElement("div", null, "يتم التشغيل بواسطة: chrome apk-web")
-        ) : /* @__PURE__ */ React.createElement("div", { className: "acc-body" }, /* @__PURE__ */ React.createElement("div", { className: "acc-card" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-profile-row", onClick: () => setView("edit") }, /* @__PURE__ */ React.createElement("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", style: { opacity: 0.7 } }, /* @__PURE__ */ React.createElement("polyline", { points: "6 9 12 15 18 9" })), /* @__PURE__ */ React.createElement("div", { className: "acc-profile-meta" }, /* @__PURE__ */ React.createElement("div", { className: "acc-name" }, displayName), /* @__PURE__ */ React.createElement("div", { className: "acc-sub" }, "APKDroid Store")), photo ? /* @__PURE__ */ React.createElement("img", { src: photo, alt: "", className: "acc-avatar" }) : /* @__PURE__ */ React.createElement("div", { className: "acc-avatar-ph" }, /* @__PURE__ */ React.createElement(PersonMark, { className: "w-7 h-7" })))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-manage", onClick: () => window.open("https://apkdroidstore3.blogspot.com/", "_blank", "noopener") }, /* @__PURE__ */ React.createElement("span", { className: "acc-manage-title" }, t("manage_account")), /* @__PURE__ */ React.createElement(StoreLogo, { size: 28 })), /* @__PURE__ */ React.createElement("div", { className: "acc-list" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => go("/search-log") }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, t("search_log")), /* @__PURE__ */ React.createElement(Icon, { name: "hist", className: "w-5 h-5" })), /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => go("/downloads") }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, t("dl_manager")), /* @__PURE__ */ React.createElement(Icon, { name: "download", className: "w-5 h-5" })), /* @__PURE__ */ style2 ? React.createElement("button", { type: "button", className: "acc-row", onClick: () => setThemeOpen(true) }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, t("appearance")), /* @__PURE__ */ React.createElement(Icon, { name: theme === "light" ? "sun" : "moon", className: "w-5 h-5" })) : null, /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => setPagesOpen(true) }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, t("pages_menu")), /* @__PURE__ */ React.createElement(Icon, { name: "folder", className: "w-5 h-5" })), /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => go("/settings") }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, t("settings")), /* @__PURE__ */ React.createElement(Icon, { name: "gear", className: "w-5 h-5" })))), 
-      
-      /* New box under the old one */
-      /* @__PURE__ */ React.createElement("div", { className: "acc-list", style: { marginTop: 12 } },
-        /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => location.reload() },
-          /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, "التحقق من وجود تحديث"),
-          /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "20", height: "20", viewBox: "0 0 18 18", fill: "currentColor" },
-            /* @__PURE__ */ React.createElement("path", { d: "M12.375,1.5h-6.75c-0.622,0 -1.125,0.504 -1.125,1.125V6.75H2.446l-0.175,0.013c-0.847,0.126 -1.266,1.16 -0.68,1.844l6.554,7.647c0.45,0.524 1.26,0.524 1.71,0l6.553,-7.647c0.586,-0.684 0.167,-1.718 -0.68,-1.844l-0.175,-0.013H13.5V2.625c0,-0.621 -0.504,-1.125 -1.125,-1.125ZM6,8.25V3h6v5.25h2.74L9,14.945 3.26,8.25H6Z" })
-          )
-        ),
-        /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => setView("version") },
-          /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, "معلومات الإصدار"),
-          /* @__PURE__ */ React.createElement(Icon, { name: "gear", className: "w-5 h-5" })
-        ),
-        /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => go("/you-projects") },
-          /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, "المشاريع"),
-          /* @__PURE__ */ React.createElement(Icon, { name: "folder", className: "w-5 h-5" })
-        ),
-        /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: openWhatsNew },
-          /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, "ما الجديد"),
-          /* @__PURE__ */ React.createElement(Icon, { name: "hist", className: "w-5 h-5" })
-        )
-      ),
-      /* Panorama as last content with margins */
-      /* @__PURE__ */ React.createElement("div", { style: { margin: "20px 16px 24px", borderRadius: 16, overflow: "hidden" } },
-        /* @__PURE__ */ React.createElement("img", { src: "./assets/textures/ads/panorama.png", alt: "Panorama", style: { width: "100%", height: "auto", display: "block", borderRadius: 16 }, onError: (e) => { e.target.style.display = "none"; } })
-      ),
-      /* @__PURE__ */ React.createElement(AccPick, { open: themeOpen, title: t("choose_theme"), onClose: () => setThemeOpen(false) }, [
+    }, "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "x", className: "w-5 h-5" }))), view === "edit" ? /* @__PURE__ */ React.createElement("div", { className: "acc-edit" }, /* @__PURE__ */ React.createElement("h2", { className: "text-lg font-bold text-center mb-2" }, t("edit_profile")), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => fileRef.current && fileRef.current.click(), style: { background: "none", border: "none", display: "block", margin: "0 auto", cursor: "pointer", color: "#eee" } }, photo ? /* @__PURE__ */ React.createElement("img", { src: photo, alt: "", className: "acc-edit-avatar" }) : /* @__PURE__ */ React.createElement("div", { className: "acc-edit-ph" }, /* @__PURE__ */ React.createElement(PersonMark, { className: "w-10 h-10" })), /* @__PURE__ */ React.createElement("div", { style: { fontSize: ".82rem", color: "#9aa", marginTop: 4 } }, t("change_photo"))), /* @__PURE__ */ React.createElement("input", { ref: fileRef, type: "file", accept: "image/*", hidden: true, onChange: onPhoto }), /* @__PURE__ */ React.createElement("label", { className: "text-sm text-muted-foreground", style: { display: "block", margin: "14px 0 6px" } }, t("profile_name")), /* @__PURE__ */ React.createElement("input", { type: "text", value: name, onChange: (e) => setName(e.target.value), placeholder: t("profile_name") }), /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-save", onClick: saveProfile }, t("save_profile"))) : /* @__PURE__ */ React.createElement("div", { className: "acc-body" }, /* @__PURE__ */ React.createElement("div", { className: "acc-card" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-profile-row", onClick: () => setView("edit") }, /* @__PURE__ */ React.createElement("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", style: { opacity: 0.7 } }, /* @__PURE__ */ React.createElement("polyline", { points: "6 9 12 15 18 9" })), /* @__PURE__ */ React.createElement("div", { className: "acc-profile-meta" }, /* @__PURE__ */ React.createElement("div", { className: "acc-name" }, displayName), /* @__PURE__ */ React.createElement("div", { className: "acc-sub" }, "APKDroid Store")), photo ? /* @__PURE__ */ React.createElement("img", { src: photo, alt: "", className: "acc-avatar" }) : /* @__PURE__ */ React.createElement("div", { className: "acc-avatar-ph" }, /* @__PURE__ */ React.createElement(PersonMark, { className: "w-7 h-7" })))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-manage", onClick: () => window.open("https://apkdroidstore3.blogspot.com/", "_blank", "noopener") }, /* @__PURE__ */ React.createElement("span", { className: "acc-manage-title" }, t("manage_account")), /* @__PURE__ */ React.createElement(StoreLogo, { size: 28 })), /* @__PURE__ */ React.createElement("div", { className: "acc-list" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => go("/search-log") }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, t("search_log")), /* @__PURE__ */ React.createElement(Icon, { name: "hist", className: "w-5 h-5" })), /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => go("/downloads") }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, t("dl_manager")), /* @__PURE__ */ React.createElement(Icon, { name: "download", className: "w-5 h-5" })), /* @__PURE__ */ style2 ? React.createElement("button", { type: "button", className: "acc-row", onClick: () => setThemeOpen(true) }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, t("appearance")), /* @__PURE__ */ React.createElement(Icon, { name: theme === "light" ? "sun" : "moon", className: "w-5 h-5" })) : null, /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => setPagesOpen(true) }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, t("pages_menu")), /* @__PURE__ */ React.createElement(Icon, { name: "folder", className: "w-5 h-5" })), /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => go("/settings") }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, t("settings")), /* @__PURE__ */ React.createElement(Icon, { name: "gear", className: "w-5 h-5" }))), /* @__PURE__ */ React.createElement("div", { className: "acc-list" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => { location.reload(); } }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, "\u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0648\u062C\u0648\u062F \u062A\u062D\u062F\u064A\u062B"), /* @__PURE__ */ React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "31.5", height: "31.5", viewBox: "0 0 18.0 18.0" }, /* @__PURE__ */ React.createElement("path", { d: "M12.375,1.5h-6.75c-0.622,0 -1.125,0.504 -1.125,1.125V6.75H2.446l-0.175,0.013c-0.847,0.126 -1.266,1.16 -0.68,1.844l6.554,7.647c0.45,0.524 1.26,0.524 1.71,0l6.553,-7.647c0.586,-0.684 0.167,-1.718 -0.68,-1.844l-0.175,-0.013H13.5V2.625c0,-0.621 -0.504,-1.125 -1.125,-1.125ZM6,8.25V3h6v5.25h2.74L9,14.945 3.26,8.25H6Z", fill: "#FFFFFF" }))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => setInfoOpen(true) }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, "\u0645\u0639\u0644\u0648\u0645\u0627\u062A \u0627\u0644\u0625\u0635\u062F\u0627\u0631"), /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", fill: "currentColor" }, /* @__PURE__ */ React.createElement("path", { d: "M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" }))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => go("/you-projects") }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, "\u0627\u0644\u0645\u0634\u0627\u0631\u064A\u0639"), /* @__PURE__ */ React.createElement(NavIcon, { kind: "projects", on: false, className: "w-5 h-5" })), /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-row", onClick: () => setNewsOpen(true) }, /* @__PURE__ */ React.createElement("span", { className: "acc-row-label" }, "\u0645\u0627 \u0627\u0644\u062C\u062F\u064A\u062F"), /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 24 24", fill: "currentColor" }, /* @__PURE__ */ React.createElement("path", { d: "M9,21c0,0.5 0.4,1 1,1h4c0.6,0 1,-0.5 1,-1v-1L9,20v1zM12,2C8.1,2 5,5.1 5,9c0,2.4 1.2,4.5 3,5.7L8,17c0,0.5 0.4,1 1,1h6c0.6,0 1,-0.5 1,-1v-2.3c1.8,-1.3 3,-3.4 3,-5.7 0,-3.9 -3.1,-7 -7,-7z" })))), panoOk ? /* @__PURE__ */ React.createElement("div", { className: "acc-pano" }, /* @__PURE__ */ React.createElement("img", { src: "assets/textures/ads/panorama.png", alt: "", onError: () => setPanoOk(false) })) : null), /* @__PURE__ */ React.createElement(WhatsNewModal, { open: newsOpen, onClose: () => setNewsOpen(false) }), infoOpen ? /* @__PURE__ */ React.createElement("div", { className: "acc-info", dir: "rtl" }, /* @__PURE__ */ React.createElement("div", { className: "acc-info-top" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "acc-x", "aria-label": t("back"), onClick: () => setInfoOpen(false) }, /* @__PURE__ */ React.createElement(Icon, { name: "x", className: "w-5 h-5" }))), /* @__PURE__ */ React.createElement("div", { className: "acc-info-body" }, /* @__PURE__ */ React.createElement("div", null, "\u0627\u0644\u0625\u0635\u062F\u0627\u0631: 1.26.86"), /* @__PURE__ */ React.createElement("div", null, "\u062A\u0627\u0631\u064A\u062E \u0627\u0648\u0644 \u0625\u0635\u062F\u0627\u0631: 10/1/2023"), /* @__PURE__ */ React.createElement("div", null, "\u0645\u0646 \u0625\u0646\u062A\u0627\u062C: imogo studios"), /* @__PURE__ */ React.createElement("div", null, "\u0627\u0644\u0645\u0637\u0648\u0631: ", /* @__PURE__ */ React.createElement("span", { className: "acc-dev", onTouchStart: devStart, onTouchEnd: devCancel, onTouchMove: devCancel, onTouchCancel: devCancel, onMouseDown: devStart, onMouseUp: devCancel, onMouseLeave: devCancel, onContextMenu: (e) => e.preventDefault() }, "AHMAD_GO")), /* @__PURE__ */ React.createElement("div", null, "\u0645\u0639\u0631\u0641 \u0627\u0644\u0645\u0637\u0648\u0631: 2538"), /* @__PURE__ */ React.createElement("div", null, "\u0627\u0644\u0645\u0639\u0631\u0641 \u0643\u0627\u0645\u0644: AHMAD GO2538"), /* @__PURE__ */ React.createElement("div", null, "\u0627\u0633\u0645 \u0627\u0644\u062D\u0632\u0645\u0629: apkdroid.store"), /* @__PURE__ */ React.createElement("div", null, "\u0645\u0639\u0631\u0641 \u0627\u0644\u062A\u0637\u0628\u064A\u0642: apk-droid-store_imogo-studios_pk_3586_sdk"), /* @__PURE__ */ React.createElement("div", null, "\u0627\u0644\u0645\u062D\u0631\u0643: chromeum"), /* @__PURE__ */ React.createElement("div", null, "\u064A\u062A\u0645 \u0627\u0644\u062A\u0634\u063A\u064A\u0644 \u0628\u0648\u0627\u0633\u0637\u0629: chrome apk-web")), devOpen ? /* @__PURE__ */ React.createElement("div", { className: "acc-dev-overlay", onClick: () => setDevOpen(false) }, /* @__PURE__ */ React.createElement("div", { className: "acc-dev-card", onClick: (e) => e.stopPropagation() }, /* @__PURE__ */ React.createElement("h3", null, "\u0627\u0644\u0645\u0637\u0648\u0631 AHMAD_GO"), /* @__PURE__ */ React.createElement("p", null, "\u0644\u0627\u0639\u0628 \u0645\u0627\u064A\u0646 \u0643\u0631\u0627\u0641\u062A \u0645\u0646\u0630 2012"), /* @__PURE__ */ React.createElement("p", null, "\u0633\u064A\u0631\u0641\u0631\u0627\u062A\u0646\u0627 \u0627\u0644\u062F\u0627\u0626\u0645\u0629:"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, "NovaNot"), /* @__PURE__ */ React.createElement("li", null, "FoxeCraft"), /* @__PURE__ */ React.createElement("li", null, "KingBed"), /* @__PURE__ */ React.createElement("li", null, "Hal2Craft")))) : null) : null, /* @__PURE__ */ React.createElement(AccPick, { open: themeOpen, title: t("choose_theme"), onClose: () => setThemeOpen(false) }, [
       { id: "light", label: t("light") },
       { id: "dark", label: t("dark") },
       { id: "system", label: t("adapt_system") },
@@ -1210,26 +1167,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     ].map((it) => /* @__PURE__ */ React.createElement("button", { key: it.p, type: "button", className: "acc-pick-item", onClick: () => {
       setPagesOpen(false);
       go(it.p);
-    } }, t(it.k))))),
-      whatsNewOpen && /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", inset: 0, background: "rgba(0,0,0,.7)", zIndex: 600, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }, onClick: () => setWhatsNewOpen(false) },
-        /* @__PURE__ */ React.createElement("div", { style: { background: "#1F1F1F", color: "#eee", borderRadius: 16, padding: 20, maxWidth: 400, width: "100%", maxHeight: "70vh", overflowY: "auto" }, onClick: (e) => e.stopPropagation() },
-          /* @__PURE__ */ React.createElement("h3", { style: { margin: "0 0 12px", fontSize: "1.1rem" } }, "ما الجديد"),
-          /* @__PURE__ */ React.createElement("pre", { style: { whiteSpace: "pre-wrap", fontFamily: "inherit", margin: 0, lineHeight: 1.6 } }, whatsNewText || "جاري التحميل..."),
-          /* @__PURE__ */ React.createElement("button", { type: "button", style: { marginTop: 16, background: "#333", color: "#fff", border: "none", borderRadius: 8, padding: "8px 16px", width: "100%" }, onClick: () => setWhatsNewOpen(false) }, "إغلاق")
-        )
-      ),
-      devModal && /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", inset: 0, background: "rgba(0,0,0,.75)", zIndex: 700, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }, onClick: () => setDevModal(false) },
-        /* @__PURE__ */ React.createElement("div", { style: { background: "#111", color: "#fff", borderRadius: 16, padding: 24, maxWidth: 340, width: "100%", textAlign: "center", lineHeight: 1.6 }, onClick: (e) => e.stopPropagation() },
-          /* @__PURE__ */ React.createElement("div", { style: { fontWeight: "bold", fontSize: "1.15rem", marginBottom: 8 } }, "المطور AHMAD_GO"),
-          /* @__PURE__ */ React.createElement("div", null, "لاعب ماين كرافت منذ 2012"),
-          /* @__PURE__ */ React.createElement("div", { style: { marginTop: 12 } }, "سيرفراتنا الدائمة:"),
-          /* @__PURE__ */ React.createElement("div", null, "NovaNot"),
-          /* @__PURE__ */ React.createElement("div", null, "FoxeCraft"),
-          /* @__PURE__ */ React.createElement("div", null, "KingBed"),
-          /* @__PURE__ */ React.createElement("div", null, "Hal2Craft"),
-          /* @__PURE__ */ React.createElement("button", { type: "button", style: { marginTop: 18, background: "#333", color: "#fff", border: "none", borderRadius: 8, padding: "8px 20px" }, onClick: () => setDevModal(false) }, "إغلاق")
-        )
-      );
+    } }, t(it.k)))));
   };
   const NavIcon = ({ kind, on, className = "w-6 h-6" }) => {
     const common = { fill: "currentColor" };
