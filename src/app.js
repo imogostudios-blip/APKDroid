@@ -1288,7 +1288,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
         /* @__PURE__ */ React.createElement("div", { className: `flex items-center justify-center rounded-full transition-all duration-200 ${a ? "nav-pill-on bg-primary/10 w-14 h-8" : "w-8 h-8"}` }, /* @__PURE__ */ React.createElement(NavIcon, { kind: it.i, on: !!a, className: "w-6 h-6" })),
         /* @__PURE__ */ React.createElement("span", { className: "bot-nav-label" }, t(it.k))
       );
-    })));
+    }))));
   };
   const bumpReloadSeed = () => {
     const c = (getS("apk_reload_count", 0) | 0) + 1;
