@@ -1733,3 +1733,14 @@ html.style2.dark .bg-btn-confirm {
 /* Top bar action buttons next to profile */
 .nav-avatar { width: 36px !important; height: 36px !important; }
 .nav-chip { width: 36px; height: 36px; }
+
+/* Green style bottom nav matches dark blue style */
+html:not(.style2) .bot-nav,
+html:not(.style2).dark .bot-nav {
+  background: #141415 !important;
+  border-color: #141415 !important;
+}
+html:not(.style2) .bot-nav button:not(.nav-ico-on),
+html:not(.style2) .bot-nav button:not(.nav-ico-on) svg {
+  color: #C4C7C5;
+}
