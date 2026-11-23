@@ -1152,8 +1152,8 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
           )
         )
       ),
-      /* @__PURE__ */ React.createElement("div", { style: { margin: "16px 14px 20px", borderRadius: 16, overflow: "hidden" } },
-        /* @__PURE__ */ React.createElement("img", { src: "./assets/textures/ads/panorama.png", alt: "", style: { width: "100%", height: "auto", display: "block", borderRadius: 16 }, onError: (e) => { e.target.style.display = "none"; } })
+      /* @__PURE__ */ React.createElement("div", { style: { margin: "16px 0 24px", borderRadius: 16, overflow: "hidden", position: "relative" } },
+        /* @__PURE__ */ React.createElement("img", { src: "./assets/textures/ads/panorama.png", alt: "", style: { width: "100%", height: "auto", display: "block", borderRadius: 16 }, onError: (e) => { e.target.parentElement.style.display = "none"; } })
       ),
       /* @__PURE__ */ React.createElement(AccPick, { open: themeOpen, title: t("choose_theme"), onClose: () => setThemeOpen(false) }, [
       { id: "light", label: t("light") },
@@ -1214,19 +1214,30 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     const onDevUp = () => {
       if (longPressTimer.current) clearTimeout(longPressTimer.current);
     };
-    return React.createElement("div", { style: { background: "#000", color: "#fff", minHeight: "100vh", padding: "24px 20px", fontFamily: "inherit" } },
-      React.createElement("button", { type: "button", onClick: () => nav("/"), style: { background: "none", border: "none", color: "#fff", fontSize: 16, marginBottom: 20, cursor: "pointer" } }, "← رجوع"),
-      React.createElement("div", { style: { fontSize: 15, lineHeight: 1.8 } },
-        React.createElement("div", null, "الإصدار: 1.26.86"),
-        React.createElement("div", null, "تاريخ اول إصدار: 10/1/2023"),
-        React.createElement("div", null, "من إنتاج: imogo studios"),
-        React.createElement("div", { onPointerDown: onDevDown, onPointerUp: onDevUp, onPointerLeave: onDevUp, style: { cursor: "pointer", userSelect: "none" } }, "المطور: AHMAD_GO"),
-        React.createElement("div", null, "معرف المطور: 2538"),
-        React.createElement("div", null, "المعرف كامل: AHMAD GO2538"),
-        React.createElement("div", null, "اسم الحزمة: apkdroid.store"),
-        React.createElement("div", null, "معرف التطبيق: apk-droid-store_imogo-studios_pk_3586_sdk"),
-        React.createElement("div", null, "المحرك: chromeum"),
-        React.createElement("div", null, "يتم التشغيل بواسطة: chrome apk-web")
+    const row = (label, value, extra) => React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px solid #222", direction: "rtl" }, ...extra },
+      React.createElement("span", { style: { color: "#aaa", fontSize: 14 } }, label),
+      React.createElement("span", { style: { color: "#fff", fontSize: 15, fontWeight: 500 } }, value)
+    );
+    return React.createElement("div", { style: { background: "#000", color: "#fff", position: "fixed", inset: 0, zIndex: 600, overflowY: "auto", fontFamily: "inherit" } },
+      React.createElement("div", { style: { display: "flex", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid #222" } },
+        React.createElement("button", { type: "button", onClick: () => nav("/"), style: { background: "none", border: "none", color: "#fff", cursor: "pointer", padding: 8 } },
+          React.createElement("svg", { viewBox: "0 0 24 24", width: "24", height: "24", fill: "currentColor" },
+            React.createElement("path", { d: "M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" })
+          )
+        ),
+        React.createElement("span", { style: { marginRight: 12, fontSize: 18, fontWeight: 600 } }, "معلومات الإصدار")
+      ),
+      React.createElement("div", { style: { padding: "8px 20px" } },
+        row("الإصدار", "1.26.86"),
+        row("تاريخ اول إصدار", "10/1/2023"),
+        row("من إنتاج", "imogo studios"),
+        row("المطور", "AHMAD_GO", { onPointerDown: onDevDown, onPointerUp: onDevUp, onPointerLeave: onDevUp, style: { cursor: "pointer", userSelect: "none" } }),
+        row("معرف المطور", "2538"),
+        row("المعرف كامل", "AHMAD GO2538"),
+        row("اسم الحزمة", "apkdroid.store"),
+        row("معرف التطبيق", "apk-droid-store_imogo-studios_pk_3586_sdk"),
+        row("المحرك", "chromeum"),
+        row("يتم التشغيل بواسطة", "chrome apk-web")
       ),
       devOpen && React.createElement("div", { style: { position: "fixed", inset: 0, background: "rgba(0,0,0,.7)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 300 }, onClick: () => setDevOpen(false) },
         React.createElement("div", { style: { background: "#1a1a1a", color: "#fff", padding: 24, borderRadius: 16, maxWidth: 320, textAlign: "center", lineHeight: 1.7 }, onClick: e => e.stopPropagation() },
