@@ -1744,3 +1744,16 @@ html:not(.style2) .bot-nav button:not(.nav-ico-on),
 html:not(.style2) .bot-nav button:not(.nav-ico-on) svg {
   color: #C4C7C5;
 }
+
+.acc-pano{margin-bottom:12px;overflow-x:auto;border-radius:28px;background:#0E0E0E}
+.acc-pano img{display:block;max-width:none;width:auto;height:auto;margin:0 auto}
+.acc-info{position:fixed;inset:0;z-index:600;background:#000000;color:#fff;display:flex;flex-direction:column}
+.acc-info-top{display:flex;padding:8px 12px 4px;flex-shrink:0}
+.acc-info-body{flex:1;overflow-y:auto;padding:16px 22px 40px;font-size:1rem;line-height:1.7}
+.acc-info-body>div{padding:8px 0;word-break:break-word}
+.acc-dev{font-weight:700;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+.acc-dev-overlay{position:fixed;inset:0;z-index:610;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:22px}
+.acc-dev-card{width:min(90vw,380px);background:#1b1b1b;color:#eee;border-radius:24px;padding:22px 22px 18px;box-shadow:0 16px 48px rgba(0,0,0,.6)}
+.acc-dev-card h3{font-size:1.15rem;font-weight:800;text-align:center;margin:0 0 12px}
+.acc-dev-card p{margin:6px 0}
+.acc-dev-card ul{margin:6px 0 0;padding-inline-start:22px;list-style:disc}
