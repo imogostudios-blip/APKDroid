@@ -1,12 +1,12 @@
-const CACHE = 'apkdroid-v75';
+const CACHE = 'apkdroid-v76';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
   './favicon.png',
-  './src/styles/tailwind.css',
-  './src/styles/app.css',
-  './src/app.js',
+  './src/css/tailwind.css',
+  './src/css/app.css',
+  './src/js/app.js',
   './vendor/react.production.min.js',
   './vendor/react-dom.production.min.js',
   './res/fonts/fonts.css',

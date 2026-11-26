@@ -17,3 +17,14 @@ src/app.jsx بقي مصدراً للتعديل. بعد أي تعديل على ا
 python3 -m http.server 8080
 
 ثم افتح http://localhost:8080 مرة وأنت متصل حتى يُثبَّت Service Worker. بعدها يفتح بدون نت.
+
+## وسوم الصور (assets/textures/photos.py)
+
+لكل صورة: `<name>` `<readme>` `<url>` و:
+- `<play=true/false>` — false: الصورة وكل ما فوقها تختفي تماماً بدون أي فراغ.
+- `<apps=...>` — نوع التطبيقات فوق الصورة: tool, social, photo, music, shopping, entertainment, productivity, education, health, finance, news, travel, sports, weather, games، أو أي كلمة بحث. `off` = بدون تطبيقات. إذا حُذف الوسم تظهر التطبيقات الشائعة.
+
+ملاحظة: app.js هو الملف الفعلي للتعديل (app.jsx قديم ولا يُبنى).
+
+## صور assets/textures/t-icons
+صورة مربعة 1:1 باسم الشريط (apps_photo1.png, games_photo1.png ...). تظهر في المكان الفاضي في بداية شريط التطبيقات، خلف التطبيقات، وتصغر وتشفّ تدريجياً عند سحب التطبيقات. إذا لم توجد الصورة لا يظهر شيء. (الصور الحالية مؤقتة)
