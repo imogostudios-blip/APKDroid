@@ -1,4 +1,4 @@
-const CACHE = 'apkdroid-v81';
+const CACHE = 'apkdroid-v82';
 const APP_SHELL = [
   './',
   './index.html',
@@ -26,7 +26,8 @@ const APP_SHELL = [
   './res/icons/icon-96.png',
   './res/icons/icon-source.png',
   './res/drawable/style1.png',
-  './res/drawable/style2.png'
+  './res/drawable/style2.png',
+  './res/drawable/loading_logo.drty'
 ];
 
 self.addEventListener('install', (event) => {
