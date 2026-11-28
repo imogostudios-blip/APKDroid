@@ -1469,10 +1469,55 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
   const SVG_SHOT_OFF = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="175" height="175"><g><path d="M512,843.9a62.6,62.6 0,1 0,0 -125.1,62.6 62.6,0 0,0 0,125.1zM366.5,671.8a44.4,44.4 0,0 1,-34.4 -15.7,46.8 46.8,0 0,1 3.2,-65.7A262.2,262.2 0,0 1,512 523.2c9.4,0 18.8,0 28.2,1.5 25,3.2 43.8,26.6 42.2,51.6 -3.1,25 -26.6,43.8 -51.6,42.2a175.9,175.9 0,0 0,-131.4 42.2,55.1 55.1,0 0,1 -32.9,11zM235.1,540.4c-12.5,0 -25,-4.7 -34.4,-14.1a48.7,48.7 0,0 1,1.6 -67.3c45.4,-42.2 97,-75.1 154.9,-95.4 25,-9.4 51.6,3.1 59.4,28.2 9.4,25 -3.1,51.6 -28.2,59.4 -45.4,17.2 -87.6,42.2 -123.6,76.7 -6.3,9.4 -18.8,12.5 -29.7,12.5zM788.9,540.4c-11,0 -23.5,-4.7 -32.9,-12.5a351.2,351.2 0,0 0,-209.6 -95.4c-25,-3.1 -45.4,-25 -42.2,-51.6 3.1,-26.6 25,-43.8 51.6,-42.2 98.6,9.4 192.4,53.2 264.4,120.4 18.8,17.2 20.4,46.9 1.6,65.7 -7.8,11 -20.4,15.7 -32.9,15.7zM89.6,394.9c-12.5,0 -25,-4.7 -34.4,-14.1 -17.2,-18.8 -17.2,-48.5 1.6,-65.7 46.9,-45.4 98.6,-82.9 156.5,-111.1a45,45 0,0 1,62.5 20.3c12.5,23.5 3.2,51.6 -20.3,62.6a618.3,618.3 0,0 0,-134.6 95.4c-7.8,9.4 -20.3,12.5 -31.3,12.5zM934.4,394.9c-11,0 -23.5,-4.7 -32.9,-12.5 -104.8,-101.7 -244.1,-156.5 -389.5,-156.5 -45.4,0 -90.8,4.7 -134.5,15.7a46.6,46.6 0,1 1,-21.9 -90.8c51.6,-12.5 103.3,-18.8 156.5,-18.8 170.5,0 331.6,65.7 455.3,183 18.8,17.2 18.8,46.9 1.6,65.7 -9.4,9.4 -21.9,14.1 -34.4,14.1z" fill="#BEC2C6"/><path d="M932.8,978.4c-12.5,0 -23.5,-4.7 -32.9,-14.1L56.7,121.1c-18.8,-18.8 -18.8,-48.5 0,-65.7 18.8,-18.8 48.5,-18.8 65.7,0l843.2,843.3c18.8,18.8 18.8,48.5 0,65.7 -9.4,9.4 -20.3,14.1 -32.9,14.1z" fill="#BEC2C6"/></g></svg>`;
   const SVG_WIFI_OFF = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="72" height="72"><path fill="#e3e3e3" d="M73-536 2-607q97-94 220.5-143.5T480-800q134 0 257.5 49.5T958-607l-71 71q-82-79-187-121.5T480-700q-115 0-220 42.5T73-536Zm350.5 352.5Q400-207 400-240t23.5-56.5Q447-320 480-320t56.5 23.5Q560-273 560-240t-23.5 56.5Q513-160 480-160t-56.5-23.5ZM298-309l-70-71q51-48 116-74t136-26q41 0 80.5 8.5T636-446q-17 17-33 38.5T574-363q-23-8-46.5-12.5T480-380q-51 0-97.5 18T298-309ZM186-422l-70-71q74-71 168-109t197-38q103 0 196.5 37.5T845-494l-15 16q-20-3-36.5-7.5T760-490q-14 0-28.5 3.5T701-478q-50-30-106-46t-115-16q-83 0-158.5 30.5T186-422Zm545.5 250.5Q720-183 720-200t11.5-28.5Q743-240 760-240t28.5 11.5Q800-217 800-200t-11.5 28.5Q777-160 760-160t-28.5-11.5ZM720-280v-140h80v140h-80Z"/></svg>`;
   const svgDataUri = (svg) => "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+
+  // Loader for combined loading logos from loading_logo.drty
+  let _logoCache = null;
+  let _logoPromise = null;
+  const loadLogos = () => {
+    if (_logoCache) return Promise.resolve(_logoCache);
+    if (_logoPromise) return _logoPromise;
+    _logoPromise = fetch("./res/drawable/loading_logo.drty")
+      .then((r) => {
+        if (!r.ok) throw new Error("failed to load logos");
+        return r.text();
+      })
+      .then((text) => {
+        const logos = {};
+        for (let i = 1; i <= 10; i++) {
+          const startTag = "<logo" + i + ">";
+          const endTag = "<logo" + i + "_end>";
+          const start = text.indexOf(startTag);
+          const end = text.indexOf(endTag);
+          if (start !== -1 && end !== -1 && end > start) {
+            const svg = text.substring(start + startTag.length, end).trim();
+            if (svg) logos[i] = svgDataUri(svg);
+          }
+        }
+        _logoCache = logos;
+        return logos;
+      })
+      .catch(() => {
+        _logoCache = {};
+        return {};
+      });
+    return _logoPromise;
+  };
+
   const NetSpin = ({ full, center }) => {
     const [icon, setIcon] = React.useState(1);
     const [angle, setAngle] = React.useState(0);
+    const [logoSrc, setLogoSrc] = React.useState("");
     const rafRef = React.useRef(null);
+
+    React.useEffect(() => {
+      let cancelled = false;
+      loadLogos().then((logos) => {
+        if (cancelled) return;
+        setLogoSrc(logos[icon] || "");
+      });
+      return () => { cancelled = true; };
+    }, [icon]);
+
     React.useEffect(() => {
       let cancelled = false;
       const SLOW_MS = 500;
@@ -1526,8 +1571,8 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
       role: "status",
       "aria-label": "loading"
     }, React.createElement("div", { className: "net-spin-mark" },
-      React.createElement("img", {
-        src: "./res/drawable/photojournal_shape" + icon + ".svg",
+      logoSrc ? React.createElement("img", {
+        src: logoSrc,
         alt: "",
         style: {
           width: "52px",
@@ -1536,7 +1581,7 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
           transform: "rotate(" + angle + "deg)",
           transition: "none"
         }
-      })
+      }) : null
     ));
   };
 
