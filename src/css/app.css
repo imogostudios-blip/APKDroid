@@ -1115,8 +1115,8 @@ html:not(.style2).dark .hdr-chip.on, html:not(.style2).black .hdr-chip.on { back
   width: 52px;
   height: 32px;
   border-radius: 16px;
-  border: 2px solid #53686A;
-  background: #D3DDDB;
+  border: 2px solid #8E918F;
+  background: #333537;
   cursor: pointer;
   padding: 0;
   transition: background-color 0.2s, border-color 0.2s;
@@ -1130,13 +1130,13 @@ html:not(.style2).dark .hdr-chip.on, html:not(.style2).black .hdr-chip.on { back
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #53686A;
+  background: #8E918F;
   transition: inset-inline-start 0.25s cubic-bezier(0.05, 0.7, 0.1, 1), top 0.25s, width 0.25s, height 0.25s, background-color 0.2s;
 }
 
 .sw[aria-checked="true"] {
-  background: #0F766E;
-  border-color: #0F766E;
+  background: #A8C7FA;
+  border-color: #A8C7FA;
 }
 
 .sw[aria-checked="true"]::after {
@@ -1144,7 +1144,7 @@ html:not(.style2).dark .hdr-chip.on, html:not(.style2).black .hdr-chip.on { back
   inset-inline-start: 22px;
   width: 24px;
   height: 24px;
-  background: #F4F7F6;
+  background: #062E6F;
 }
 
 .sw:focus-visible {
@@ -1195,7 +1195,7 @@ html.style2 .bg-btn-cancel {
   position: fixed;
   inset: 0;
   z-index: 90;
-  background: #141415;
+  background: #0A0A0B;
   color: #ffffff;
   overflow-y: auto;
   font-family: inherit;
