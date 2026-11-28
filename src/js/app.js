@@ -1472,15 +1472,17 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     const rafRef = React.useRef(null);
     React.useEffect(() => {
       let cancelled = false;
-      const SLOW_MS = 1000;
-      const FAST_MS = 180;
-      const SLOW_DEG = 80;
+      const SLOW_MS = 500;
+      const FAST_MS = 220;
+      const SLOW_DEG = 70;
+      const HALF_TURN = 180;
 
       const runIcon = (n) => {
         if (cancelled) return;
         setIcon(n);
         setAngle(0);
         const start = performance.now();
+        let switched = false;
 
         const animate = (now) => {
           if (cancelled) return;
@@ -1493,12 +1495,17 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
             rafRef.current = requestAnimationFrame(animate);
           } else if (elapsed < SLOW_MS + FAST_MS) {
             const prog = (elapsed - SLOW_MS) / FAST_MS;
-            newAngle = SLOW_DEG + prog * (360 - SLOW_DEG);
+            newAngle = SLOW_DEG + prog * HALF_TURN;
             setAngle(newAngle);
+            if (!switched && prog >= 0.45) {
+              switched = true;
+              const next = n >= 10 ? 1 : n + 1;
+              setIcon(next);
+            }
             rafRef.current = requestAnimationFrame(animate);
           } else {
             const next = n >= 10 ? 1 : n + 1;
-            setTimeout(() => runIcon(next), 40);
+            setTimeout(() => runIcon(next), 30);
           }
         };
         rafRef.current = requestAnimationFrame(animate);
@@ -1520,8 +1527,8 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
         src: "./res/drawable/photojournal_shape" + icon + ".svg",
         alt: "",
         style: {
-          width: "64px",
-          height: "64px",
+          width: "52px",
+          height: "52px",
           display: "block",
           transform: "rotate(" + angle + "deg)",
           transition: "none"
@@ -3872,16 +3879,16 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     return React.createElement(ProjectPage, { route: "/you-project/" + id + "/edit", nav });
   };
   const SettingsSpinner = () => /* @__PURE__ */ React.createElement("div", { className: "set-spin-screen", role: "status", "aria-label": "loading" }, /* @__PURE__ */ React.createElement("svg", { className: "set-spin", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 50 50", width: "36", height: "36", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("g", { className: "set-spin-rotor" }, /* @__PURE__ */ React.createElement("circle", { className: "set-spin-arc", cx: "25", cy: "25", r: "20", fill: "none", stroke: "#0B57D0", strokeWidth: "4", strokeMiterlimit: "10", strokeLinecap: "round" }))));
-  const Settings = ({ selStore, setSelStore, style2, setStyle2, setExpMode, lang, setLang, night, setNight, nav, country2, setCountry }) => {
+  const Settings = ({ selStore, setSelStore, style2, setStyle2, setExpMode, lang, setLang, night, setNight, nav, countryCode, setCountry }) => {
     const [apiOpen, setApiOpen] = useState(false);
-    const [countryOpen, setCountryOpen] = useState(false);
-    const [countryQ, setCountryQ] = useState("");
-    const pickCountry = (c) => {
-      setCountryOpen(false);
-      if (c === country2) return;
-      setCountry(c);
+    const [regionOpen, setRegionOpen] = useState(false);
+    const [regionQ, setRegionQ] = useState("");
+    const pickRegion = (c) => {
       setS("apk_country", c);
-      if (!isBlockedCountry(c)) location.reload();
+      setCountry(c);
+      setRegionOpen(false);
+      setRegionQ("");
+      if (!isBlockedCountry(c)) setTimeout(() => location.reload(), 250);
     };
     const pickSrc = (id) => {
       const n = normalizeStore(id);
@@ -3889,17 +3896,14 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       setS("apk_store", n);
       setApiOpen(false);
     };
-    return /* @__PURE__ */ React.createElement("div", { className: "page-cover play-wrap" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 px-3 pt-3 pb-2" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip", onClick: () => window.history.back(), "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" })), /* @__PURE__ */ React.createElement("h1", { className: "text-xl font-bold flex-1" }, t("settings_title"))), /* @__PURE__ */ React.createElement("div", { className: "play-seg-row", style: { paddingTop: 8 } }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setLang("ar"), className: `play-seg ${lang === "ar" ? "on" : ""}` }, t("lang_ar")), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setLang("en"), className: `play-seg ${lang === "en" ? "on" : ""}` }, t("lang_en"))), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setCountryOpen(true), className: "settings-box", style: { width: "calc(100% - 28px)", border: "none", display: "flex", alignItems: "center", gap: 12, textAlign: "inherit", fontFamily: "inherit", cursor: "pointer" } }, /* @__PURE__ */ React.createElement("span", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { className: "block text-sm font-semibold" }, lang === "ar" ? "المنطقة" : "Region"), /* @__PURE__ */ React.createElement("span", { className: "block text-xs mt-0.5", style: { opacity: 0.7 } }, lang === "ar" ? "تغيير منطقة متجر التطبيقات" : "Change the app store region")), /* @__PURE__ */ React.createElement("span", { className: "text-xs font-bold" }, countryLabel(country2, lang === "ar"))), /* @__PURE__ */ React.createElement(AccPick, { open: countryOpen, title: lang === "ar" ? "المنطقة" : "Region", onClose: () => setCountryOpen(false) }, /* @__PURE__ */ React.createElement("input", { className: "ob-sheet-search set-country-search", value: countryQ, onChange: (e) => setCountryQ(e.target.value), placeholder: lang === "ar" ? "بحث عن بلد" : "Search country" }), WORLD_COUNTRIES.filter((x) => {
-      const q = countryQ.trim().toLowerCase();
-      return !q || x.ar.includes(countryQ.trim()) || x.en.toLowerCase().includes(q) || x.c.includes(q);
-    }).map((x) => /* @__PURE__ */ React.createElement("button", { key: x.c, type: "button", className: `acc-pick-item ${country2 === x.c ? "on" : ""}`, onClick: () => pickCountry(x.c) }, /* @__PURE__ */ React.createElement("span", { style: { flex: 1, textAlign: "inherit" } }, lang === "ar" ? x.ar : x.en), country2 === x.c && /* @__PURE__ */ React.createElement("span", null, "✓")))), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setApiOpen(true), className: "settings-box", style: { width: "calc(100% - 28px)", border: "none", display: "flex", alignItems: "center", gap: 12, textAlign: "inherit", fontFamily: "inherit", cursor: "pointer" } }, /* @__PURE__ */ React.createElement("span", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { className: "block text-sm font-semibold" }, "API Search Apps"), /* @__PURE__ */ React.createElement("span", { className: "block text-xs mt-0.5", style: { opacity: 0.7 } }, t("api_search_app_desc"))), /* @__PURE__ */ React.createElement("span", { className: "text-xs font-bold" }, storeLabel(STORE_CONFIGS[selStore]))), /* @__PURE__ */ React.createElement("div", { className: "settings-box", style: { display: "flex", alignItems: "center", gap: 12 } }, /* @__PURE__ */ React.createElement("div", { className: "min-w-0", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium" }, t("style2")), /* @__PURE__ */ React.createElement("p", { className: "text-xs mt-0.5", style: { opacity: 0.7 } }, t("style2_desc"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "sw", "aria-checked": style2 ? "true" : "false", onClick: () => {
+    return /* @__PURE__ */ React.createElement("div", { className: "page-cover play-wrap" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 px-3 pt-3 pb-2" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip", onClick: () => window.history.back(), "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" })), /* @__PURE__ */ React.createElement("h1", { className: "text-xl font-bold flex-1" }, t("settings_title"))), /* @__PURE__ */ React.createElement("div", { className: "play-seg-row", style: { paddingTop: 8 } }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setLang("ar"), className: `play-seg ${lang === "ar" ? "on" : ""}` }, t("lang_ar")), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setLang("en"), className: `play-seg ${lang === "en" ? "on" : ""}` }, t("lang_en"))), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setApiOpen(true), className: "settings-box", style: { width: "calc(100% - 28px)", border: "none", display: "flex", alignItems: "center", gap: 12, textAlign: "inherit", fontFamily: "inherit", cursor: "pointer" } }, /* @__PURE__ */ React.createElement("span", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { className: "block text-sm font-semibold" }, "API Search Apps"), /* @__PURE__ */ React.createElement("span", { className: "block text-xs mt-0.5", style: { opacity: 0.7 } }, t("api_search_app_desc"))), /* @__PURE__ */ React.createElement("span", { className: "text-xs font-bold" }, storeLabel(STORE_CONFIGS[selStore]))), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setRegionOpen(true), className: "settings-box", style: { width: "calc(100% - 28px)", border: "none", display: "flex", alignItems: "center", gap: 12, textAlign: "inherit", fontFamily: "inherit", cursor: "pointer" } }, /* @__PURE__ */ React.createElement("span", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { className: "block text-sm font-semibold" }, t("store_country"))), /* @__PURE__ */ React.createElement("span", { className: "text-xs font-bold" }, countryLabel(countryCode, lang === "ar"))), /* @__PURE__ */ React.createElement("div", { className: "settings-box", style: { display: "flex", alignItems: "center", gap: 12 } }, /* @__PURE__ */ React.createElement("div", { className: "min-w-0", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium" }, t("style2")), /* @__PURE__ */ React.createElement("p", { className: "text-xs mt-0.5", style: { opacity: 0.7 } }, t("style2_desc"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "sw", "aria-checked": style2 ? "true" : "false", onClick: () => {
       const n = !style2;
       setStyle2(n);
       setExpMode(!n);
       setNight(!n);
     }, "aria-label": t("style2") })), /* @__PURE__ */ React.createElement("button", { type: "button", className: "settings-box", style: { width: "calc(100% - 28px)", border: "none", textAlign: "inherit", fontFamily: "inherit", cursor: "pointer", color: "#eee" }, onClick: () => {
       if (window.confirm(t("reset_confirm"))) wipeStore();
-    } }, /* @__PURE__ */ React.createElement("span", { className: "block text-sm font-semibold" }, t("reset_data")), /* @__PURE__ */ React.createElement("span", { className: "block text-xs mt-0.5", style: { opacity: 0.7 } }, t("reset_data_desc"))), /* @__PURE__ */ React.createElement(AccPick, { open: apiOpen, title: "API Search Apps", onClose: () => setApiOpen(false) }, INSTALL_SOURCE_IDS.map((id) => {
+    } }, /* @__PURE__ */ React.createElement("span", { className: "block text-sm font-semibold" }, t("reset_data")), /* @__PURE__ */ React.createElement("span", { className: "block text-xs mt-0.5", style: { opacity: 0.7 } }, t("reset_data_desc"))), /* @__PURE__ */ React.createElement(AccPick, { open: regionOpen, title: t("store_country"), onClose: () => { setRegionOpen(false); setRegionQ(""); } }, /* @__PURE__ */ React.createElement("input", { value: regionQ, onChange: (e) => setRegionQ(e.target.value), placeholder: lang === "ar" ? "بحث عن بلد" : "Search country", style: { display: "block", width: "calc(100% - 24px)", height: 42, margin: "0 12px 8px", borderRadius: 12, border: "1px solid rgba(255,255,255,.14)", background: "rgba(255,255,255,.07)", color: "#eee", padding: "0 12px", fontSize: ".92rem", fontFamily: "inherit", outline: "none" } }), WORLD_COUNTRIES.filter((x) => { const k = regionQ.trim().toLowerCase(); return !k || x.ar.includes(regionQ.trim()) || x.en.toLowerCase().includes(k) || x.c.includes(k); }).map((x) => /* @__PURE__ */ React.createElement("button", { key: x.c, type: "button", className: `acc-pick-item ${countryCode === x.c ? "on" : ""}`, onClick: () => pickRegion(x.c) }, /* @__PURE__ */ React.createElement("span", { style: { flex: 1, textAlign: "inherit" } }, lang === "ar" ? x.ar : x.en), countryCode === x.c && /* @__PURE__ */ React.createElement("span", null, "\u2713")))), /* @__PURE__ */ React.createElement(AccPick, { open: apiOpen, title: "API Search Apps", onClose: () => setApiOpen(false) }, INSTALL_SOURCE_IDS.map((id) => {
       const cfg = STORE_CONFIGS[id];
       const on = selStore === id;
       return /* @__PURE__ */ React.createElement("button", { key: id, type: "button", className: `acc-pick-item ${on ? "on" : ""}`, onClick: () => pickSrc(id) }, /* @__PURE__ */ React.createElement("span", { className: "w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0" }, /* @__PURE__ */ React.createElement(BrandIcon, { name: cfg.icon })), /* @__PURE__ */ React.createElement("span", { style: { flex: 1, textAlign: "inherit" } }, /* @__PURE__ */ React.createElement("span", { style: { display: "block" } }, storeLabel(cfg)), cfg.kind === "direct" && /* @__PURE__ */ React.createElement("span", { style: { display: "block", fontSize: ".72rem", opacity: 0.65, fontWeight: 400 } }, t("store_direct_hint"))), on && /* @__PURE__ */ React.createElement("span", null, "\u2713"));
@@ -5214,7 +5218,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     else if (route.startsWith("/you-project/")) page = /* @__PURE__ */ React.createElement(ProjectGate, { route, nav });
     else if (route === "/now-playing") page = /* @__PURE__ */ React.createElement(NowPlaying, { track, playing, progress, duration, onToggle: togglePlay, onPrev: playPrev, onNext: playNext, onSeek: seekTo, onFav: toggleSongFav, isFav: isSongFav, nav });
     else if (route === "/equalizer") page = /* @__PURE__ */ React.createElement(EqualizerPage, { eqOn, setEqOn, bands, setBand, volume, setVolume, nav });
-    else if (route === "/settings") page = /* @__PURE__ */ React.createElement(Settings, { selStore, setSelStore, style2, setStyle2, setExpMode, lang, setLang, night, setNight, nav, country2, setCountry });
+    else if (route === "/settings") page = /* @__PURE__ */ React.createElement(Settings, { selStore, setSelStore, style2, setStyle2, setExpMode, lang, setLang, night, setNight, nav, countryCode: country2, setCountry });
     else if (route.startsWith("/category/")) page = /* @__PURE__ */ React.createElement(Category, { genre: route.split("/")[2], open });
     else page = /* @__PURE__ */ React.createElement(Home, { nav, open, openInstall });
     const showS = !route.startsWith("/search") && !isDetail && route !== "/now-playing" && route !== "/equalizer" && !isDownloads;
