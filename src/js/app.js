@@ -1472,15 +1472,17 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     const rafRef = React.useRef(null);
     React.useEffect(() => {
       let cancelled = false;
-      const SLOW_MS = 1000;
-      const FAST_MS = 180;
-      const SLOW_DEG = 80;
+      const SLOW_MS = 500;
+      const FAST_MS = 220;
+      const SLOW_DEG = 70;
+      const HALF_TURN = 180;
 
       const runIcon = (n) => {
         if (cancelled) return;
         setIcon(n);
         setAngle(0);
         const start = performance.now();
+        let switched = false;
 
         const animate = (now) => {
           if (cancelled) return;
@@ -1493,12 +1495,17 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
             rafRef.current = requestAnimationFrame(animate);
           } else if (elapsed < SLOW_MS + FAST_MS) {
             const prog = (elapsed - SLOW_MS) / FAST_MS;
-            newAngle = SLOW_DEG + prog * (360 - SLOW_DEG);
+            newAngle = SLOW_DEG + prog * HALF_TURN;
             setAngle(newAngle);
+            if (!switched && prog >= 0.45) {
+              switched = true;
+              const next = n >= 10 ? 1 : n + 1;
+              setIcon(next);
+            }
             rafRef.current = requestAnimationFrame(animate);
           } else {
             const next = n >= 10 ? 1 : n + 1;
-            setTimeout(() => runIcon(next), 40);
+            setTimeout(() => runIcon(next), 30);
           }
         };
         rafRef.current = requestAnimationFrame(animate);
@@ -1520,8 +1527,8 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
         src: "./res/drawable/photojournal_shape" + icon + ".svg",
         alt: "",
         style: {
-          width: "64px",
-          height: "64px",
+          width: "52px",
+          height: "52px",
           display: "block",
           transform: "rotate(" + angle + "deg)",
           transition: "none"
