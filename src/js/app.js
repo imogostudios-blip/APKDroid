@@ -3879,33 +3879,34 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     return React.createElement(ProjectPage, { route: "/you-project/" + id + "/edit", nav });
   };
   const SettingsSpinner = () => /* @__PURE__ */ React.createElement("div", { className: "set-spin-screen", role: "status", "aria-label": "loading" }, /* @__PURE__ */ React.createElement("svg", { className: "set-spin", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 50 50", width: "36", height: "36", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("g", { className: "set-spin-rotor" }, /* @__PURE__ */ React.createElement("circle", { className: "set-spin-arc", cx: "25", cy: "25", r: "20", fill: "none", stroke: "#0B57D0", strokeWidth: "4", strokeMiterlimit: "10", strokeLinecap: "round" }))));
-  const Settings = ({ selStore, setSelStore, style2, setStyle2, setExpMode, lang, setLang, night, setNight, nav }) => {
+  const Settings = ({ selStore, setSelStore, style2, setStyle2, setExpMode, lang, setLang, night, setNight, nav, country2, setCountry }) => {
     const [apiOpen, setApiOpen] = useState(false);
-    const [regionOpen, setRegionOpen] = useState(false);
-    const [curCountry, setCurCountry] = useState(() => getS("apk_country", "us"));
+    const [countryOpen, setCountryOpen] = useState(false);
+    const pickCountry = (c) => {
+      setCountryOpen(false);
+      if (c === country2) return;
+      setCountry(c);
+      setS("apk_country", c);
+      if (!isBlockedCountry(c)) location.reload();
+    };
     const pickSrc = (id) => {
       const n = normalizeStore(id);
       setSelStore(n);
       setS("apk_store", n);
       setApiOpen(false);
     };
-    const pickRegion = (code) => {
-      setS("apk_country", code);
-      setCurCountry(code);
-      setRegionOpen(false);
-    };
-    return /* @__PURE__ */ React.createElement("div", { className: "page-cover play-wrap" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 px-3 pt-3 pb-2" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip", onClick: () => window.history.back(), "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" })), /* @__PURE__ */ React.createElement("h1", { className: "text-xl font-bold flex-1" }, t("settings_title"))), /* @__PURE__ */ React.createElement("div", { className: "play-seg-row", style: { paddingTop: 8 } }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setLang("ar"), className: `play-seg ${lang === "ar" ? "on" : ""}` }, t("lang_ar")), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setLang("en"), className: `play-seg ${lang === "en" ? "on" : ""}` }, t("lang_en"))), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setApiOpen(true), className: "settings-box", style: { width: "calc(100% - 28px)", border: "none", display: "flex", alignItems: "center", gap: 12, textAlign: "inherit", fontFamily: "inherit", cursor: "pointer" } }, /* @__PURE__ */ React.createElement("span", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { className: "block text-sm font-semibold" }, "API Search Apps"), /* @__PURE__ */ React.createElement("span", { className: "block text-xs mt-0.5", style: { opacity: 0.7 } }, t("api_search_app_desc"))), /* @__PURE__ */ React.createElement("span", { className: "text-xs font-bold" }, storeLabel(STORE_CONFIGS[selStore]))), /* @__PURE__ */ React.createElement("div", { className: "settings-box", style: { display: "flex", alignItems: "center", gap: 12 } }, /* @__PURE__ */ React.createElement("div", { className: "min-w-0", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium" }, t("style2")), /* @__PURE__ */ React.createElement("p", { className: "text-xs mt-0.5", style: { opacity: 0.7 } }, t("style2_desc"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "sw", "aria-checked": style2 ? "true" : "false", onClick: () => {
+    return /* @__PURE__ */ React.createElement("div", { className: "page-cover play-wrap" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 px-3 pt-3 pb-2" }, /* @__PURE__ */ React.createElement("button", { type: "button", className: "nav-chip", onClick: () => window.history.back(), "aria-label": t("back") }, /* @__PURE__ */ React.createElement(Icon, { name: "left", className: "w-5 h-5" })), /* @__PURE__ */ React.createElement("h1", { className: "text-xl font-bold flex-1" }, t("settings_title"))), /* @__PURE__ */ React.createElement("div", { className: "play-seg-row", style: { paddingTop: 8 } }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setLang("ar"), className: `play-seg ${lang === "ar" ? "on" : ""}` }, t("lang_ar")), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setLang("en"), className: `play-seg ${lang === "en" ? "on" : ""}` }, t("lang_en"))), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setCountryOpen(true), className: "settings-box", style: { width: "calc(100% - 28px)", border: "none", display: "flex", alignItems: "center", gap: 12, textAlign: "inherit", fontFamily: "inherit", cursor: "pointer" } }, /* @__PURE__ */ React.createElement("span", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { className: "block text-sm font-semibold" }, lang === "ar" ? "المنطقة" : "Region"), /* @__PURE__ */ React.createElement("span", { className: "block text-xs mt-0.5", style: { opacity: 0.7 } }, lang === "ar" ? "تغيير منطقة متجر التطبيقات" : "Change the app store region")), /* @__PURE__ */ React.createElement("span", { className: "text-xs font-bold" }, countryLabel(country2, lang === "ar"))), /* @__PURE__ */ React.createElement(AccPick, { open: countryOpen, title: lang === "ar" ? "المنطقة" : "Region", onClose: () => setCountryOpen(false) }, WORLD_COUNTRIES.map((x) => /* @__PURE__ */ React.createElement("button", { key: x.c, type: "button", className: `acc-pick-item ${country2 === x.c ? "on" : ""}`, onClick: () => pickCountry(x.c) }, /* @__PURE__ */ React.createElement("span", { style: { flex: 1, textAlign: "inherit" } }, lang === "ar" ? x.ar : x.en), country2 === x.c && /* @__PURE__ */ React.createElement("span", null, "✓")))), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setApiOpen(true), className: "settings-box", style: { width: "calc(100% - 28px)", border: "none", display: "flex", alignItems: "center", gap: 12, textAlign: "inherit", fontFamily: "inherit", cursor: "pointer" } }, /* @__PURE__ */ React.createElement("span", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { className: "block text-sm font-semibold" }, "API Search Apps"), /* @__PURE__ */ React.createElement("span", { className: "block text-xs mt-0.5", style: { opacity: 0.7 } }, t("api_search_app_desc"))), /* @__PURE__ */ React.createElement("span", { className: "text-xs font-bold" }, storeLabel(STORE_CONFIGS[selStore]))), /* @__PURE__ */ React.createElement("div", { className: "settings-box", style: { display: "flex", alignItems: "center", gap: 12 } }, /* @__PURE__ */ React.createElement("div", { className: "min-w-0", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("p", { className: "text-sm font-medium" }, t("style2")), /* @__PURE__ */ React.createElement("p", { className: "text-xs mt-0.5", style: { opacity: 0.7 } }, t("style2_desc"))), /* @__PURE__ */ React.createElement("button", { type: "button", className: "sw", "aria-checked": style2 ? "true" : "false", onClick: () => {
       const n = !style2;
       setStyle2(n);
       setExpMode(!n);
       setNight(!n);
-    }, "aria-label": t("style2") })), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: () => setRegionOpen(true), className: "settings-box", style: { width: "calc(100% - 28px)", border: "none", display: "flex", alignItems: "center", gap: 12, textAlign: "inherit", fontFamily: "inherit", cursor: "pointer" } }, /* @__PURE__ */ React.createElement("span", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("span", { className: "block text-sm font-semibold" }, lang === "ar" ? "المنطقة" : "Region"), /* @__PURE__ */ React.createElement("span", { className: "block text-xs mt-0.5", style: { opacity: 0.7 } }, (WORLD_COUNTRIES.find(c => c.c === curCountry) || {}).en || curCountry)), /* @__PURE__ */ React.createElement("span", { className: "text-xs" }, "›")), /* @__PURE__ */ React.createElement("button", { type: "button", className: "settings-box", style: { width: "calc(100% - 28px)", border: "none", textAlign: "inherit", fontFamily: "inherit", cursor: "pointer", color: "#eee" }, onClick: () => {
+    }, "aria-label": t("style2") })), /* @__PURE__ */ React.createElement("button", { type: "button", className: "settings-box", style: { width: "calc(100% - 28px)", border: "none", textAlign: "inherit", fontFamily: "inherit", cursor: "pointer", color: "#eee" }, onClick: () => {
       if (window.confirm(t("reset_confirm"))) wipeStore();
     } }, /* @__PURE__ */ React.createElement("span", { className: "block text-sm font-semibold" }, t("reset_data")), /* @__PURE__ */ React.createElement("span", { className: "block text-xs mt-0.5", style: { opacity: 0.7 } }, t("reset_data_desc"))), /* @__PURE__ */ React.createElement(AccPick, { open: apiOpen, title: "API Search Apps", onClose: () => setApiOpen(false) }, INSTALL_SOURCE_IDS.map((id) => {
       const cfg = STORE_CONFIGS[id];
       const on = selStore === id;
       return /* @__PURE__ */ React.createElement("button", { key: id, type: "button", className: `acc-pick-item ${on ? "on" : ""}`, onClick: () => pickSrc(id) }, /* @__PURE__ */ React.createElement("span", { className: "w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0" }, /* @__PURE__ */ React.createElement(BrandIcon, { name: cfg.icon })), /* @__PURE__ */ React.createElement("span", { style: { flex: 1, textAlign: "inherit" } }, /* @__PURE__ */ React.createElement("span", { style: { display: "block" } }, storeLabel(cfg)), cfg.kind === "direct" && /* @__PURE__ */ React.createElement("span", { style: { display: "block", fontSize: ".72rem", opacity: 0.65, fontWeight: 400 } }, t("store_direct_hint"))), on && /* @__PURE__ */ React.createElement("span", null, "\u2713"));
-    })), /* @__PURE__ */ React.createElement(AccPick, { open: regionOpen, title: lang === "ar" ? "اختر المنطقة" : "Choose Region", onClose: () => setRegionOpen(false) }, WORLD_COUNTRIES.map((c) => /* @__PURE__ */ React.createElement("button", { key: c.c, type: "button", className: `acc-pick-item ${curCountry === c.c ? "on" : ""}`, onClick: () => pickRegion(c.c) }, /* @__PURE__ */ React.createElement("span", null, lang === "ar" ? c.ar : c.en), curCountry === c.c && /* @__PURE__ */ React.createElement("span", { style: { marginInlineStart: "auto" } }, "✓")))));
+    })));
   };
   const Category = ({ genre, open }) => {
     const decoded = decodeURIComponent(genre || "");
@@ -4169,172 +4170,89 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     if (!it) return code || "";
     return ar ? it.ar : it.en;
   };
+  const SVG_OB_COUNTRY = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57.0 56.0"><path d="M16.977,16.764C16.438,18.576 16.002,20.46 15.697,22.404C15.39,24.358 15.217,26.369 15.205,28.427C9.633,27.494 4.83,26.138 1.183,24.784C1.61,21.047 2.773,17.534 4.523,14.393C8.111,15.341 12.325,16.195 16.977,16.764ZM5.784,12.341C9.251,13.226 13.28,14.013 17.705,14.533C19.746,8.77 22.771,3.845 25.75,0.187C17.443,1.147 10.244,5.742 5.784,12.341ZM28.947,0C28.965,0 28.982,0 29,0C29.018,0 29.035,0 29.053,0C32.201,3.455 35.634,8.565 37.91,14.708C31.623,15.365 25.575,15.289 20.064,14.78C22.339,8.605 25.787,3.468 28.947,0ZM32.25,0.187C40.403,1.129 47.49,5.574 51.966,11.978C48.033,13.123 44.108,13.918 40.259,14.43C38.218,8.711 35.211,3.823 32.25,0.187ZM53.253,13.999C49.133,15.237 45.021,16.098 40.99,16.654C41.544,18.5 41.992,20.421 42.304,22.404C42.617,24.401 42.791,26.458 42.796,28.563C47.412,27.796 52.123,26.576 56.817,24.782C56.372,20.889 55.128,17.239 53.253,13.999ZM56.988,27.178C52.208,28.953 47.42,30.156 42.731,30.908C42.512,34.698 41.727,38.622 40.209,42.605C44.868,42.076 49.649,41.154 54.434,39.725C56.081,36.158 57,32.186 57,28C57,27.725 56.996,27.451 56.988,27.178ZM52.931,42.544C48.297,43.788 43.685,44.583 39.196,45.029C37.571,48.601 35.335,52.209 32.371,55.799C41.086,54.754 48.57,49.704 52.931,42.544ZM29.163,56C29.108,56 29.054,56 29,56C28.946,56 28.892,56 28.837,56C25.59,52.367 23.157,48.722 21.394,45.121C26.126,45.525 31.232,45.625 36.541,45.253C34.784,48.811 32.37,52.411 29.163,56ZM25.629,55.799C16.82,54.742 9.269,49.595 4.929,42.312C8.838,43.344 13.521,44.276 18.727,44.859C20.358,48.487 22.618,52.152 25.629,55.799ZM3.47,39.516C7.353,40.657 12.214,41.733 17.722,42.421C16.231,38.452 15.466,34.544 15.261,30.769C9.665,29.86 4.797,28.528 1.012,27.172C1.004,27.447 1,27.723 1,28C1,32.105 1.883,36.003 3.47,39.516ZM20.309,42.71C25.65,43.235 31.514,43.374 37.629,42.86C39.277,38.894 40.137,34.997 40.402,31.246C32.238,32.309 24.437,32.046 17.589,31.116C17.841,34.859 18.683,38.75 20.309,42.71ZM19.306,17.021C18.739,18.86 18.283,20.778 17.971,22.761C17.666,24.708 17.5,26.719 17.507,28.781C24.371,29.744 32.249,30.026 40.493,28.91C40.507,26.803 40.34,24.748 40.029,22.761C39.713,20.75 39.248,18.806 38.67,16.943C31.823,17.699 25.25,17.604 19.306,17.021Z" fill="#29b6f6"/></svg>`;
+  const SVG_OB_CHECK = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8,0C12.4183,0 16,3.58172 16,8C16,12.4183 12.4183,16 8,16C3.58172,16 0,12.4183 0,8C0,3.58172 3.58172,0 8,0ZM11.3584,5.64645C11.1849,5.47288 10.9154,5.4536 10.7206,5.58859L10.6513,5.64645L7,9.298L5.35355,7.65131L5.28431,7.59346C5.08944,7.45846 4.82001,7.47775 4.64645,7.65131C4.47288,7.82488 4.4536,8.09431 4.58859,8.28917L4.64645,8.35842L6.64645,10.3584L6.71569,10.4163C6.8862,10.5344 7.1138,10.5344 7.28431,10.4163L7.35355,10.3584L11.3584,6.35355L11.4163,6.28431C11.5513,6.08944 11.532,5.82001 11.3584,5.64645Z" fill="#01712B"/></svg>`;
+  const OB_LEGAL_AR = "بمتابعتك أنت توافق على بنود الخدمة وسياسة الخصوصية الخاصة بنا. كما أنه سيتم جلب بيانات هائلة عبر خدمات خارجية مثل iTunes وقد تخضع هذه المواقع إلى بنود خدمة وسياسة خصوصية خاصة بها. نحن لا نتحمل مسؤولية أي محتوى صادر من هذه الخدمات.";
+  const OB_LEGAL_EN = "By continuing you agree to our Terms of Service and Privacy Policy. Large amounts of data will also be fetched through external services such as iTunes, and these sites may be subject to their own terms of service and privacy policies. We are not responsible for any content coming from these services.";
   const OnboardFlow = ({ onFinish, setLang, setTheme, setExpMode, setStyle2 }) => {
+    const h = React.createElement;
+    // 0 welcome, 1 country, 2 language, 3 style, 4 theme, 5 terms, 6 signing in, 7 setting up
     const [step, setStep] = useState(0);
-    const [langPick, setLangPick] = useState("en");
     const [countryPick, setCountryPick] = useState(null);
-    const [stylePick, setStylePick] = useState(null);
+    const [langPick, setLangPick] = useState(null);
+    const [lookPick, setLookPick] = useState(null);
     const [themePick, setThemePick] = useState(null);
     const ar = langPick === "ar";
-
+    const rtl = step >= 3 && ar;
+    const tr = (a, e) => ar ? a : e;
     useEffect(() => {
-      if (step === 6) {
-        const t = setTimeout(() => setStep(7), 5000);
-        return () => clearTimeout(t);
-      }
-      if (step === 7) {
-        const t = setTimeout(() => {
-          onFinish({
-            lang: langPick || "en",
-            theme: themePick || "system",
-            exp: stylePick === 0,
-            style2: stylePick === 1,
-            country: countryPick || "us"
-          });
-        }, 5000);
-        return () => clearTimeout(t);
-      }
+      if (step !== 6 && step !== 7) return;
+      const id = setTimeout(() => {
+        if (step === 6) {
+          setStep(7);
+          return;
+        }
+        onFinish({ lang: langPick || "ar", theme: themePick || "light", exp: !lookPick, style2: !!lookPick, country: countryPick || "us" });
+      }, 5e3);
+      return () => clearTimeout(id);
     }, [step]);
-
-    const GLOBE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 57 56"><path d="M16.977,16.764C16.438,18.576 16.002,20.46 15.697,22.404C15.39,24.358 15.217,26.369 15.205,28.427C9.633,27.494 4.83,26.138 1.183,24.784C1.61,21.047 2.773,17.534 4.523,14.393C8.111,15.341 12.325,16.195 16.977,16.764ZM5.784,12.341C9.251,13.226 13.28,14.013 17.705,14.533C19.746,8.77 22.771,3.845 25.75,0.187C17.443,1.147 10.244,5.742 5.784,12.341ZM28.947,0C28.965,0 28.982,0 29,0C29.018,0 29.035,0 29.053,0C32.201,3.455 35.634,8.565 37.91,14.708C31.623,15.365 25.575,15.289 20.064,14.78C22.339,8.605 25.787,3.468 28.947,0ZM32.25,0.187C40.403,1.129 47.49,5.574 51.966,11.978C48.033,13.123 44.108,13.918 40.259,14.43C38.218,8.711 35.211,3.823 32.25,0.187ZM53.253,13.999C49.133,15.237 45.021,16.098 40.99,16.654C41.544,18.5 41.992,20.421 42.304,22.404C42.617,24.401 42.791,26.458 42.796,28.563C47.412,27.796 52.123,26.576 56.817,24.782C56.372,20.889 55.128,17.239 53.253,13.999ZM56.988,27.178C52.208,28.953 47.42,30.156 42.731,30.908C42.512,34.698 41.727,38.622 40.209,42.605C44.868,42.076 49.649,41.154 54.434,39.725C56.081,36.158 57,32.186 57,28C57,27.725 56.996,27.451 56.988,27.178ZM52.931,42.544C48.297,43.788 43.685,44.583 39.196,45.029C37.571,48.601 35.335,52.209 32.371,55.799C41.086,54.754 48.57,49.704 52.931,42.544ZM29.163,56C29.108,56 29.054,56 29,56C28.946,56 28.892,56 28.837,56C25.59,52.367 23.157,48.722 21.394,45.121C26.126,45.525 31.232,45.625 36.541,45.253C34.784,48.811 32.37,52.411 29.163,56ZM25.629,55.799C16.82,54.742 9.269,49.595 4.929,42.312C8.838,43.344 13.521,44.276 18.727,44.859C20.358,48.487 22.618,52.152 25.629,55.799ZM3.47,39.516C7.353,40.657 12.214,41.733 17.722,42.421C16.231,38.452 15.466,34.544 15.261,30.769C9.665,29.86 4.797,28.528 1.012,27.172C1.004,27.447 1,27.723 1,28C1,32.105 1.883,36.003 3.47,39.516ZM20.309,42.71C25.65,43.235 31.514,43.374 37.629,42.86C39.277,38.894 40.137,34.997 40.402,31.246C32.238,32.309 24.437,32.046 17.589,31.116C17.841,34.859 18.683,38.75 20.309,42.71ZM19.306,17.021C18.739,18.86 18.283,20.778 17.971,22.761C17.666,24.708 17.5,26.719 17.507,28.781C24.371,29.744 32.249,30.026 40.493,28.91C40.507,26.803 40.34,24.748 40.029,22.761C39.713,20.75 39.248,18.806 38.67,16.943C31.823,17.699 25.25,17.604 19.306,17.021Z" fill="#29b6f6"/></svg>`;
-
-    const CHECK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 16 16"><path d="M8,0C12.4183,0 16,3.58172 16,8C16,12.4183 12.4183,16 8,16C3.58172,16 0,12.4183 0,8C0,3.58172 3.58172,0 8,0ZM11.3584,5.64645C11.1849,5.47288 10.9154,5.4536 10.7206,5.58859L10.6513,5.64645L7,9.298L5.35355,7.65131L5.28431,7.59346C5.08944,7.45846 4.82001,7.47775 4.64645,7.65131C4.47288,7.82488 4.4536,8.09431 4.58859,8.28917L4.64645,8.35842L6.64645,10.3584L6.71569,10.4163C6.8862,10.5344 7.1138,10.5344 7.28431,10.4163L7.35355,10.3584L11.3584,6.35355L11.4163,6.28431C11.5513,6.08944 11.532,5.82001 11.3584,5.64645Z" fill="#01712B"/></svg>`;
-
-    const DISCLAIMER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="140" height="120" viewBox="0 0 141 120"><g><path d="M84.098,3.172C83.348,2.421 82.33,2 81.27,2L59.73,2C58.67,2 57.652,2.421 56.902,3.172L41.672,18.402C40.921,19.152 40.5,20.17 40.5,21.23V42.77C40.5,43.83 40.921,44.848 41.672,45.598L56.902,60.828C57.652,61.579 58.67,62 59.73,62H81.27C82.33,62 83.348,61.579 84.098,60.828L99.328,45.598C100.079,44.848 100.5,43.83 100.5,42.77V21.23C100.5,20.17 100.079,19.152 99.328,18.402L84.098,3.172Z" fill="#EE675C"/><path d="M70.5,62V118" stroke="#9AA0A6" stroke-width="1"/><path d="M67.5,15h6v24h-6z" fill="#3C4043"/><path d="M67,46.5C67,48.409 68.591,50 70.5,50C72.409,50 74,48.409 74,46.5C74,44.591 72.409,43 70.5,43C68.485,43.106 67,44.591 67,46.5Z" fill="#3C4043"/><path d="M40.5,118H100.5" stroke="#9AA0A6" stroke-width="1"/></g></svg>`;
-
-    const SPINNER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="48" height="48"><style>.ms{animation:rot 2s linear infinite;transform-origin:center}.mp{stroke:#A8C7FA;stroke-linecap:round;animation:dash 1.5s ease-in-out infinite}@keyframes rot{100%{transform:rotate(360deg)}}@keyframes dash{0%{stroke-dasharray:1,150;stroke-dashoffset:0}50%{stroke-dasharray:90,150;stroke-dashoffset:-35}100%{stroke-dasharray:90,150;stroke-dashoffset:-124}}</style><g class="ms"><circle class="mp" cx="25" cy="25" r="20" fill="none" stroke-width="4"/></g></svg>`;
-
-    const btnStyle = {
-      position: "fixed",
-      bottom: 24,
-      left: 24,
-      right: 24,
-      height: 52,
-      borderRadius: 26,
-      background: "#062E6F",
-      color: "#fff",
-      border: "none",
-      fontSize: 16,
-      fontWeight: 600,
-      cursor: "pointer"
+    const canNext = step === 0 || step === 5 || step === 1 && !!countryPick || step === 2 && !!langPick || step === 3 && lookPick !== null || step === 4 && !!themePick;
+    const goNext = () => {
+      if (!canNext) return;
+      if (step === 2) setLang(langPick);
+      if (step === 3) {
+        setStyle2(!!lookPick);
+        setExpMode(!lookPick);
+      }
+      if (step === 4) setTheme(themePick);
+      setStep(step + 1);
     };
-
-    const pageStyle = {
-      minHeight: "100dvh",
-      background: "#0A0A0B",
-      color: "#fff",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      padding: "40px 20px 100px",
-      boxSizing: "border-box"
+    const nextLabel = step === 0 ? "Sign In" : step >= 2 ? tr("متابعة", "Next") : "Next";
+    const head = (svg) => h("div", { className: "ob2-head" }, h(ObSvg, { className: "ob2-head-logo", html: svg }));
+    const body = () => {
+      if (step === 0) return h("div", { className: "ob2-mid" },
+        h("img", { className: "ob2-welcome-logo", src: "res/icons/icon-192.png", alt: "APKDroid", draggable: false }),
+        h("div", { className: "ob2-welcome-title" }, "Welcome To APKDroid"));
+      if (step === 1) return h(React.Fragment, null,
+        head(SVG_OB_COUNTRY),
+        h("div", { className: "ob2-list" }, WORLD_COUNTRIES.map((x) =>
+          h("button", { key: x.c, type: "button", className: `ob2-item ${countryPick === x.c ? "on" : ""}`, onClick: () => setCountryPick(x.c) }, x.en))));
+      if (step === 2) return h(React.Fragment, null,
+        head(SVG_LANG),
+        h("div", { className: "ob2-mid ob2-mid-top" },
+          h("button", { type: "button", className: `ob2-item lang ${langPick === "en" ? "on" : ""}`, onClick: () => setLangPick("en") }, "English"),
+          h("button", { type: "button", className: `ob2-item lang ${langPick === "ar" ? "on" : ""}`, onClick: () => setLangPick("ar") }, "العربية")));
+      if (step === 3) return h("div", { className: "ob2-mid" },
+        h("div", { className: "ob2-previews" }, [false, true].map((v) =>
+          h("button", { key: String(v), type: "button", className: `ob2-style ${lookPick === v ? "on" : ""}`, onClick: () => setLookPick(v), "aria-pressed": lookPick === v },
+            h("img", { className: "ob2-style-img", src: v ? "res/drawable/style2.png" : "res/drawable/style1.png", alt: v ? "Style 2" : "Style 1", draggable: false }),
+            lookPick === v ? h(ObSvg, { className: "ob2-radio on", html: SVG_OB_CHECK }) : h("span", { className: "ob2-radio off" })))),
+        h("div", { className: "ob2-h" }, tr("اختر الستايل الذي تفضله", "Choose the style you prefer")),
+        h("div", { className: "ob2-sub" }, tr("تخصيص ألوان وشكل التطبيق حسب رغبتك", "Customize the colors and look of the app to your liking")));
+      if (step === 4) return h("div", { className: "ob2-mid" },
+        h(ObSvg, { className: "ob-logo sm ob2-theme-logo", html: SVG_THEME }),
+        h("div", { className: "ob2-theme-row" },
+          h("button", { type: "button", className: `ob2-theme light ${themePick === "light" ? "on" : ""}`, onClick: () => setThemePick("light") }, tr("ثيم فاتح", "Light theme")),
+          h("button", { type: "button", className: `ob2-theme dark ${themePick === "dark" ? "on" : ""}`, onClick: () => setThemePick("dark") }, tr("ثيم داكن", "Dark theme"))),
+        h("button", { type: "button", className: `ob2-theme auto ${themePick === "system" ? "on" : ""}`, onClick: () => setThemePick("system"), "aria-label": tr("تكيف حسب مظهر النظام", "Adapt to system appearance") },
+          h("span", { className: "ob2-auto-t l", "aria-hidden": "true" }, tr("تكيف حسب مظهر النظام", "Adapt to system appearance")),
+          h("span", { className: "ob2-auto-t r", "aria-hidden": "true" }, tr("تكيف حسب مظهر النظام", "Adapt to system appearance"))));
+      if (step === 5) return h("div", { className: "ob2-mid" },
+        h(ObSvg, { className: "ob-logo sm", html: SVG_TERMS }),
+        h("p", { className: "ob-legal", style: { maxWidth: 460 } }, ar ? OB_LEGAL_AR : OB_LEGAL_EN));
+      if (step === 6) return h("div", { className: "ob2-mid ob2-mid-top ob2-signing" },
+        h(ObSvg, { className: "ob-logo", html: SVG_SETUP }),
+        h("div", { className: "ob-title" }, tr("جاري تسجيل الدخول", "Signing in")));
+      return h("div", { className: "ob2-mid" },
+        h("div", { className: "ob-title", style: { marginTop: 0 } }, tr("جاري إعداد APKDroid", "Setting up APKDroid")),
+        h("svg", { className: "ob2-spinner", viewBox: "0 0 50 50", "aria-hidden": "true" },
+          h("circle", { className: "ob2-spinner-path", cx: 25, cy: 25, r: 20, fill: "none", strokeWidth: 4, strokeMiterlimit: 10 })));
     };
-
-    if (step === 0) {
-      return React.createElement("div", { style: pageStyle, dir: "ltr" },
-        React.createElement("img", { src: "./res/icons/icon-192.png", alt: "APKDroid", style: { width: 96, height: 96, marginTop: "18vh", borderRadius: 22 } }),
-        React.createElement("h1", { style: { marginTop: 28, fontSize: 26, fontWeight: 700 } }, "Welcome To APKDroid"),
-        React.createElement("button", { type: "button", style: btnStyle, onClick: () => setStep(1) }, "Sign In")
-      );
-    }
-
-    if (step === 1) {
-      return React.createElement("div", { style: { ...pageStyle, alignItems: "stretch" }, dir: "ltr" },
-        React.createElement("div", { style: { textAlign: "center", marginBottom: 16 }, dangerouslySetInnerHTML: { __html: GLOBE_SVG } }),
-        React.createElement("div", { style: { flex: 1, overflowY: "auto", width: "100%" } },
-          WORLD_COUNTRIES.map((c) => React.createElement("button", {
-            key: c.c,
-            type: "button",
-            onClick: () => setCountryPick(c.c),
-            style: {
-              display: "block",
-              width: "100%",
-              padding: "14px 16px",
-              marginBottom: 6,
-              borderRadius: 12,
-              border: "none",
-              background: countryPick === c.c ? "#38BDF8" : "#1C1C1E",
-              color: "#fff",
-              textAlign: "left",
-              fontSize: 15,
-              cursor: "pointer"
-            }
-          }, c.en))
-        ),
-        countryPick && React.createElement("button", { type: "button", style: btnStyle, onClick: () => setStep(2) }, "Next")
-      );
-    }
-
-    if (step === 2) {
-      return React.createElement("div", { style: pageStyle, dir: ar ? "rtl" : "ltr" },
-        React.createElement("div", { style: { marginTop: 40 }, dangerouslySetInnerHTML: { __html: GLOBE_SVG } }),
-        React.createElement("button", {
-          type: "button",
-          onClick: () => setLangPick("en"),
-          style: { width: "100%", maxWidth: 320, padding: 16, marginTop: 40, borderRadius: 14, border: "none", background: langPick === "en" ? "#29b6f6" : "#1C1C1E", color: "#fff", fontSize: 16, cursor: "pointer" }
-        }, "English"),
-        React.createElement("button", {
-          type: "button",
-          onClick: () => setLangPick("ar"),
-          style: { width: "100%", maxWidth: 320, padding: 16, marginTop: 12, borderRadius: 14, border: "none", background: langPick === "ar" ? "#29b6f6" : "#1C1C1E", color: "#fff", fontSize: 16, cursor: "pointer" }
-        }, "العربية"),
-        React.createElement("button", { type: "button", style: btnStyle, onClick: () => { setLang(langPick); setStep(3); } }, ar ? "متابعة" : "Next")
-      );
-    }
-
-    if (step === 3) {
-      return React.createElement("div", { style: pageStyle, dir: ar ? "rtl" : "ltr" },
-        React.createElement("h2", { style: { marginTop: 20, fontSize: 20 } }, ar ? "اختر الستايل الذي تفضله" : "Choose your preferred style"),
-        React.createElement("p", { style: { opacity: 0.7, fontSize: 14, textAlign: "center", maxWidth: 280 } }, ar ? "تخصيص ألوان وشكل التطبيق حسب رغبتك" : "Customize the colors and look of the app"),
-        React.createElement("div", { style: { display: "flex", gap: 16, marginTop: 24 } },
-          [0, 1].map((i) => React.createElement("div", { key: i, style: { textAlign: "center", cursor: "pointer" }, onClick: () => setStylePick(i) },
-            React.createElement("img", { src: `./res/drawable/style${i+1}.png`, alt: "", style: { width: 120, height: 213, borderRadius: 16, objectFit: "cover", border: stylePick === i ? "3px solid #29b6f6" : "3px solid transparent" } }),
-            React.createElement("div", { style: { marginTop: 10, display: "flex", justifyContent: "center" }, dangerouslySetInnerHTML: { __html: stylePick === i ? CHECK_SVG : `<svg width="28" height="28" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#555" stroke-width="1.5"/></svg>` } })
-          ))
-        ),
-        stylePick !== null && React.createElement("button", { type: "button", style: btnStyle, onClick: () => { setStyle2(stylePick === 1); setExpMode(stylePick === 0); setStep(4); } }, ar ? "متابعة" : "Next")
-      );
-    }
-
-    if (step === 4) {
-      return React.createElement("div", { style: pageStyle, dir: ar ? "rtl" : "ltr" },
-        React.createElement("div", { style: { width: 100, height: 100, borderRadius: "50%", background: "#1C1C1E", marginTop: 30, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48 } }, "⭐"),
-        React.createElement("button", { type: "button", onClick: () => setThemePick("light"), style: { width: "100%", maxWidth: 300, padding: 16, marginTop: 40, borderRadius: 14, background: "#fff", color: "#000", border: themePick === "light" ? "3px solid #29b6f6" : "none", fontSize: 15, cursor: "pointer" } }, ar ? "ثيم فاتح" : "Light theme"),
-        React.createElement("button", { type: "button", onClick: () => setThemePick("dark"), style: { width: "100%", maxWidth: 300, padding: 16, marginTop: 12, borderRadius: 14, background: "#000", color: "#fff", border: themePick === "dark" ? "3px solid #29b6f6" : "1px solid #333", fontSize: 15, cursor: "pointer" } }, ar ? "ثيم داكن" : "Dark theme"),
-        React.createElement("button", { type: "button", onClick: () => setThemePick("system"), style: { width: "100%", maxWidth: 300, padding: 16, marginTop: 12, borderRadius: 14, background: "linear-gradient(90deg, #fff 50%, #000 50%)", color: "#fff", border: themePick === "system" ? "3px solid #29b6f6" : "none", fontSize: 15, cursor: "pointer", color: "#000", textShadow: "0 0 2px #fff" } }, ar ? "تكيف حسب مظهر النظام" : "Adapt to system"),
-        themePick && React.createElement("button", { type: "button", style: btnStyle, onClick: () => { setTheme(themePick); setStep(5); } }, ar ? "متابعة" : "Next")
-      );
-    }
-
-    if (step === 5) {
-      const discText = ar
-        ? "إخلاء المسؤولية: هذا التطبيق يجلب البيانات من مصادر خارجية مثل iTunes. قد تخضع هذه المواقع لشروط خدمة وسياسة خصوصية خاصة بها. نحن لا نتحمل مسؤولية أي محتوى صادر من هذه الخدمات."
-        : "Disclaimer: This app fetches data from external sources such as iTunes. These sites may have their own terms of service and privacy policies. We are not responsible for any content originating from these services.";
-      return React.createElement("div", { style: pageStyle, dir: ar ? "rtl" : "ltr" },
-        React.createElement("div", { style: { marginTop: 20 }, dangerouslySetInnerHTML: { __html: DISCLAIMER_SVG } }),
-        React.createElement("p", { style: { marginTop: 24, fontSize: 14, lineHeight: 1.6, maxWidth: 340, textAlign: "center", opacity: 0.9 } }, discText),
-        React.createElement("button", { type: "button", style: btnStyle, onClick: () => setStep(6) }, ar ? "متابعة" : "Next")
-      );
-    }
-
-    if (step === 6) {
-      return React.createElement("div", { style: pageStyle },
-        React.createElement("div", { style: { width: 80, height: 80, borderRadius: "50%", background: "#1C1C1E", marginTop: "20vh", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36, animation: "pulse 1.5s infinite" } }, "⚙"),
-        React.createElement("p", { style: { marginTop: 24, fontSize: 18 } }, ar ? "جاري تسجيل الدخول" : "Signing in...")
-      );
-    }
-
-    if (step === 7) {
-      return React.createElement("div", { style: pageStyle },
-        React.createElement("p", { style: { marginTop: "22vh", fontSize: 18 } }, ar ? "جاري إعداد APKDroid" : "Setting up APKDroid"),
-        React.createElement("div", { style: { marginTop: 24 }, dangerouslySetInnerHTML: { __html: SPINNER_SVG } })
-      );
-    }
-
-    return null;
+    return h("div", { className: `ob-screen ob2 ${step === 0 ? "ob2-welcome" : ""}`, dir: rtl ? "rtl" : "ltr" },
+      h("div", { className: "ob2-page", key: step }, body()),
+      step <= 5 && h("div", { className: `ob2-foot ${canNext ? "show" : ""}` },
+        h("button", { type: "button", className: "ob2-btn", disabled: !canNext, onClick: goNext }, nextLabel)));
   };
-
-
   const SVG_BLOCKED = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><g><path d="M36,36m-36,0a36,36 0,1 1,72 0a36,36 0,1 1,-72 0" fill="#F28B82" fill-opacity="0.08"></path><path d="M20.417,48.75L36,21.833L51.583,48.75H20.417ZM46.667,45.917L36,27.486L25.333,45.917H46.667ZM34.583,41.667V44.5H37.417V41.667H34.583ZM34.583,33.167H37.417V38.833H34.583V33.167Z" fill="#F28B82"></path></g></svg>';
   const CountryBlock = ({ country: country2, setCountry, lang }) => {
     const [open, setOpen] = useState(false);
@@ -5294,7 +5212,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     else if (route.startsWith("/you-project/")) page = /* @__PURE__ */ React.createElement(ProjectGate, { route, nav });
     else if (route === "/now-playing") page = /* @__PURE__ */ React.createElement(NowPlaying, { track, playing, progress, duration, onToggle: togglePlay, onPrev: playPrev, onNext: playNext, onSeek: seekTo, onFav: toggleSongFav, isFav: isSongFav, nav });
     else if (route === "/equalizer") page = /* @__PURE__ */ React.createElement(EqualizerPage, { eqOn, setEqOn, bands, setBand, volume, setVolume, nav });
-    else if (route === "/settings") page = /* @__PURE__ */ React.createElement(Settings, { selStore, setSelStore, style2, setStyle2, setExpMode, lang, setLang, night, setNight, nav });
+    else if (route === "/settings") page = /* @__PURE__ */ React.createElement(Settings, { selStore, setSelStore, style2, setStyle2, setExpMode, lang, setLang, night, setNight, nav, country2, setCountry });
     else if (route.startsWith("/category/")) page = /* @__PURE__ */ React.createElement(Category, { genre: route.split("/")[2], open });
     else page = /* @__PURE__ */ React.createElement(Home, { nav, open, openInstall });
     const showS = !route.startsWith("/search") && !isDetail && route !== "/now-playing" && route !== "/equalizer" && !isDownloads;
