@@ -442,8 +442,8 @@ html:not(.dark) .acc-row:hover{background:rgba(0,0,0,.04)}
 .net-spin{display:flex;align-items:center;justify-content:center;background:hsl(var(--bg))}
 .net-full{position:absolute;inset:0;z-index:4;background:hsl(var(--bg))}
 .net-in{position:relative;z-index:1;min-height:100%;width:100%;flex:1}
-.net-spin-mark{width:64px;height:64px}
-.net-spin-mark img{width:64px;height:64px;display:block}
+.net-spin-mark{width:52px;height:52px}
+.net-spin-mark img{width:52px;height:52px;display:block}
 .net-off{background:hsl(var(--bg));color:hsl(var(--fg));display:flex;align-items:center;justify-content:center;min-height:calc(100dvh - 8.5rem)}
 .net-off-block{position:relative;top:auto;display:flex;flex-direction:column;align-items:center;padding:0 20px;text-align:center;width:100%;transform:translateY(-28px)}
 .net-off-ico{width:72px;height:72px}
