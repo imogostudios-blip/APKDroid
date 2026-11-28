@@ -5265,4 +5265,74 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
   }).catch(() => {
     ReactDOM.createRoot(document.getElementById("root")).render(/* @__PURE__ */ React.createElement(ErrorBoundary, null, /* @__PURE__ */ React.createElement(App, null), /* @__PURE__ */ React.createElement(PeekHost, null)));
   });
+
+  // ===== Status bar auto color: absorbs the background color directly under it =====
+  (() => {
+    let raf = 0, last = "";
+    const cv = document.createElement("canvas");
+    cv.width = cv.height = 1;
+    const cx = cv.getContext("2d");
+    const parse = (str) => {
+      try {
+        cx.clearRect(0, 0, 1, 1);
+        cx.fillStyle = "#000";
+        cx.fillStyle = str;
+        cx.fillRect(0, 0, 1, 1);
+        const d = cx.getImageData(0, 0, 1, 1).data;
+        return { r: d[0], g: d[1], b: d[2], a: d[3] / 255 };
+      } catch (e) {
+        return null;
+      }
+    };
+    const sample = () => {
+      raf = 0;
+      try {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (!meta) return;
+        const layers = [];
+        let el = document.elementFromPoint(Math.max(1, innerWidth / 2), 1);
+        let opaque = null;
+        while (el && el.nodeType === 1) {
+          const bg = getComputedStyle(el).backgroundColor;
+          const c = bg ? parse(bg) : null;
+          if (c && c.a > 0) {
+            if (c.a >= 0.999) { opaque = c; break; }
+            layers.push(c);
+          }
+          el = el.parentElement;
+        }
+        if (!opaque) opaque = parse(getComputedStyle(document.body).backgroundColor);
+        if (!opaque || opaque.a < 0.999) opaque = parse(getComputedStyle(document.documentElement).backgroundColor);
+        if (!opaque || opaque.a < 0.999) return;
+        let base = opaque;
+        for (let i = layers.length - 1; i >= 0; i--) {
+          const t = layers[i];
+          base = { r: t.r * t.a + base.r * (1 - t.a), g: t.g * t.a + base.g * (1 - t.a), b: t.b * t.a + base.b * (1 - t.a), a: 1 };
+        }
+        const hex = "#" + [base.r, base.g, base.b].map((v) => Math.round(v).toString(16).padStart(2, "0")).join("");
+        if (hex !== last || meta.getAttribute("content") !== hex) {
+          last = hex;
+          meta.setAttribute("content", hex);
+        }
+      } catch (e) {
+      }
+    };
+    const queue = () => {
+      if (!raf) raf = requestAnimationFrame(sample);
+    };
+    window.addEventListener("scroll", queue, true);
+    window.addEventListener("resize", queue);
+    window.addEventListener("hashchange", queue);
+    window.addEventListener("popstate", queue);
+    document.addEventListener("transitionend", queue, true);
+    document.addEventListener("animationend", queue, true);
+    document.addEventListener("click", () => setTimeout(queue, 60), true);
+    document.addEventListener("touchend", () => setTimeout(queue, 60), true);
+    try {
+      new MutationObserver(queue).observe(document.documentElement, { attributes: true, childList: true, subtree: true, attributeFilter: ["class", "style", "content"] });
+    } catch (e) {
+    }
+    setInterval(queue, 700);
+    queue();
+  })();
 })();
