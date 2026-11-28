@@ -139,6 +139,7 @@ html.style2.dark .dl-name-pct,html.style2.black .dl-name-pct{color:#A8C7FA}
 .bg-screenshots{display:flex;gap:10px;overflow-x:auto;padding:8px 16px 8px;scrollbar-width:none;align-items:flex-start}
 .bg-screenshots::-webkit-scrollbar{display:none}
 .bg-screenshot{flex:0 0 auto;height:auto;width:auto;max-height:320px;max-width:min(280px,75vw);border-radius:6px;object-fit:contain;box-shadow:0 1px 4px rgba(0,0,0,.18);background:hsl(var(--muted));cursor:zoom-in;display:block}
+.bg-screenshots .bg-screenshot[style*="aspect-ratio"]{cursor:default;box-shadow:0 1px 4px rgba(0,0,0,.28)}
 /* Lightbox */
 .bg-lightbox{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;touch-action:none}
 .bg-lightbox-img{max-width:96vw;max-height:88vh;object-fit:contain;border-radius:4px;user-select:none;pointer-events:none}
