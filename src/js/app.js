@@ -1472,49 +1472,45 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
     const rafRef = React.useRef(null);
     React.useEffect(() => {
       let cancelled = false;
+      const SLOW_MS = 1000;
+      const FAST_MS = 180;
+      const SLOW_DEG = 80;
+
       const runIcon = (n) => {
         if (cancelled) return;
         setIcon(n);
         setAngle(0);
-        const isOdd = n % 2 === 1;
         const start = performance.now();
+
         const animate = (now) => {
           if (cancelled) return;
           const elapsed = now - start;
           let newAngle = 0;
-          if (isOdd) {
-            const dur = 400;
-            const progress = Math.min(elapsed / dur, 1);
-            newAngle = progress * 360;
+
+          if (elapsed < SLOW_MS) {
+            newAngle = (elapsed / SLOW_MS) * SLOW_DEG;
             setAngle(newAngle);
-            if (progress < 1) {
-              rafRef.current = requestAnimationFrame(animate);
-            } else {
-              setTimeout(() => runIcon(n === 10 ? 1 : n + 1), 30);
-            }
+            rafRef.current = requestAnimationFrame(animate);
+          } else if (elapsed < SLOW_MS + FAST_MS) {
+            const prog = (elapsed - SLOW_MS) / FAST_MS;
+            newAngle = SLOW_DEG + prog * (360 - SLOW_DEG);
+            setAngle(newAngle);
+            rafRef.current = requestAnimationFrame(animate);
           } else {
-            if (elapsed < 1000) {
-              newAngle = (elapsed / 1000) * 150;
-              setAngle(newAngle);
-              rafRef.current = requestAnimationFrame(animate);
-            } else if (elapsed < 1250) {
-              const prog = (elapsed - 1000) / 250;
-              newAngle = 150 + prog * 210;
-              setAngle(newAngle);
-              rafRef.current = requestAnimationFrame(animate);
-            } else {
-              setTimeout(() => runIcon(n === 10 ? 1 : n + 1), 30);
-            }
+            const next = n >= 10 ? 1 : n + 1;
+            setTimeout(() => runIcon(next), 40);
           }
         };
         rafRef.current = requestAnimationFrame(animate);
       };
+
       runIcon(1);
       return () => {
         cancelled = true;
         if (rafRef.current) cancelAnimationFrame(rafRef.current);
       };
     }, []);
+
     return React.createElement("div", {
       className: center ? "net-spin net-center" : full ? "net-spin net-full" : "net-spin net-in",
       role: "status",
@@ -1524,8 +1520,8 @@ const TopNav = ({ nav, isDetail, onOpenAccount, route, photo }) => {
         src: "./res/drawable/photojournal_shape" + icon + ".svg",
         alt: "",
         style: {
-          width: "120px",
-          height: "120px",
+          width: "64px",
+          height: "64px",
           display: "block",
           transform: "rotate(" + angle + "deg)",
           transition: "none"
