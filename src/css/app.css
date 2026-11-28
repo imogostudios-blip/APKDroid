@@ -1668,6 +1668,7 @@ html:not(.style2) .bg-screenshots {
   align-items: center;
   justify-content: center;
   scroll-snap-align: start;
+  scroll-snap-stop: always;
   background: #000;
 }
 .bg-lightbox-img-full {
