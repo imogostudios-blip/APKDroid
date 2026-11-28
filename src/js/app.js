@@ -753,7 +753,10 @@
     setS(key, { ts: Date.now(), data: d });
     return d;
   }
-  const country = () => getS("apk_country", "us");
+  const country = () => {
+    const c = getS("apk_country", "us");
+    return c === "sy" ? "us" : c;
+  };
   const pushSearchHist = (term, type = "apps") => {
     const t2 = String(term || "").trim();
     if (!t2) return;
