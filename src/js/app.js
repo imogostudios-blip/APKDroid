@@ -2774,6 +2774,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const touchX = useRef(null);
     const fileInputRef = useRef(null);
     const lbScroller = useRef(null);
+    const lbSmooth = useRef(false);
     const dlCancelRef = useRef(false);
     const dlTimerRef = useRef(null);
     const shouldLaunchRef = useRef(false);
@@ -3087,12 +3088,14 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     useEffect(() => {
       if (lbIdx == null || !lbScroller.current) return;
       const el = lbScroller.current;
+      const smooth = lbSmooth.current;
+      lbSmooth.current = false;
       const go = () => {
-        el.scrollLeft = lbIdx * el.clientWidth;
+        el.scrollTo({ left: lbIdx * el.clientWidth, behavior: smooth ? "smooth" : "auto" });
       };
       go();
-      const t = setTimeout(go, 50);
-      return () => clearTimeout(t);
+      const t = smooth ? null : setTimeout(go, 50);
+      return () => { if (t) clearTimeout(t); };
     }, [lbIdx]);
     const onLbTouchStart = (e) => {
       touchX.current = e.touches[0].clientX;
@@ -3102,8 +3105,13 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
       const dx = e.changedTouches[0].clientX - touchX.current;
       touchX.current = null;
       if (Math.abs(dx) < 40) return;
-      if (dx < 0) lbNext();
-      else lbPrev();
+      lbSmooth.current = true;
+      setLbIdx((i) => {
+        if (i == null) return i;
+        const n = dx < 0 ? Math.min(shots.length - 1, i + 1) : Math.max(0, i - 1);
+        if (n === i) lbSmooth.current = false;
+        return n;
+      });
     };
     const loadAllReviews = async () => {
       setRevAllLd(true);
@@ -3329,7 +3337,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     })), reviews && reviews.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "bg-reviews-more-wrap" }, /* @__PURE__ */ React.createElement("button", { className: "rounded-full px-6 py-2 text-sm font-medium border border-[hsl(var(--border))] hover:bg-[hsl(var(--muted))]", disabled: revAllLd, onClick: () => revAll ? setRevAll(false) : loadAllReviews() }, revAllLd ? t("loading") : revAll ? t("hide_reviews") : t("show_more")))), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-section" }, /* @__PURE__ */ React.createElement("h3", null, _lang === "ar" ? "\u0643\u0644\u0645\u0627\u062A \u0628\u062D\u062B \u0645\u0641\u062A\u0627\u062D\u064A\u0629" : "Search keywords"), /* @__PURE__ */ React.createElement("div", { className: "kw-wrap" }, (_lang === "ar" ? DETAIL_KEYWORDS : DETAIL_KEYWORDS_EN).map((w) => /* @__PURE__ */ React.createElement("button", { key: w, type: "button", className: "kw-chip", onClick: () => nav("/search?q=" + encodeURIComponent(w)) }, w)))), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-section" }, /* @__PURE__ */ React.createElement("h3", null, t("info")), /* @__PURE__ */ React.createElement("div", { className: "bg-info-list" }, /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("version"), ":"), " ", app.version || "\u2014"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("last_update"), ":"), " ", fmtDate(app.currentVersionReleaseDate)), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("size"), ":"), " ", fmtSize(app.fileSizeBytes)), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("age_rating"), ":"), " ", app.contentAdvisoryRating || "\u2014"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("developer"), ":"), " ", app.sellerName || app.artistName), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement("b", null, t("category"), ":"), " ", app.primaryGenreName || (app.genres || []).join(", "))))), stackApps.length > 0 && /* @__PURE__ */ React.createElement("div", { style: { marginTop: 18 } }, /* @__PURE__ */ React.createElement(StackedAppsPager, { frames: [0, 3, 6, 9, 12].map((i) => stackApps.slice(i, i + 3)).filter((g) => g.length), open: (x) => nav(`/app/${x.trackId}`), title: _lang === "ar" ? "\u062A\u0637\u0628\u064A\u0642\u0627\u062A \u0645\u0634\u0627\u0628\u0647\u0629" : "Similar apps" })), sim.length > 0 && /* @__PURE__ */ React.createElement(HScroll, { title: t("you_might_like") }, sim.map((a) => /* @__PURE__ */ React.createElement(AppCard, { key: a.trackId, app: a, small: true, onClick: (x) => nav(`/app/${x.trackId}`) }))), app && /* @__PURE__ */ React.createElement(DevBanner, { app, nav }), /* @__PURE__ */ infoOpen && /* @__PURE__ */ React.createElement(AppInfoSheet, { app, onClose: () => setInfoOpen(false) }), srcOpen && /* @__PURE__ */ React.createElement(SourceSheet, { selStore, onPick: (sid) => { const n = normalizeStore(sid); if (setSelStore) setSelStore(n); setS("apk_store", n); }, onClose: () => setSrcOpen(false) }), lbIdx != null && shots.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox", onClick: closeLb }, /* @__PURE__ */ React.createElement("button", { className: "bg-lightbox-close", onClick: (e) => {
       e.stopPropagation();
       closeLb();
-    }, "aria-label": "Close" }, "\xD7"), /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox-scroller", ref: lbScroller, onClick: (e) => e.stopPropagation() }, shots.map((s, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "bg-lightbox-slide" }, /* @__PURE__ */ React.createElement("img", { className: "bg-lightbox-img-full", src: s, alt: "", draggable: false })))), /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox-counter" }, (lbIdx != null ? lbIdx + 1 : 1), " / ", shots.length)), toastMsg && /* @__PURE__ */ React.createElement("div", { className: "bg-toast show" }, toastMsg));
+    }, "aria-label": "Close" }, "\xD7"), /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox-scroller", ref: lbScroller, onTouchStart: onLbTouchStart, onTouchEnd: onLbTouchEnd, onClick: (e) => e.stopPropagation() }, shots.map((s, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "bg-lightbox-slide" }, /* @__PURE__ */ React.createElement("img", { className: "bg-lightbox-img-full", src: s, alt: "", draggable: false })))), /* @__PURE__ */ React.createElement("div", { className: "bg-lightbox-counter" }, (lbIdx != null ? lbIdx + 1 : 1), " / ", shots.length)), toastMsg && /* @__PURE__ */ React.createElement("div", { className: "bg-toast show" }, toastMsg));
   };
   const DownloadsManager = ({ open }) => {
     const [tab, setTab] = useState("active");
