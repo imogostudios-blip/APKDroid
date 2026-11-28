@@ -2807,6 +2807,7 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
     const [revAllLd, setRevAllLd] = useState(false);
     const [toastMsg, setToastMsg] = useState("");
     const [lbIdx, setLbIdx] = useState(null);
+    const [appVideo, setAppVideo] = useState(null); // { ytId, videoUrl, thumb } or null
     const [peek, setPeek] = useState(false);
     const [peekBare, setPeekBare] = useState(false);
     const [peekSrc, setPeekSrc] = useState("");
@@ -2998,6 +2999,35 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
         }
       })();
     }, [id]);
+    // Fetch matching video from Blogger posts for this app
+    useEffect(() => {
+      if (!app || !app.trackName) {
+        setAppVideo(null);
+        return;
+      }
+      let cancelled = false;
+      const name = String(app.trackName).trim().toLowerCase();
+      fetch(BLOGGER_POSTS_URL)
+        .then(r => r.json())
+        .then(data => {
+          if (cancelled) return;
+          const items = data.items || [];
+          const match = items.find(p => {
+            const title = String(p.title || "").trim().toLowerCase();
+            return title === name || title.includes(name) || name.includes(title);
+          });
+          if (match && match.content) {
+            const info = extractVideoInfo(match.content);
+            if (info.ytId || info.videoUrl) {
+              setAppVideo({ ytId: info.ytId, videoUrl: info.videoUrl, thumb: info.thumb, title: match.title });
+              return;
+            }
+          }
+          setAppVideo(null);
+        })
+        .catch(() => { if (!cancelled) setAppVideo(null); });
+      return () => { cancelled = true; };
+    }, [app]);
     useEffect(() => {
       const tick = () => {
         const rec = getDlRec(id);
@@ -3374,7 +3404,28 @@ const NetOffline = ({ onRetry }) => /* @__PURE__ */ React.createElement("div", {
         }
       },
       t("req_confirm")
-    )))), shots.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "bg-screenshots" }, shots.slice(0, 12).map((s, i) => /* @__PURE__ */ React.createElement("img", { key: i, src: s, className: "bg-screenshot", alt: "", loading: "lazy", onClick: () => openLb(i) }))), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-section" }, /* @__PURE__ */ React.createElement("h3", null, t("description")), /* @__PURE__ */ React.createElement("p", { className: `bg-description ${exp ? "" : "collapsed"}` }, app.description), app.description && app.description.length > 180 && /* @__PURE__ */ React.createElement("button", { className: "bg-read-more", onClick: () => setExp(!exp) }, exp ? t("less") : t("more"))), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-section" }, /* @__PURE__ */ React.createElement("h3", null, t("ratings_reviews")), /* @__PURE__ */ React.createElement("div", { className: "bg-rating-overview" }, /* @__PURE__ */ React.createElement("div", { className: "bg-rating-bars" }, [5, 4, 3, 2, 1].map((s) => /* @__PURE__ */ React.createElement("div", { key: s, className: "bg-rating-bar-row" }, /* @__PURE__ */ React.createElement("span", { className: "bg-rating-bar-star" }, s), /* @__PURE__ */ React.createElement("div", { className: "bg-rating-bar-track" }, /* @__PURE__ */ React.createElement("div", { className: "bg-rating-bar-fill", style: { width: `${dist[s]}%` } })), /* @__PURE__ */ React.createElement("span", { className: "bg-rating-bar-percent" }, dist[s], "%")))), /* @__PURE__ */ React.createElement("div", { className: "bg-rating-score-big" }, /* @__PURE__ */ React.createElement("div", { className: "bg-rating-score-num" }, rating), /* @__PURE__ */ React.createElement("div", { className: "bg-rating-score-stars" }, starsStr), app.userRatingCount ? /* @__PURE__ */ React.createElement("div", { className: "bg-rating-score-count" }, app.userRatingCount.toLocaleString(), " ", t("ratings_count")) : null))), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-section" }, /* @__PURE__ */ React.createElement("h3", null, t("comments")), revLd ? /* @__PURE__ */ React.createElement("div", { className: "bg-reviews-loading" }, t("loading_reviews")) : !reviews || reviews.length === 0 ? /* @__PURE__ */ React.createElement("div", { className: "bg-reviews-empty" }, t("no_reviews")) : /* @__PURE__ */ React.createElement("div", null, reviews.slice(0, revAll ? reviews.length : 5).map((r, i) => {
+    )))), (shots.length > 0 || appVideo) && /* @__PURE__ */ React.createElement("div", { className: "bg-screenshots" },
+      appVideo && /* @__PURE__ */ React.createElement("div", {
+        key: "app-video",
+        className: "bg-screenshot",
+        style: { aspectRatio: "16 / 9", maxHeight: "220px", maxWidth: "min(390px, 85vw)", background: "#000", position: "relative", overflow: "hidden" }
+      },
+        appVideo.ytId ? /* @__PURE__ */ React.createElement("iframe", {
+          src: "https://www.youtube.com/embed/" + appVideo.ytId + "?rel=0&modestbranding=1",
+          title: appVideo.title || "Video",
+          allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+          allowFullScreen: true,
+          style: { width: "100%", height: "100%", border: "none", position: "absolute", inset: 0 }
+        }) : appVideo.videoUrl ? /* @__PURE__ */ React.createElement("video", {
+          src: appVideo.videoUrl,
+          controls: true,
+          playsInline: true,
+          style: { width: "100%", height: "100%", objectFit: "contain" },
+          poster: appVideo.thumb || undefined
+        }) : null
+      ),
+      shots.slice(0, 12).map((s, i) => /* @__PURE__ */ React.createElement("img", { key: i, src: s, className: "bg-screenshot", alt: "", loading: "lazy", onClick: () => openLb(i) }))
+    ), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-section" }, /* @__PURE__ */ React.createElement("h3", null, t("description")), /* @__PURE__ */ React.createElement("p", { className: `bg-description ${exp ? "" : "collapsed"}` }, app.description), app.description && app.description.length > 180 && /* @__PURE__ */ React.createElement("button", { className: "bg-read-more", onClick: () => setExp(!exp) }, exp ? t("less") : t("more"))), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-section" }, /* @__PURE__ */ React.createElement("h3", null, t("ratings_reviews")), /* @__PURE__ */ React.createElement("div", { className: "bg-rating-overview" }, /* @__PURE__ */ React.createElement("div", { className: "bg-rating-bars" }, [5, 4, 3, 2, 1].map((s) => /* @__PURE__ */ React.createElement("div", { key: s, className: "bg-rating-bar-row" }, /* @__PURE__ */ React.createElement("span", { className: "bg-rating-bar-star" }, s), /* @__PURE__ */ React.createElement("div", { className: "bg-rating-bar-track" }, /* @__PURE__ */ React.createElement("div", { className: "bg-rating-bar-fill", style: { width: `${dist[s]}%` } })), /* @__PURE__ */ React.createElement("span", { className: "bg-rating-bar-percent" }, dist[s], "%")))), /* @__PURE__ */ React.createElement("div", { className: "bg-rating-score-big" }, /* @__PURE__ */ React.createElement("div", { className: "bg-rating-score-num" }, rating), /* @__PURE__ */ React.createElement("div", { className: "bg-rating-score-stars" }, starsStr), app.userRatingCount ? /* @__PURE__ */ React.createElement("div", { className: "bg-rating-score-count" }, app.userRatingCount.toLocaleString(), " ", t("ratings_count")) : null))), /* @__PURE__ */ React.createElement("div", { className: "bg-detail-section" }, /* @__PURE__ */ React.createElement("h3", null, t("comments")), revLd ? /* @__PURE__ */ React.createElement("div", { className: "bg-reviews-loading" }, t("loading_reviews")) : !reviews || reviews.length === 0 ? /* @__PURE__ */ React.createElement("div", { className: "bg-reviews-empty" }, t("no_reviews")) : /* @__PURE__ */ React.createElement("div", null, reviews.slice(0, revAll ? reviews.length : 5).map((r, i) => {
       const rr = Math.max(0, Math.min(5, Number(r.rating) || 0));
       const st = Array.from({ length: 5 }, (_, i2) => i2 < rr ? "\u2605" : "\u2606").join("");
       const initial = (r.author || "A").trim().charAt(0).toUpperCase();
